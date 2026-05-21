@@ -22,6 +22,7 @@ public class Funcionario {
     @Column(length = 21)
     private String telefone;
 
+    // CRIAR O ENUM
     @Column
     private String cargo;
 
@@ -44,27 +45,69 @@ public class Funcionario {
     }
 
     // Getters e Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
 
-    public String getNome() { return nome; }
-    public void setNome(String nome) { this.nome = nome; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getCpf() { return cpf; }
-    public void setCpf(String cpf) { this.cpf = cpf; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getEndereco() { return endereco; }
-    public void setEndereco(String endereco) { this.endereco = endereco; }
+    public String getNome() {
+        return nome;
+    }
 
-    public String getTelefone() { return telefone; }
-    public void setTelefone(String telefone) { this.telefone = telefone; }
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 
-    public Integer getIdade() { return idade; }
-    public void setIdade(Integer idade) { this.idade = idade; }
+    public String getCpf() {
+        return cpf;
+    }
 
-    public String getCargo() { return cargo; }
-    public void setCargo(String cargo) { this.cargo = cargo; }  
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
 
-    public Integer getCodigoPonto() { return codigoPonto; }
-    public void setCodigoPonto(Integer codigoPonto) { this.codigoPonto = codigoPonto; }
+    public String getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public String getCargo() {
+        return cargo;
+    }
+
+    public void setCargo(String cargo) {
+        this.cargo = cargo;
+    }
+
+    public Integer getCodigoPonto() {
+        return codigoPonto;
+    }
+
+    public void setCodigoPonto(Integer codigoPonto) {
+        this.codigoPonto = codigoPonto;
+    }
+
+    public Integer getIdade() {
+        return idade;
+    }
+
+    public void setIdade(Integer idade) {
+        this.idade = idade;
+    }
+
 }    

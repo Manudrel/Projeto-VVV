@@ -14,7 +14,7 @@ public class Rota {
     private Integer origem;
     
     @Column (nullable = false, length = 100)
-    private Integer destino
+    private Integer destino;
 
      
     // Construtores
@@ -27,16 +27,26 @@ public class Rota {
     }
 
     // Getters e Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() { 
+        return id; 
+    }
 
-    public Integer getOrigem() { return origem; }
-    public void setOrigem(Integer origem) { this.origem = origem; }
+    public void setId(Long id) { 
+        this.id = id; 
+    }
 
-    public Integer getDestino() { return destino; }
-    public void setDestino(Integer destino) { this.destino = destino; }
+    public Integer getOrigem() { 
+        return origem; 
+    }
+    public void setOrigem(Integer origem) { 
+        this.origem = origem; 
+    }
 
-    public String getCnpj() { return cnpj; }
-    public void setCnpj(String cnpj) { this.cnpj = cnpj; }
+    public Integer getDestino() { 
+        return destino; 
+    }
 
+    public void setDestino(Integer destino) { 
+        this.destino = destino; 
+    }
 }

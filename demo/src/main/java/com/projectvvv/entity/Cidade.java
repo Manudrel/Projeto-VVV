@@ -31,13 +31,35 @@ public class Cidade {
     }
 
     // Getters e Setters
+    public Long getId() {
+        return id;
+    }
 
-    private Long getId() { return id;}
-    private void setId(Long id) { this.id = id;}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    private String getEstado() { return estado; }
-    private void setEstado(String estado) { this.estado = estado; }
+    public String getEstado() {
+        return estado;
+    }
 
-    private String getCidade() { return cidade; }
-    private void setCidade(String cidade) { this.cidade = cidade; }
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public String getCidade() {
+        return cidade;
+    }
+
+    public void setCidade(String cidade) {
+        this.cidade = cidade;
+    }
+
+    public String getPais() {
+        return pais;
+    }
+
+    public void setPais(String pais) {
+        this.pais = pais;
+    }
 }
