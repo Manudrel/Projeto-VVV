@@ -37,14 +37,37 @@ public class ReservaService {
     public Reserva atualizar(Long id, Reserva reservaAtualizada) {
         Reserva reserva = buscarPorId(id);
 
-        reserva.setData(reservaAtualizada.getData());
-        reserva.setHoraPartida(reservaAtualizada.getHoraPartida());
-        reserva.setStatusReserva(reservaAtualizada.getStatusReserva());
-        reserva.setTipoViagem(reservaAtualizada.getTipoViagem());
-        reserva.setLocalizador(reservaAtualizada.getLocalizador());
-        reserva.setTipoPassagem(reservaAtualizada.getTipoPassagem());
-        reserva.setIdRota(reservaAtualizada.getIdRota());
-        reserva.setIdModal(reservaAtualizada.getIdModal());
+        if (reservaAtualizada.getData() != null) {
+            reserva.setData(reservaAtualizada.getData());
+        }
+
+        if (reservaAtualizada.getHoraPartida() != null) {
+            reserva.setHoraPartida(reservaAtualizada.getHoraPartida());
+        }
+
+        if (reservaAtualizada.getStatusReserva() != null) {
+            reserva.setStatusReserva(reservaAtualizada.getStatusReserva());
+        }
+
+        if (reservaAtualizada.getTipoViagem() != null) {
+            reserva.setTipoViagem(reservaAtualizada.getTipoViagem());
+        }
+
+        if (reservaAtualizada.getLocalizador() != null) {
+            reserva.setLocalizador(reservaAtualizada.getLocalizador());
+        }
+
+        if (reservaAtualizada.getTipoPassagem() != null) {
+            reserva.setTipoPassagem(reservaAtualizada.getTipoPassagem());
+        }
+
+        if (reservaAtualizada.getIdRota() != null) {
+            reserva.setIdRota(reservaAtualizada.getIdRota());
+        }
+
+        if (reservaAtualizada.getIdModal() != null) {
+            reserva.setIdModal(reservaAtualizada.getIdModal());
+        }
 
         return reservaRepository.save(reserva);
     }

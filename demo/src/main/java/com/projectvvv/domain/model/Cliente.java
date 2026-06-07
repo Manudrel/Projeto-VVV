@@ -1,5 +1,4 @@
-package com.projectvvv.domain.entity;
-
+package com.projectvvv.domain.model;
 import jakarta.persistence.*;
 
 @Entity

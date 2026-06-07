@@ -10,35 +10,36 @@ public class Modal {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column (nullable = false, length = 100)
+    @Column(nullable = false, length = 100)
     private String codigoModal;
 
     // CRIAR ENUM
-    @Column (nullable = false, length = 100)
+    @Column(nullable = false, length = 100)
     private String tipo;
 
-    @Column (nullable = false, length = 4)
+    @Column(nullable = false, length = 4)
     private Integer ano;
 
-    @Column (nullable = false, length = 100)
+    @Column(nullable = false, length = 100)
     private String modelo;
 
-    @Column (nullable = false)
+    @Column(nullable = false)
     private Integer capacidade;
 
     //CRIAR ENUM
-    @Column (nullable = false, length = 100)
+    @Column(nullable = false, length = 100)
     private String estado;
 
-    @Column (nullable = false)
+    @Column(nullable = false)
     private Long idTrasnportadora;
 
 
     // Construtores
-    public Modal() {}
+    public Modal() {
+    }
 
     public Modal(Long id, String codigoModal, String tipo, Integer ano, String modelo, Integer capacidade,
-            String estado, Long idTrasnportadora) {
+                 String estado, Long idTrasnportadora) {
         this.id = id;
         this.codigoModal = codigoModal;
         this.tipo = tipo;
@@ -50,12 +51,12 @@ public class Modal {
     }
 
     // Getters e Setters
-    public Long getId() { 
-        return id; 
+    public Long getId() {
+        return id;
     }
 
-    public void setId(Long id) { 
-        this.id = id; 
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getCodigoModal() {
@@ -113,4 +114,5 @@ public class Modal {
     public void setIdTrasnportadora(Long idTrasnportadora) {
         this.idTrasnportadora = idTrasnportadora;
     }
+
 }

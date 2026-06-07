@@ -42,10 +42,14 @@ public class ReservaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(reservaService.criar(reserva));
     }
 
-    // PUT /api/reservas/{id}
-    @PutMapping("/{id}")
-    public ResponseEntity<Reserva> atualizar(@PathVariable Long id, @RequestBody Reserva reserva) {
-        return ResponseEntity.ok(reservaService.atualizar(id, reserva));
+    // PATCH /api/reservas/{id}
+    @PatchMapping(" /{id}")
+    public ResponseEntity<Reserva> atualizar(
+            @PathVariable Long id,
+            @RequestBody Reserva reserva) {
+
+        Reserva reservaAtualizada = reservaService.atualizar(id, reserva);
+        return ResponseEntity.ok(reservaAtualizada);
     }
 
     // DELETE /api/reservas/{id}
