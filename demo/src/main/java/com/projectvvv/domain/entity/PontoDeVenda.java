@@ -1,4 +1,4 @@
-package com.projectvvv.entity;
+package com.projectvvv.domain.entity;
 
 import jakarta.persistence.*;
 
