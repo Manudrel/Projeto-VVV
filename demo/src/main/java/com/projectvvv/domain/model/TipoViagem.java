@@ -1,4 +1,4 @@
-package com.projectvvv.domain.enums;
+package com.projectvvv.domain.model;
 
 public enum TipoViagem {
     ONIBUS,
