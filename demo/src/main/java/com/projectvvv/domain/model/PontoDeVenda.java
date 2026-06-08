@@ -1,20 +1,20 @@
-package com.projectvvv.domain.entity;
+package com.projectvvv.domain.model;
 
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "cliente")
-public class Cliente {
+@Table(name = "ponto_de_venda")
+public class PontoDeVenda {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long codigoPonto;
 
     @Column(nullable = false, length = 100)
     private String nome;
 
-    @Column(nullable = false, unique = true, length = 12)
-    private String cpf;
+    @Column(nullable = false, unique = true, length = 14)
+    private String cnpj;
 
     @Column(length = 200)
     private String endereco;
@@ -22,28 +22,25 @@ public class Cliente {
     @Column(length = 21)
     private String telefone;
 
-    @Column
-    private Integer idade;
-
+     
     // Construtores
-    public Cliente() {}
+    public PontoDeVenda() {}
 
-    public Cliente(Long id, String nome, String cpf, String endereco, String telefone, Integer idade) {
-        this.id = id;
+    public PontoDeVenda(Long codigoPonto, String nome, String cnpj, String endereco, String telefone) {
+        this.codigoPonto = codigoPonto;
         this.nome = nome;
-        this.cpf = cpf;
+        this.cnpj = cnpj;
         this.endereco = endereco;
         this.telefone = telefone;
-        this.idade = idade;
     }
 
     // Getters e Setters
-    public Long getId() {
-        return id;
+    public Long getCodigoPonto() {
+        return codigoPonto;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setCodigoPonto(Long codigoPonto) {
+        this.codigoPonto = codigoPonto;
     }
 
     public String getNome() {
@@ -54,12 +51,12 @@ public class Cliente {
         this.nome = nome;
     }
 
-    public String getCpf() {
-        return cpf;
+    public String getCnpj() {
+        return cnpj;
     }
 
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
+    public void setCnpj(String cnpj) {
+        this.cnpj = cnpj;
     }
 
     public String getEndereco() {
@@ -76,13 +73,5 @@ public class Cliente {
 
     public void setTelefone(String telefone) {
         this.telefone = telefone;
-    }
-
-    public Integer getIdade() {
-        return idade;
-    }
-
-    public void setIdade(Integer idade) {
-        this.idade = idade;
     }
 }

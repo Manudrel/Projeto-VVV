@@ -1,6 +1,7 @@
-package com.projectvvv.domain.entity;
+package com.projectvvv.domain.model;
 
 import jakarta.persistence.*;
+import com.projectvvv.domain.enums.TipoPassagem;
 
 @Entity
 @Table(name = "ticket")
@@ -15,7 +16,7 @@ public class Ticket {
 
     // Criar Enum
     @Column(nullable = false)
-    private String tipoPassagem;
+    private TipoPassagem tipoPassagem;
 
     @Column(nullable = false)
     private Long idReserva;
@@ -24,9 +25,9 @@ public class Ticket {
     private Long idCliente;
 
     // Construtores
-    private Ticket(){}
+    public Ticket(){}
 
-    private Ticket(Long id, String tipoPassagem, String codigoTicket, Long idReserva, Long idCliente) {
+    private Ticket(Long id, TipoPassagem tipoPassagem, String codigoTicket, Long idReserva, Long idCliente) {
         this.id = id;
         this.tipoPassagem = tipoPassagem;
         this.codigoTicket = codigoTicket;
@@ -38,11 +39,11 @@ public class Ticket {
     public Long getId() { return id;}
     public void setId(Long id) { this.id = id;}
 
-    public String getTipoPassagem() { 
+    public TipoPassagem getTipoPassagem() { 
         return tipoPassagem;
     }
 
-    public void setTipoPassagem(String tipoPassagem) { 
+    public void setTipoPassagem(TipoPassagem tipoPassagem) { 
         this.tipoPassagem = tipoPassagem;
     }
 

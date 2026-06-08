@@ -1,10 +1,10 @@
-package com.projectvvv.domain.entity;
+package com.projectvvv.domain.model;
 
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "funcionario")
-public class Funcionario {
+@Table(name = "cliente")
+public class Cliente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,20 +22,13 @@ public class Funcionario {
     @Column(length = 21)
     private String telefone;
 
-    // CRIAR O ENUM
-    @Column
-    private String cargo;
-
-    @Column
-    private Integer codigoPonto;
-
     @Column
     private Integer idade;
 
     // Construtores
-    public Funcionario() {}
+    public Cliente() {}
 
-    public Funcionario(Long id, String nome, String cpf, String endereco, String telefone, Integer idade) {
+    public Cliente(Long id, String nome, String cpf, String endereco, String telefone, Integer idade) {
         this.id = id;
         this.nome = nome;
         this.cpf = cpf;
@@ -45,7 +38,6 @@ public class Funcionario {
     }
 
     // Getters e Setters
-
     public Long getId() {
         return id;
     }
@@ -86,22 +78,6 @@ public class Funcionario {
         this.telefone = telefone;
     }
 
-    public String getCargo() {
-        return cargo;
-    }
-
-    public void setCargo(String cargo) {
-        this.cargo = cargo;
-    }
-
-    public Integer getCodigoPonto() {
-        return codigoPonto;
-    }
-
-    public void setCodigoPonto(Integer codigoPonto) {
-        this.codigoPonto = codigoPonto;
-    }
-
     public Integer getIdade() {
         return idade;
     }
@@ -109,5 +85,4 @@ public class Funcionario {
     public void setIdade(Integer idade) {
         this.idade = idade;
     }
-
-}    
+}

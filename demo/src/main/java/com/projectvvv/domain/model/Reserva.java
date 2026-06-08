@@ -1,8 +1,12 @@
-package com.projectvvv.domain.entity;
+package com.projectvvv.domain.model;
 
 import java.util.Date;
 
 import jakarta.persistence.*;
+
+import com.projectvvv.domain.enums.TipoPassagem;
+import com.projectvvv.domain.enums.StatusReserva;
+import com.projectvvv.domain.enums.TipoViagem;
 
 @Entity
 @Table(name = "reserva")
@@ -18,20 +22,17 @@ public class Reserva {
     @Column (nullable = false, length = 100)
     private String horaPartida;
 
-    // CRIAR ENUM
     @Column (nullable = false)
-    private String statusReserva;
+    private StatusReserva statusReserva;
 
-    // CRIAR ENUM
     @Column (nullable = false)
-    private String tipoViagem;
+    private TipoViagem tipoViagem;
 
     @Column (nullable = false, length = 100)
     private String localizador;
 
-    // CRIAR ENUM
     @Column (nullable = false)
-    private String tipoPassagem;
+    private TipoPassagem tipoPassagem;
 
     @Column (nullable = false)
     private Long idRota;
@@ -44,8 +45,8 @@ public class Reserva {
 
 
     // Getters e Setters
-    public Reserva(Long codigoReserva, Date data, String horaPartida, String statusReserva, String tipoViagem,
-            String localizador, String tipoPassagem, Long idRota, Long idModal) {
+    public Reserva(Long codigoReserva, Date data, String horaPartida, StatusReserva statusReserva, TipoViagem tipoViagem,
+            String localizador, TipoPassagem tipoPassagem, Long idRota, Long idModal) {
         this.codigoReserva = codigoReserva;
         this.data = data;
         this.horaPartida = horaPartida;
@@ -88,22 +89,22 @@ public class Reserva {
     }
 
 
-    public String getStatusReserva() {
+    public StatusReserva getStatusReserva() {
         return statusReserva;
     }
 
 
-    public void setStatusReserva(String statusReserva) {
+    public void setStatusReserva(StatusReserva statusReserva) {
         this.statusReserva = statusReserva;
     }
 
 
-    public String getTipoViagem() {
+    public TipoViagem getTipoViagem() {
         return tipoViagem;
     }
 
 
-    public void setTipoViagem(String tipoViagem) {
+    public void setTipoViagem(TipoViagem tipoViagem) {
         this.tipoViagem = tipoViagem;
     }
 
@@ -118,12 +119,12 @@ public class Reserva {
     }
 
 
-    public String getTipoPassagem() {
+    public TipoPassagem getTipoPassagem() {
         return tipoPassagem;
     }
 
 
-    public void setTipoPassagem(String tipoPassagem) {
+    public void setTipoPassagem(TipoPassagem tipoPassagem) {
         this.tipoPassagem = tipoPassagem;
     }
 
