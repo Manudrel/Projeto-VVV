@@ -1,6 +1,6 @@
 package com.projectvvv.domain.model;
 
-public enum TipoViagem {
+public enum TipoModal {
     ONIBUS,
     AVIAO,
     NAVIO

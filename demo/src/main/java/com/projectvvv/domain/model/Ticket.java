@@ -1,7 +1,6 @@
 package com.projectvvv.domain.model;
 
 import jakarta.persistence.*;
-import com.projectvvv.domain.enums.TipoPassagem;
 
 @Entity
 @Table(name = "ticket")

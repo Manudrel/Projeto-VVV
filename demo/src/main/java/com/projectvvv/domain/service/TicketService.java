@@ -1,6 +1,6 @@
 package com.projectvvv.domain.service;
 
-import com.projectvvv.domain.enums.StatusPagamento;
+import com.projectvvv.domain.model.StatusPagamento;
 import com.projectvvv.domain.model.Pagamento;
 import com.projectvvv.domain.model.Reserva;
 import com.projectvvv.domain.model.Ticket;
@@ -51,10 +51,22 @@ public class TicketService {
         Ticket ticketExistente = ticketRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Ticket não encontrado para atualização."));
 
-        ticketExistente.setCodigoTicket(ticketAtualizado.getCodigoTicket());
-        ticketExistente.setTipoPassagem(ticketAtualizado.getTipoPassagem());
-        ticketExistente.setIdCliente(ticketAtualizado.getIdCliente());
-        ticketExistente.setIdReserva(ticketAtualizado.getIdReserva());
+        if (!ticketExistente.getId().equals(ticketAtualizado.getId())) {
+            throw new RuntimeException("ID do ticket atualizado não corresponde ao ID do ticket existente.");
+        }
+
+        if (ticketAtualizado.getCodigoTicket() != null ){
+            ticketExistente.setCodigoTicket(ticketAtualizado.getCodigoTicket());
+        }
+        if (ticketAtualizado.getTipoPassagem() != null) {
+            ticketExistente.setTipoPassagem(ticketAtualizado.getTipoPassagem());
+        }
+        if (ticketAtualizado.getIdCliente() != null) {
+            ticketExistente.setIdCliente(ticketAtualizado.getIdCliente());
+        }
+        if (ticketAtualizado.getIdReserva() != null) {
+            ticketExistente.setIdReserva(ticketAtualizado.getIdReserva());
+        }
 
         return ticketRepository.save(ticketExistente);
     }

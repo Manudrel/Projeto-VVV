@@ -1,8 +1,6 @@
 package com.projectvvv.domain.model;
 
 import jakarta.persistence.*;
-import com.projectvvv.domain.model.TipoModal;
-import com.projectvvv.domain.model.EstadoModal;
 
 @Entity
 @Table(name = "modal")
@@ -17,7 +15,7 @@ public class Modal {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 100)
-    private TipoModal tipo;
+    private TipoModal tipoModal;
 
     @Column(nullable = false, length = 4)
     private Integer ano;
@@ -41,11 +39,11 @@ public class Modal {
     public Modal() {
     }
 
-    public Modal(Long id, String codigoModal, TipoModal tipo, Integer ano, String modelo, Integer capacidade,
+    public Modal(Long id, String codigoModal, TipoModal tipoModal, Integer ano, String modelo, Integer capacidade,
                  EstadoModal estado, Long idTrasnportadora) {
         this.id = id;
         this.codigoModal = codigoModal;
-        this.tipo = tipo;
+        this.tipoModal = tipoModal;
         this.ano = ano;
         this.modelo = modelo;
         this.capacidade = capacidade;
@@ -70,12 +68,12 @@ public class Modal {
         this.codigoModal = codigoModal;
     }
 
-    public TipoModal getTipoEnum() {
-        return tipo;
+    public TipoModal getTipoModal() {
+        return tipoModal;
     }
 
-    public void setTipoEnum(TipoModal tipo) {
-        this.tipo = tipo;
+    public void setTipoModal(TipoModal tipoModal) {
+        this.tipoModal = tipoModal;
     }
 
     public Integer getAno() {
@@ -102,11 +100,11 @@ public class Modal {
         this.capacidade = capacidade;
     }
 
-    public EstadoModal getEstado() {
+    public EstadoModal getEstadoModal() {
         return estado;
     }
 
-    public void setEstado(EstadoModal estado) {
+    public void setEstadoModal(EstadoModal estado) {
         this.estado = estado;
     }
 

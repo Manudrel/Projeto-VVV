@@ -1,8 +1,7 @@
 package com.projectvvv.domain.model;
 
 import jakarta.persistence.*;
-import com.projectvvv.domain.model.TipoPagamento;
-import com.projectvvv.domain.model.StatusPagamento;
+
 
 @Entity
 @Table(name = "pagamento")
