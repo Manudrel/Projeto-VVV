@@ -1,10 +1,14 @@
 package com.projectvvv.domain.service;
 
+import com.projectvvv.domain.repository.HistoricoManutencaoRepository;
 import com.projectvvv.domain.repository.ModalRepository;
 import com.projectvvv.domain.model.Modal;
 import com.projectvvv.domain.model.EstadoModal;
+import com.projectvvv.domain.model.HistoricoManutencao;
 import com.projectvvv.domain.model.TipoModal;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 import java.util.UUID;
@@ -13,9 +17,14 @@ import java.util.UUID;
 public class ModalService {
 
     private final ModalRepository modalRepository;
+    private final HistoricoManutencaoRepository historicoRepository;
 
-    public ModalService(ModalRepository modalRepository) {
+    public ModalService(
+        ModalRepository modalRepository,
+        HistoricoManutencaoRepository historicoRepository) {
+
         this.modalRepository = modalRepository;
+        this.historicoRepository = historicoRepository;
     }
 
     public Modal buscarPorId(Long id) {
@@ -37,6 +46,45 @@ public class ModalService {
         modal.setAno(ano);
         modal.setModelo(modelo);
         modal.setCapacidade(capacidade);
+
+        return modalRepository.save(modal);
+    }
+
+    public Modal manutencao(Long id, String descricao) {
+
+        Modal modal = buscarPorId(id);
+
+        modal.setEstadoModal(EstadoModal.MANUTENCAO);
+
+        Modal salvo = modalRepository.save(modal);
+
+        HistoricoManutencao historico =
+                new HistoricoManutencao();
+
+        historico.setModalId(id);
+        historico.setDataRegistro(LocalDateTime.now());
+        historico.setDescricao(descricao);
+
+        historicoRepository.save(historico);
+
+        return salvo;
+    }
+
+
+    public Modal ativar(Long id) {
+
+        Modal modal = buscarPorId(id);
+
+        modal.setEstadoModal(EstadoModal.ATIVO);
+
+        return modalRepository.save(modal);
+    }
+
+    public Modal inativar(Long id) {
+
+        Modal modal = buscarPorId(id);
+
+        modal.setEstadoModal(EstadoModal.INATIVO);
 
         return modalRepository.save(modal);
     }

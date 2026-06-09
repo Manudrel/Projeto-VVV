@@ -31,7 +31,16 @@ public class ModalController {
     // POST /api/modais
     @PostMapping
     public ResponseEntity<Modal> criar(@RequestBody Modal modal) {
-        Modal modalCriado = modalService.criar(modal, modal.getIdTrasnportadora(), modal.getTipoModal(), modal.getAno(), modal.getModelo(), modal.getCapacidade());
+
+        Modal modalCriado = modalService.criar(
+                modal,
+                modal.getIdTrasnportadora(),
+                modal.getTipoModal(),
+                modal.getAno(),
+                modal.getModelo(),
+                modal.getCapacidade()
+        );
+
         return ResponseEntity.status(201).body(modalCriado);
     }
 
@@ -44,6 +53,37 @@ public class ModalController {
         Modal modalAtualizado = modalService.atualizar(id, modal);
 
         return ResponseEntity.ok(modalAtualizado);
+    }
+
+    // PATCH /api/modais/{id}/manutencao
+    @PatchMapping("/{id}/manutencao")
+    public ResponseEntity<Modal> colocarEmManutencao(
+            @PathVariable Long id,
+            @RequestParam String descricao) {
+
+        Modal modal = modalService.manutencao(id, descricao);
+
+        return ResponseEntity.ok(modal);
+    }
+
+    // PATCH /api/modais/{id}/ativar
+    @PatchMapping("/{id}/ativar")
+    public ResponseEntity<Modal> ativar(
+            @PathVariable Long id) {
+
+        Modal modal = modalService.ativar(id);
+
+        return ResponseEntity.ok(modal);
+    }
+
+    // PATCH /api/modais/{id}/inativar
+    @PatchMapping("/{id}/inativar")
+    public ResponseEntity<Modal> inativar(
+            @PathVariable Long id) {
+
+        Modal modal = modalService.inativar(id);
+
+        return ResponseEntity.ok(modal);
     }
 
     // DELETE /api/modais/{id}
