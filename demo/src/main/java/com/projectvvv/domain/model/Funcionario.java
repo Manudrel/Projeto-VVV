@@ -1,6 +1,7 @@
 package com.projectvvv.domain.model;
 
 import jakarta.persistence.*;
+import com.projectvvv.domain.model.Cargo;
 
 @Entity
 @Table(name = "funcionario")
@@ -22,9 +23,9 @@ public class Funcionario {
     @Column(length = 21)
     private String telefone;
 
-    // CRIAR O ENUM
+    @Enumerated(EnumType.STRING)
     @Column
-    private String cargo;
+    private Cargo cargo;
 
     @Column
     private Integer codigoPonto;
@@ -35,11 +36,12 @@ public class Funcionario {
     // Construtores
     public Funcionario() {}
 
-    public Funcionario(Long id, String nome, String cpf, String endereco, String telefone, Integer idade) {
+    public Funcionario(Long id, String nome, String cpf, String endereco, Cargo cargo, String telefone, Integer idade) {
         this.id = id;
         this.nome = nome;
         this.cpf = cpf;
         this.endereco = endereco;
+        this.cargo = cargo;
         this.telefone = telefone;
         this.idade = idade;
     }
@@ -110,4 +112,11 @@ public class Funcionario {
         this.idade = idade;
     }
 
+    public Cargo getCargoEnum() {
+        return cargo;
+    }
+
+    public void setCargoEnum(Cargo cargo) {
+        this.cargo = cargo;
+    }
 }    

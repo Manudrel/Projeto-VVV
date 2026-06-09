@@ -1,6 +1,8 @@
 package com.projectvvv.domain.model;
 
 import jakarta.persistence.*;
+import com.projectvvv.domain.model.TipoModal;
+import com.projectvvv.domain.model.EstadoModal;
 
 @Entity
 @Table(name = "modal")
@@ -13,9 +15,9 @@ public class Modal {
     @Column(nullable = false, length = 100)
     private String codigoModal;
 
-    // CRIAR ENUM
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 100)
-    private String tipo;
+    private TipoModal tipo;
 
     @Column(nullable = false, length = 4)
     private Integer ano;
@@ -26,9 +28,10 @@ public class Modal {
     @Column(nullable = false)
     private Integer capacidade;
 
-    //CRIAR ENUM
+
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 100)
-    private String estado;
+    private EstadoModal estado;
 
     @Column(nullable = false)
     private Long idTrasnportadora;
@@ -38,8 +41,8 @@ public class Modal {
     public Modal() {
     }
 
-    public Modal(Long id, String codigoModal, String tipo, Integer ano, String modelo, Integer capacidade,
-                 String estado, Long idTrasnportadora) {
+    public Modal(Long id, String codigoModal, TipoModal tipo, Integer ano, String modelo, Integer capacidade,
+                 EstadoModal estado, Long idTrasnportadora) {
         this.id = id;
         this.codigoModal = codigoModal;
         this.tipo = tipo;
@@ -67,11 +70,11 @@ public class Modal {
         this.codigoModal = codigoModal;
     }
 
-    public String getTipo() {
+    public TipoModal getTipoEnum() {
         return tipo;
     }
 
-    public void setTipo(String tipo) {
+    public void setTipoEnum(TipoModal tipo) {
         this.tipo = tipo;
     }
 
@@ -99,11 +102,11 @@ public class Modal {
         this.capacidade = capacidade;
     }
 
-    public String getEstado() {
+    public EstadoModal getEstado() {
         return estado;
     }
 
-    public void setEstado(String estado) {
+    public void setEstado(EstadoModal estado) {
         this.estado = estado;
     }
 

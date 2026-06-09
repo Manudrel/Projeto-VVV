@@ -1,6 +1,8 @@
 package com.projectvvv.domain.model;
 
 import jakarta.persistence.*;
+import com.projectvvv.domain.model.TipoPagamento;
+import com.projectvvv.domain.model.StatusPagamento;
 
 @Entity
 @Table(name = "pagamento")
@@ -10,16 +12,16 @@ public class Pagamento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Criar ENUM
     @Column(nullable = false)
-    private String tipoPagamentoString;
+    @Enumerated(EnumType.STRING)
+    private TipoPagamento tipoPagamento;
 
     @Column(nullable = false)
     private Integer parcelas;
 
-    // Criar ENUM
     @Column(nullable = false)
-    private String statusPagamento;
+    @Enumerated(EnumType.STRING)
+    private StatusPagamento statusPagamento;
 
     @Column(nullable = false, length = 100)
     private Float valorPago;
@@ -33,9 +35,9 @@ public class Pagamento {
     // Construtores
     private Pagamento() {}
 
-    public Pagamento(Long id, String tipoPagamentoString, Integer parcelas, String statusPagamento, Float valorPago, Long idTicket, Long idCliente) {
+    public Pagamento(Long id, TipoPagamento tipoPagamento, Integer parcelas, StatusPagamento statusPagamento, Float valorPago, Long idTicket, Long idCliente) {
         this.id = id;
-        this.tipoPagamentoString = tipoPagamentoString;
+        this.tipoPagamento = tipoPagamento;
         this.parcelas = parcelas;
         this.statusPagamento = statusPagamento;
         this.valorPago = valorPago;
@@ -52,12 +54,12 @@ public class Pagamento {
         this.id = id;
     }
 
-    public String getTipoPagamentoString() {
-        return tipoPagamentoString;
+    public TipoPagamento getTipoPagamento() {
+        return tipoPagamento;
     }
 
-    public void setTipoPagamentoString(String tipoPagamentoString) {
-        this.tipoPagamentoString = tipoPagamentoString;
+    public void setTipoPagamento(TipoPagamento tipoPagamento) {
+        this.tipoPagamento = tipoPagamento;
     }
 
     public Integer getParcelas() {
@@ -68,11 +70,11 @@ public class Pagamento {
         this.parcelas = parcelas;
     }
 
-    public String getStatusPagamento() {
+    public StatusPagamento getStatusPagamento() {
         return statusPagamento;
     }
 
-    public void setStatusPagamento(String statusPagamento) {
+    public void setStatusPagamento(StatusPagamento statusPagamento) {
         this.statusPagamento = statusPagamento;
     }
 

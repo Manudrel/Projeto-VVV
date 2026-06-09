@@ -14,7 +14,7 @@ public class Ticket {
     @Column(nullable = false, length = 100)
     private String codigoTicket;
 
-    // Criar Enum
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private TipoPassagem tipoPassagem;
 
