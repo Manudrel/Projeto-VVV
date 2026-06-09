@@ -4,6 +4,7 @@ import java.util.Date;
 
 import jakarta.persistence.*;
 
+
 @Entity
 @Table(name = "reserva")
 public class Reserva {
@@ -12,38 +13,37 @@ public class Reserva {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long codigoReserva;
 
-    @Column(nullable = false)
-    @Temporal(TemporalType.DATE)
+    @Column (nullable = false)
     private Date data;
-
-    @Column(nullable = false, length = 100)
+     
+    @Column (nullable = false, length = 100)
     private String horaPartida;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column (nullable = false)
     private StatusReserva statusReserva;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column (nullable = false)
     private TipoViagem tipoViagem;
 
-    @Column(nullable = false, length = 100)
+    @Column (nullable = false, length = 100)
     private String localizador;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column (nullable = false)
     private TipoPassagem tipoPassagem;
 
-    @Column(nullable = false)
+    @Column (nullable = false)
     private Long idRota;
 
-    @Column(nullable = false)
+    @Column (nullable = false)
     private Long idModal;
 
+    // Construtores
     public Reserva() {}
 
-    public Reserva(Long codigoReserva, Date data, String horaPartida, StatusReserva statusReserva,
-                   TipoViagem tipoViagem, String localizador, TipoPassagem tipoPassagem, Long idRota, Long idModal) {
+
+    // Getters e Setters
+    public Reserva(Long codigoReserva, Date data, String horaPartida, StatusReserva statusReserva, TipoViagem tipoViagem,
+            String localizador, TipoPassagem tipoPassagem, Long idRota, Long idModal) {
         this.codigoReserva = codigoReserva;
         this.data = data;
         this.horaPartida = horaPartida;
@@ -55,30 +55,94 @@ public class Reserva {
         this.idModal = idModal;
     }
 
-    public Long getCodigoReserva() { return codigoReserva; }
-    public void setCodigoReserva(Long codigoReserva) { this.codigoReserva = codigoReserva; }
 
-    public Date getData() { return data; }
-    public void setData(Date data) { this.data = data; }
+    public Long getCodigoReserva() {
+        return codigoReserva;
+    }
 
-    public String getHoraPartida() { return horaPartida; }
-    public void setHoraPartida(String horaPartida) { this.horaPartida = horaPartida; }
 
-    public StatusReserva getStatusReserva() { return statusReserva; }
-    public void setStatusReserva(StatusReserva statusReserva) { this.statusReserva = statusReserva; }
+    public void setCodigoReserva(Long codigoReserva) {
+        this.codigoReserva = codigoReserva;
+    }
 
-    public TipoViagem getTipoViagem() { return tipoViagem; }
-    public void setTipoViagem(TipoViagem tipoViagem) { this.tipoViagem = tipoViagem; }
 
-    public String getLocalizador() { return localizador; }
-    public void setLocalizador(String localizador) { this.localizador = localizador; }
+    public Date getData() {
+        return data;
+    }
 
-    public TipoPassagem getTipoPassagem() { return tipoPassagem; }
-    public void setTipoPassagem(TipoPassagem tipoPassagem) { this.tipoPassagem = tipoPassagem; }
 
-    public Long getIdRota() { return idRota; }
-    public void setIdRota(Long idRota) { this.idRota = idRota; }
+    public void setData(Date data) {
+        this.data = data;
+    }
 
-    public Long getIdModal() { return idModal; }
-    public void setIdModal(Long idModal) { this.idModal = idModal; }
+
+    public String getHoraPartida() {
+        return horaPartida;
+    }
+
+
+    public void setHoraPartida(String horaPartida) {
+        this.horaPartida = horaPartida;
+    }
+
+
+    public StatusReserva getStatusReserva() {
+        return statusReserva;
+    }
+
+
+    public void setStatusReserva(StatusReserva statusReserva) {
+        this.statusReserva = statusReserva;
+    }
+
+
+    public TipoViagem getTipoViagem() {
+        return tipoViagem;
+    }
+
+
+    public void setTipoViagem(TipoViagem tipoViagem) {
+        this.tipoViagem = tipoViagem;
+    }
+
+
+    public String getLocalizador() {
+        return localizador;
+    }
+
+
+    public void setLocalizador(String localizador) {
+        this.localizador = localizador;
+    }
+
+
+    public TipoPassagem getTipoPassagem() {
+        return tipoPassagem;
+    }
+
+
+    public void setTipoPassagem(TipoPassagem tipoPassagem) {
+        this.tipoPassagem = tipoPassagem;
+    }
+
+
+    public Long getIdRota() {
+        return idRota;
+    }
+
+
+    public void setIdRota(Long idRota) {
+        this.idRota = idRota;
+    }
+
+
+    public Long getIdModal() {
+        return idModal;
+    }
+
+
+    public void setIdModal(Long idModal) {
+        this.idModal = idModal;
+    }
+
 }
