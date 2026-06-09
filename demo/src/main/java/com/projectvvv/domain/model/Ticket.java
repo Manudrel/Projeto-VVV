@@ -1,7 +1,6 @@
 package com.projectvvv.domain.model;
 
 import jakarta.persistence.*;
-import com.projectvvv.domain.enums.TipoPassagem;
 
 @Entity
 @Table(name = "ticket")
@@ -27,7 +26,7 @@ public class Ticket {
     // Construtores
     public Ticket(){}
 
-    private Ticket(Long id, TipoPassagem tipoPassagem, String codigoTicket, Long idReserva, Long idCliente) {
+    public Ticket(Long id, TipoPassagem tipoPassagem, String codigoTicket, Long idReserva, Long idCliente) {
         this.id = id;
         this.tipoPassagem = tipoPassagem;
         this.codigoTicket = codigoTicket;

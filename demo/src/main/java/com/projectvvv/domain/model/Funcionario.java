@@ -1,7 +1,6 @@
 package com.projectvvv.domain.model;
 
 import jakarta.persistence.*;
-import com.projectvvv.domain.model.Cargo;
 
 @Entity
 @Table(name = "funcionario")
@@ -88,11 +87,11 @@ public class Funcionario {
         this.telefone = telefone;
     }
 
-    public String getCargo() {
+    public Cargo getCargo() {
         return cargo;
     }
 
-    public void setCargo(String cargo) {
+    public void setCargo(Cargo cargo) {
         this.cargo = cargo;
     }
 

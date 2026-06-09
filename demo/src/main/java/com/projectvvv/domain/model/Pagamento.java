@@ -1,8 +1,7 @@
 package com.projectvvv.domain.model;
 
 import jakarta.persistence.*;
-import com.projectvvv.domain.model.TipoPagamento;
-import com.projectvvv.domain.model.StatusPagamento;
+
 
 @Entity
 @Table(name = "pagamento")
@@ -33,7 +32,7 @@ public class Pagamento {
     private Long idCliente;
 
     // Construtores
-    private Pagamento() {}
+    public Pagamento() {}
 
     public Pagamento(Long id, TipoPagamento tipoPagamento, Integer parcelas, StatusPagamento statusPagamento, Float valorPago, Long idTicket, Long idCliente) {
         this.id = id;

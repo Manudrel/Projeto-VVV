@@ -1,6 +1,5 @@
 package com.projectvvv.domain.service;
 
-import com.projectvvv.domain.enums.StatusPagamento;
 import com.projectvvv.domain.model.Pagamento;
 import com.projectvvv.domain.model.Reserva;
 import com.projectvvv.domain.model.Ticket;

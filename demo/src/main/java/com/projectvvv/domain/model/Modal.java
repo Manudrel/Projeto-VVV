@@ -1,8 +1,6 @@
 package com.projectvvv.domain.model;
 
 import jakarta.persistence.*;
-import com.projectvvv.domain.model.TipoModal;
-import com.projectvvv.domain.model.EstadoModal;
 
 @Entity
 @Table(name = "modal")

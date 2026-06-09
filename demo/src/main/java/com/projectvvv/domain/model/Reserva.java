@@ -23,7 +23,7 @@ public class Reserva {
     private StatusReserva statusReserva;
 
     @Column (nullable = false)
-    private TipoViagem tipoViagem;
+    private TipoModal tipoViagem;
 
     @Column (nullable = false, length = 100)
     private String localizador;
@@ -42,7 +42,7 @@ public class Reserva {
 
 
     // Getters e Setters
-    public Reserva(Long codigoReserva, Date data, String horaPartida, StatusReserva statusReserva, TipoViagem tipoViagem,
+    public Reserva(Long codigoReserva, Date data, String horaPartida, StatusReserva statusReserva, TipoModal tipoViagem,
             String localizador, TipoPassagem tipoPassagem, Long idRota, Long idModal) {
         this.codigoReserva = codigoReserva;
         this.data = data;
@@ -96,12 +96,12 @@ public class Reserva {
     }
 
 
-    public TipoViagem getTipoViagem() {
+    public TipoModal getTipoViagem() {
         return tipoViagem;
     }
 
 
-    public void setTipoViagem(TipoViagem tipoViagem) {
+    public void setTipoViagem(TipoModal tipoViagem) {
         this.tipoViagem = tipoViagem;
     }
 
