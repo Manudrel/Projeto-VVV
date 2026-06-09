@@ -4,9 +4,6 @@ import java.util.Date;
 
 import jakarta.persistence.*;
 
-import com.projectvvv.domain.enums.TipoPassagem;
-import com.projectvvv.domain.enums.StatusReserva;
-import com.projectvvv.domain.enums.TipoViagem;
 
 @Entity
 @Table(name = "reserva")
