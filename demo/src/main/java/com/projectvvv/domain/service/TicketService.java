@@ -26,28 +26,16 @@ public class TicketService {
     }
 
     public Ticket criar(Reserva reserva, Pagamento pagamento, Cliente cliente) {
-
-        if (!StatusPagamento.FINALIZADO.name().equals(pagamento.getStatusPagamento())) {
-            throw new RuntimeException(
-                "Não é possível emitir ticket para pagamento não aprovado."
-            );
-        }
-
         Ticket ticket = new Ticket();
 
         ticket.setCodigoTicket(
             "TK-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase()
         );
-
-
         ticket.setTipoPassagem(
                 reserva.getTipoPassagem()
         );
-
         ticket.setIdCliente(cliente.getId());
-
         ticket.setIdReserva(reserva.getCodigoReserva());
-
 
         return ticketRepository.save(ticket);
     }
