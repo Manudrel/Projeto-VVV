@@ -1,9 +1,11 @@
-package com.projectvvv.demo.models;
+package com.projectvvv.demo.model;
 
 import org.junit.jupiter.api.Test;
 
+import com.projectvvv.domain.model.Cliente;
 import com.projectvvv.domain.model.Pagamento;
 import com.projectvvv.domain.model.StatusPagamento;
+import com.projectvvv.domain.model.Ticket;
 import com.projectvvv.domain.model.TipoPagamento;
 
 public class PagamentoTest {
@@ -15,8 +17,8 @@ public class PagamentoTest {
         int parcelas = 3;
         StatusPagamento statusPagamento = StatusPagamento.FINALIZADO;
         float valorPago = 150.75f;
-        long idTicket = 2L;
-        long idCliente = 3L;
+        Ticket idTicket = new Ticket();
+        Cliente idCliente = new Cliente();
 
         Pagamento pagamento = new Pagamento(id, tipoPagamento, parcelas, statusPagamento, valorPago, idTicket, idCliente);
 
@@ -25,8 +27,8 @@ public class PagamentoTest {
         assert pagamento.getParcelas().equals(parcelas);
         assert pagamento.getStatusPagamento() == statusPagamento;
         assert pagamento.getValorPago().equals(valorPago);
-        assert pagamento.getIdTicket().equals(idTicket);
-        assert pagamento.getIdCliente().equals(idCliente);
+        assert pagamento.getTicket().equals(idTicket);
+        assert pagamento.getCliente().equals(idCliente);
    
     }
 }

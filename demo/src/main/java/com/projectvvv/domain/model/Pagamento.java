@@ -33,17 +33,17 @@ public class Pagamento {
     @JoinColumn(name = "id_ticket")
     private Ticket ticket;
 
-    // Construtores
-    public Pagamento() {}
+    public Pagamento() {
+    }
 
-    public Pagamento(Long id, TipoPagamento tipoPagamento, Integer parcelas, StatusPagamento statusPagamento, Float valorPago, Ticket ticket, Cliente cliente) {
+    public Pagamento(Long id, TipoPagamento tipoPagamento, Integer parcelas, StatusPagamento statusPagamento, Float valorPago, Ticket idTicket, Cliente idCliente) {
         this.id = id;
         this.tipoPagamento = tipoPagamento;
         this.parcelas = parcelas;
         this.statusPagamento = statusPagamento;
         this.valorPago = valorPago;
-        this.ticket = ticket;
-        this.cliente = cliente;
+        this.ticket = idTicket;
+        this.cliente = idCliente;
     }
 
     // Getters e Setters

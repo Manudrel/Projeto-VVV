@@ -1,4 +1,4 @@
-package com.projectvvv.demo.models;
+package com.projectvvv.demo.model;
 
 import java.util.Date;
 
