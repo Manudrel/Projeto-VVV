@@ -30,7 +30,7 @@ public class ReservaTest {
         assert reserva.getData().equals(data);
         assert reserva.getHoraPartida().equals(horaPartida);
         assert reserva.getStatusReserva() == statusReserva;
-        assert reserva.getTipoViagem() == tipoViagem;
+        assert reserva.getTipoModal() == tipoViagem;
         assert reserva.getLocalizador().equals(localizador);
         assert reserva.getTipoPassagem() == tipoPassagem;
         assert reserva.getIdRota().equals(idRota);

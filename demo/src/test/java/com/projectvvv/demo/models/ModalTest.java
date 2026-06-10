@@ -23,11 +23,11 @@ public class ModalTest {
 
         assert modal.getId().equals(id);
         assert modal.getCodigoModal().equals(codigoModal);
-        assert modal.getTipoEnum() == tipo;
+        assert modal.getTipoModal() == tipo;
         assert modal.getAno().equals(ano);
         assert modal.getModelo().equals(modelo);
         assert modal.getCapacidade().equals(capacidade);
-        assert modal.getEstado() == estado;
+        assert modal.getEstadoModal() == estado;
         assert modal.getIdTrasnportadora().equals(idTransportadora);
    
     }
