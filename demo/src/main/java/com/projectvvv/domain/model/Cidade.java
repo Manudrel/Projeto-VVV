@@ -21,9 +21,9 @@ public class Cidade {
 
 
     // Construtores
-    private Cidade(){}
+    public Cidade(){}
 
-    private Cidade(Long id, String estado, String cidade, String pais) {
+    public Cidade(Long id, String estado, String cidade, String pais) {
         this.id = id;
         this.estado = estado;
         this.cidade = cidade;
