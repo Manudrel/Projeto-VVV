@@ -22,26 +22,28 @@ public class Pagamento {
     @Enumerated(EnumType.STRING)
     private StatusPagamento statusPagamento;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false)
     private Float valorPago;
 
-    @Column(nullable = false, length = 100)
-    private Long idTicket;
+    @ManyToOne
+    @JoinColumn(name = "id_cliente")
+    private Cliente cliente;
 
-    @Column(nullable = false, length = 100)
-    private Long idCliente;
+    @OneToOne
+    @JoinColumn(name = "id_ticket")
+    private Ticket ticket;
 
     // Construtores
     public Pagamento() {}
 
-    public Pagamento(Long id, TipoPagamento tipoPagamento, Integer parcelas, StatusPagamento statusPagamento, Float valorPago, Long idTicket, Long idCliente) {
+    public Pagamento(Long id, TipoPagamento tipoPagamento, Integer parcelas, StatusPagamento statusPagamento, Float valorPago, Ticket ticket, Cliente cliente) {
         this.id = id;
         this.tipoPagamento = tipoPagamento;
         this.parcelas = parcelas;
         this.statusPagamento = statusPagamento;
         this.valorPago = valorPago;
-        this.idTicket = idTicket;
-        this.idCliente = idCliente;
+        this.ticket = ticket;
+        this.cliente = cliente;
     }
 
     // Getters e Setters
@@ -85,19 +87,19 @@ public class Pagamento {
         this.valorPago = valorPago;
     }
 
-    public Long getIdTicket() {
-        return idTicket;
+    public Ticket getTicket() {
+        return ticket;
     }
 
-    public void setIdTicket(Long idTicket) {
-        this.idTicket = idTicket;
+    public void setTicket(Ticket ticket) {
+        this.ticket = ticket;
     }
 
-    public Long getIdCliente() {
-        return idCliente;
+    public Cliente getCliente() {
+        return cliente;
     }
 
-    public void setIdCliente(Long idCliente) {
-        this.idCliente = idCliente;
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
 }

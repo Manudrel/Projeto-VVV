@@ -19,16 +19,19 @@ public class Reserva {
     @Column (nullable = false, length = 100)
     private String horaPartida;
 
-    @Column (nullable = false)
-    private StatusReserva statusReserva;
-
-    @Column (nullable = false)
-    private TipoModal tipoModal;
-
     @Column (nullable = false, length = 100)
     private String localizador;
 
-    @Column (nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private StatusReserva statusReserva;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TipoModal tipoModal;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private TipoPassagem tipoPassagem;
 
     @Column (nullable = false)
