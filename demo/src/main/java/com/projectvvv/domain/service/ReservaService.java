@@ -31,6 +31,8 @@ public class ReservaService {
     }
 
     public Reserva criar(Reserva reserva) {
+        reserva.setStatusReserva(StatusReserva.PENDENTE);
+        
         return reservaRepository.save(reserva);
     }
 

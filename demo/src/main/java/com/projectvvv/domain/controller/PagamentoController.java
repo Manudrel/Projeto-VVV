@@ -6,6 +6,8 @@ import com.projectvvv.domain.service.PagamentoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/pagamentos")
 public class PagamentoController {
@@ -18,30 +20,55 @@ public class PagamentoController {
         this.pagamentoService = pagamentoService;
     }
 
-    @PostMapping
+    @PostMapping("/reserva/{reservaId}/cliente/{clienteId}")
     public ResponseEntity<Pagamento> realizarPagamento(
 
-            @RequestBody Pagamento pagamento,
+            @PathVariable Long reservaId,
 
-            @RequestParam Float valorReserva) {
+            @PathVariable Long clienteId,
+
+            @RequestBody Pagamento pagamento) {
 
         Pagamento pagamentoRealizado =
                 pagamentoService.realizarPagamento(
-                        pagamento,
-                        valorReserva);
+                        reservaId,
+                        clienteId,
+                        pagamento);
 
         return ResponseEntity
                 .status(201)
                 .body(pagamentoRealizado);
     }
 
-    @PostMapping("/{id}/cancelar")
-    public ResponseEntity<Pagamento> cancelarPagamento(
+    @GetMapping("/{id}")
+    public ResponseEntity<Pagamento> buscarPorId(
             @PathVariable Long id) {
 
-        Pagamento pagamentoCancelado =
-                pagamentoService.cancelarPagamento(id);
+        return ResponseEntity.ok(
+                pagamentoService.buscarPorId(id));
+    }
 
-        return ResponseEntity.ok(pagamentoCancelado);
+    @GetMapping
+    public ResponseEntity<List<Pagamento>> listarTodos() {
+
+        return ResponseEntity.ok(
+                pagamentoService.listarTodos());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletar(
+            @PathVariable Long id) {
+
+        pagamentoService.deletar(id);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    public ResponseEntity<Void> cancelarPagamento(
+            @PathVariable Long id) {
+
+        pagamentoService.cancelarPagamento(id);
+
+        return ResponseEntity.noContent().build();
     }
 }

@@ -5,6 +5,7 @@ import com.projectvvv.domain.repository.PagamentoRepository;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 
 @Service
 public class PagamentoService {
@@ -47,10 +48,12 @@ public class PagamentoService {
 
         Float valorFinal = pagamento.getValorPago();
 
-        /*
-         * REGRA DE JUROS
-         */
-
+        // Regra do Juros
+        
+        if (pagamento.getStatusPagamento() == StatusPagamento.FINALIZADO){
+            throw new RuntimeException("Pagamento já finalizado. Não é possível realizar o pagamento novamente.");
+        }
+        
         if (pagamento.getTipoPagamento()
                 == TipoPagamento.CARTAO_CREDITO
                 &&
@@ -61,19 +64,18 @@ public class PagamentoService {
 
         pagamento.setValorPago(valorFinal);
 
-        /*
-         * APROVA PAGAMENTO
-         */
+        // Aprova o pagamento
 
         pagamento.setStatusPagamento(
                 StatusPagamento.FINALIZADO);
 
+        pagamento.setCliente(cliente);
+        
+
         Pagamento pagamentoSalvo =
                 pagamentoRepository.save(pagamento);
 
-        /*
-         * CONFIRMA RESERVA
-         */
+        // Confirma a reserva
 
         reserva.setStatusReserva(
                 StatusReserva.CONCLUIDO);
@@ -82,9 +84,7 @@ public class PagamentoService {
                 reserva.getCodigoReserva(),
                 reserva);
 
-        /*
-         * ATUALIZA INVENTÁRIO DO MODAL
-         */
+        // Atualiza a Capacidade do Modal
 
         Modal modal =
                 modalService.buscarPorId(
@@ -97,9 +97,8 @@ public class PagamentoService {
                 modal.getId(),
                 modal);
 
-        /*
-         * GERA TICKET
-         */
+    
+        // GERAR TICKET
 
         ticketService.criar(
                 reserva,
@@ -119,5 +118,21 @@ public class PagamentoService {
 
         pagamento.setStatusPagamento(StatusPagamento.CANCELADO);
         return pagamentoRepository.save(pagamento);
+    }
+
+    public Pagamento buscarPorId(Long id) {
+        return pagamentoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Pagamento não encontrado."));
+    }
+
+    public List<Pagamento> listarTodos() {
+        return pagamentoRepository.findAll();
+    }
+
+    public void deletar(Long id) {
+        if (!pagamentoRepository.existsById(id)) {
+            throw new RuntimeException("Pagamento não encontrado para exclusão.");
+        }
+        pagamentoRepository.deleteById(id);
     }
 }
