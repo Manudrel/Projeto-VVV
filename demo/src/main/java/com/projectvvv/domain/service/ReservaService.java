@@ -49,8 +49,8 @@ public class ReservaService {
             reserva.setStatusReserva(reservaAtualizada.getStatusReserva());
         }
 
-        if (reservaAtualizada.getTipoViagem() != null) {
-            reserva.setTipoViagem(reservaAtualizada.getTipoViagem());
+        if (reservaAtualizada.getTipoModal() != null) {
+            reserva.setTipoModal(reservaAtualizada.getTipoModal());
         }
 
         if (reservaAtualizada.getLocalizador() != null) {
