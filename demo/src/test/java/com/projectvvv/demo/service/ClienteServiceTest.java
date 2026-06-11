@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -99,12 +100,12 @@ class ClienteServiceTest {
         Cliente clienteAntigo = new Cliente();
         clienteAntigo.setNome("Felipe Antigo");
         clienteAntigo.setCpf("123.456.789-00");
-        clienteAntigo.setIdade(25);
+        clienteAntigo.setDataNascimento(LocalDate.of(1990, 1, 1));
 
         Cliente dadosNovos = new Cliente();
         dadosNovos.setNome("Felipe Novo");
         dadosNovos.setCpf(null);         
-        dadosNovos.setIdade(null);
+        dadosNovos.setDataNascimento(null);
 
         Mockito.when(repository.findById(id)).thenReturn(Optional.of(clienteAntigo));
         Mockito.when(repository.save(any(Cliente.class))).thenAnswer(invocation -> invocation.getArgument(0));
@@ -113,6 +114,6 @@ class ClienteServiceTest {
 
         assertEquals("Felipe Novo", resultado.getNome());    
         assertEquals("123.456.789-00", resultado.getCpf());  
-        assertEquals(25, resultado.getIdade());              
+        assertEquals(LocalDate.of(1990, 1, 1), resultado.getDataNascimento());              
     }
 }

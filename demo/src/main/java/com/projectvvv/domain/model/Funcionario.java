@@ -1,5 +1,7 @@
 package com.projectvvv.domain.model;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -30,19 +32,19 @@ public class Funcionario {
     private Integer codigoPonto;
 
     @Column
-    private Integer idade;
+    private LocalDate dataNascimento;
 
     // Construtores
     public Funcionario() {}
 
-    public Funcionario(Long id, String nome, String cpf, String endereco, Cargo cargo, String telefone, Integer idade) {
+    public Funcionario(Long id, String nome, String cpf, String endereco, Cargo cargo, String telefone, LocalDate dataNascimento) {
         this.id = id;
         this.nome = nome;
         this.cpf = cpf;
         this.endereco = endereco;
         this.cargo = cargo;
         this.telefone = telefone;
-        this.idade = idade;
+        this.dataNascimento = dataNascimento;
     }
 
     // Getters e Setters
@@ -103,12 +105,12 @@ public class Funcionario {
         this.codigoPonto = codigoPonto;
     }
 
-    public Integer getIdade() {
-        return idade;
+    public LocalDate getDataNascimento() {
+        return dataNascimento;
     }
 
-    public void setIdade(Integer idade) {
-        this.idade = idade;
+    public void setDataNascimento(LocalDate dataNascimento) {
+        this.dataNascimento = dataNascimento;
     }
 
     public Cargo getCargoEnum() {

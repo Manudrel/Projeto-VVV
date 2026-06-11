@@ -60,9 +60,9 @@ public class ClienteService {
                     clienteAtualizado.getTelefone());
         }
 
-        if (clienteAtualizado.getIdade() != null) {
-            clienteExistente.setIdade(
-                    clienteAtualizado.getIdade());
+        if (clienteAtualizado.getDataNascimento() != null) {
+            clienteExistente.setDataNascimento(
+                    clienteAtualizado.getDataNascimento());
         }
 
         return repository.save(

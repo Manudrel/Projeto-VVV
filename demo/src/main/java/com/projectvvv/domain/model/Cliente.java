@@ -1,5 +1,7 @@
 package com.projectvvv.domain.model;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -23,18 +25,18 @@ public class Cliente {
     private String telefone;
 
     @Column
-    private Integer idade;
+    private LocalDate dataNascimento;
 
     // Construtores
     public Cliente() {}
 
-    public Cliente(Long id, String nome, String cpf, String endereco, String telefone, Integer idade) {
+    public Cliente(Long id, String nome, String cpf, String endereco, String telefone, LocalDate dataNascimento) {
         this.id = id;
         this.nome = nome;
         this.cpf = cpf;
         this.endereco = endereco;
         this.telefone = telefone;
-        this.idade = idade;
+        this.dataNascimento = dataNascimento;
     }
 
     // Getters e Setters
@@ -78,11 +80,11 @@ public class Cliente {
         this.telefone = telefone;
     }
 
-    public Integer getIdade() {
-        return idade;
+    public LocalDate getDataNascimento() {
+        return dataNascimento;
     }
 
-    public void setIdade(Integer idade) {
-        this.idade = idade;
+    public void setDataNascimento(LocalDate dataNascimento) {
+        this.dataNascimento = dataNascimento;
     }
 }

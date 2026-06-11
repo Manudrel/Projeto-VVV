@@ -1,6 +1,7 @@
 package com.projectvvv.demo.model;
 
 import org.junit.jupiter.api.Test;
+import java.time.LocalDate;
 
 import com.projectvvv.domain.model.Cargo;
 import com.projectvvv.domain.model.Funcionario;
@@ -15,9 +16,9 @@ public class FuncionarioTest {
         String endereco = "Rua Miguel Ângelo, 96";
         Cargo cargo = Cargo.GERENTE;
         String telefone = "21987654321";
-        int idade = 23;
+        LocalDate dataNascimento = LocalDate.of(1990, 1, 1);
 
-        Funcionario funcionarioObj = new Funcionario(id, nome, cpf, endereco, cargo, telefone, idade);
+        Funcionario funcionarioObj = new Funcionario(id, nome, cpf, endereco, cargo, telefone, dataNascimento);
 
         assert funcionarioObj.getId() == id;
         assert funcionarioObj.getNome().equals(nome);
@@ -25,6 +26,6 @@ public class FuncionarioTest {
         assert funcionarioObj.getEndereco().equals(endereco);
         assert funcionarioObj.getCargo() == cargo;
         assert funcionarioObj.getTelefone().equals(telefone);
-        assert funcionarioObj.getIdade() == idade;
+        assert funcionarioObj.getDataNascimento().equals(dataNascimento);
     }
 }
