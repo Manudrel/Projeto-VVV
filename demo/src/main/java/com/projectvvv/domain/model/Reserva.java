@@ -28,6 +28,10 @@ public class Reserva {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    private TipoViagem tipoViagem;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private TipoModal tipoModal;
 
     @Enumerated(EnumType.STRING)
@@ -45,12 +49,13 @@ public class Reserva {
 
 
     // Getters e Setters
-    public Reserva(Long codigoReserva, Date data, String horaPartida, StatusReserva statusReserva, TipoModal tipoModal,
+    public Reserva(Long codigoReserva, Date data, String horaPartida, StatusReserva statusReserva, TipoViagem tipoViagem ,TipoModal tipoModal,
             String localizador, TipoPassagem tipoPassagem, Long idRota, Long idModal) {
         this.codigoReserva = codigoReserva;
         this.data = data;
         this.horaPartida = horaPartida;
         this.statusReserva = statusReserva;
+        this.tipoViagem = tipoViagem;
         this.tipoModal = tipoModal;
         this.localizador = localizador;
         this.tipoPassagem = tipoPassagem;
@@ -108,6 +113,14 @@ public class Reserva {
         this.tipoModal = tipoModal;
     }
 
+    public TipoViagem getTipoViagem() {
+        return tipoViagem;
+    }
+
+    public void setTipoViagem(TipoViagem tipoViagem) {
+        this.tipoViagem = tipoViagem;
+    }
+
 
     public String getLocalizador() {
         return localizador;
@@ -147,5 +160,6 @@ public class Reserva {
     public void setIdModal(Long idModal) {
         this.idModal = idModal;
     }
+
 
 }

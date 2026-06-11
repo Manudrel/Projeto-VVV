@@ -10,43 +10,46 @@ public class Rota {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column (nullable = false, length = 100)
-    private Integer origem;
-    
-    @Column (nullable = false, length = 100)
-    private Integer destino;
+    @ManyToOne
+    @JoinColumn(name = "origem", nullable = false)
+    private Cidade origem;
 
-     
+    @ManyToOne
+    @JoinColumn(name = "destino", nullable = false)
+    private Cidade destino;
+
     // Construtores
-    public Rota() {}
+    public Rota() {
+    }
 
-    public Rota(Long id, Integer origem, Integer destino) {
+    public Rota(Long id, Cidade origem, Cidade destino) {
         this.id = id;
         this.origem = origem;
         this.destino = destino;
     }
 
     // Getters e Setters
-    public Long getId() { 
-        return id; 
+    public Long getId() {
+        return id;
     }
 
-    public void setId(Long id) { 
-        this.id = id; 
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public Integer getOrigem() { 
-        return origem; 
-    }
-    public void setOrigem(Integer origem) { 
-        this.origem = origem; 
+    public Cidade getOrigem() {
+        return origem;
     }
 
-    public Integer getDestino() { 
-        return destino; 
+    public void setOrigem(Cidade origem) {
+        this.origem = origem;
     }
 
-    public void setDestino(Integer destino) { 
-        this.destino = destino; 
+    public Cidade getDestino() {
+        return destino;
+    }
+
+    public void setDestino(Cidade destino) {
+        this.destino = destino;
     }
 }
