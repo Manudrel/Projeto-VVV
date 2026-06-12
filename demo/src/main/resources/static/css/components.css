@@ -1,0 +1,50 @@
+.card {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.btn-primary {
+    width: 100%;
+    border: none;
+    border-radius: 8px;
+    padding: 14px;
+
+    background: var(--primary);
+    color: var(--white);
+
+    font-size: 16px;
+    font-weight: 600;
+
+    cursor: pointer;
+    transition: background 0.25s, transform 0.15s, box-shadow 0.25s;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+    box-shadow: 0 6px 20px rgba(255, 107, 0, 0.35);
+    transform: translateY(-2px);
+}
+
+.btn-primary:active {
+    transform: scale(0.97);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-control {
+    padding: 12px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-size: 15px;
+    transition: border-color 0.2s;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary);
+}

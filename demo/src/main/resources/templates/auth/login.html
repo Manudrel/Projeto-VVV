@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - ProjectVVV</title>
+
+    <link rel="stylesheet" href="/css/variables.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/auth.css">
+</head>
+
+<body>
+
+    <div class="auth-container">
+
+        <div class="auth-card card">
+
+            <div class="auth-header">
+                <h1>ProjectVVV</h1>
+                <p>Acesse sua conta</p>
+            </div>
+
+            <form class="auth-form" th:action="@{/auth/login}" method="post">
+
+                <div class="form-group">
+                    <label for="cpf">CPF</label>
+                    <input class="form-control" type="cpf" id="cpf" name="cpf" placeholder="Digite seu cpf" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="senha">Senha</label>
+                    <input class="form-control" type="password" id="senha" name="senha" placeholder="Digite sua senha"
+                        required>
+                </div>
+
+                <button type="submit" class="btn-primary">
+                    Entrar
+                </button>
+
+            </form>
+
+            <div class="auth-footer">
+                <p>
+                    Não possui conta?
+                    <a th:href="@{/auth/cadastro}">
+                        Cadastre-se
+                    </a>
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

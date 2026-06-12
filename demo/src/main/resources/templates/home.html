@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-br"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+
+    <title>VVV - Vai & Volta Viagens</title>
+
+    <link rel="stylesheet" th:href="@{/css/root.css}">
+    <link rel="stylesheet" th:href="@{/css/components.css}">
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+</head>
+
+<body>
+
+<div class="home-container">
+
+    <section class="hero">
+
+        <h1>Vai & Volta Viagens</h1>
+
+        <p>
+            Sistema de gerenciamento de reservas, emissão de tickets
+            e controle operacional de viagens para ônibus, aviões,
+            navios e trens.
+        </p>
+
+        <div class="hero-buttons">
+            <a th:href="@{/auth/login}">
+                <button class="btn-primary">
+                    Entrar
+                </button>
+            </a>
+        </div>
+
+    </section>
+
+    <section class="features">
+
+        <div class="features-grid">
+
+            <div class="card feature-card">
+                <h3>🎫 Reservas</h3>
+                <p>
+                    Criação e gerenciamento de reservas de viagens.
+                </p>
+            </div>
+
+            <div class="card feature-card">
+                <h3>💳 Pagamentos</h3>
+                <p>
+                    Controle de pagamentos e parcelamentos.
+                </p>
+            </div>
+
+            <div class="card feature-card">
+                <h3>🧾 Tickets</h3>
+                <p>
+                    Emissão automática de bilhetes após confirmação.
+                </p>
+            </div>
+
+            <div class="card feature-card">
+                <h3>🛠️ Modais</h3>
+                <p>
+                    Gestão de manutenção e disponibilidade dos veículos.
+                </p>
+            </div>
+
+        </div>
+
+    </section>
+
+    <section class="modals">
+
+        <h2 style="text-align:center; margin-bottom:30px;">
+            Modais Disponíveis
+        </h2>
+
+        <div class="modals-grid">
+
+            <div class="card modal-card">
+                <div class="modal-icon">✈️</div>
+                <strong>Aviões</strong>
+            </div>
+
+            <div class="card modal-card">
+                <div class="modal-icon">🚌</div>
+                <strong>Ônibus</strong>
+            </div>
+
+            <div class="card modal-card">
+                <div class="modal-icon">🚆</div>
+                <strong>Trens</strong>
+            </div>
+
+            <div class="card modal-card">
+                <div class="modal-icon">🚢</div>
+                <strong>Navios</strong>
+            </div>
+
+        </div>
+
+    </section>
+
+    <footer class="footer">
+        Sistema VVV • Vai & Volta Viagens
+    </footer>
+
+</div>
+
+</body>
+</html>
