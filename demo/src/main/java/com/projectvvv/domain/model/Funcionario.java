@@ -3,6 +3,7 @@ package com.projectvvv.domain.model;
 import java.time.LocalDate;
 
 import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "funcionario")
@@ -28,8 +29,12 @@ public class Funcionario {
     @Column
     private Cargo cargo;
 
-    @Column
-    private Integer codigoPonto;
+    @OneToMany(
+        mappedBy = "funcionario",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+    )
+    private List<PontosDeVendaDoFuncionario> pontosDeVenda;
 
     @Column
     private LocalDate dataNascimento;
@@ -97,12 +102,12 @@ public class Funcionario {
         this.cargo = cargo;
     }
 
-    public Integer getCodigoPonto() {
-        return codigoPonto;
+    public List<PontosDeVendaDoFuncionario> getPontosDeVenda() {
+        return pontosDeVenda;
     }
 
-    public void setCodigoPonto(Integer codigoPonto) {
-        this.codigoPonto = codigoPonto;
+    public void setPontosDeVenda(List<PontosDeVendaDoFuncionario> pontosDeVenda) {
+        this.pontosDeVenda = pontosDeVenda;
     }
 
     public LocalDate getDataNascimento() {
