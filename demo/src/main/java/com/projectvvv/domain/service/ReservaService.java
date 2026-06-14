@@ -5,9 +5,16 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.projectvvv.domain.dto.ReservaDTO;
+import com.projectvvv.domain.dto.RotaDaReservaDTO;
 import com.projectvvv.domain.model.Reserva;
+import com.projectvvv.domain.model.Rota;
+import com.projectvvv.domain.model.RotaDaReserva;
 import com.projectvvv.domain.model.StatusReserva;
+import com.projectvvv.domain.repository.ModalRepository;
 import com.projectvvv.domain.repository.ReservaRepository;
+import com.projectvvv.domain.repository.RotaDaReservaRepository;
+import com.projectvvv.domain.repository.RotaRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -17,67 +24,131 @@ public class ReservaService {
     @Autowired
     private ReservaRepository reservaRepository;
 
+    @Autowired
+    private ModalRepository modalRepository;
+
+    @Autowired
+    private RotaRepository rotaRepository;
+
+    @Autowired
+    private RotaDaReservaRepository rotaDaReservaRepository;
+
     public List<Reserva> listarTodas() {
         return reservaRepository.findAll();
     }
 
     public Reserva buscarPorId(Long id) {
         return reservaRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Reserva não encontrada com ID: " + id));
+                .orElseThrow(() ->
+                        new EntityNotFoundException(
+                                "Reserva não encontrada com ID: " + id));
     }
 
     public List<Reserva> buscarPorStatus(StatusReserva status) {
         return reservaRepository.findByStatusReserva(status);
     }
 
-    public Reserva criar(Reserva reserva) {
+    public Reserva criar(ReservaDTO dto) {
+
+        if (!modalRepository.existsById(dto.getIdModal())) {
+            throw new EntityNotFoundException(
+                    "Modal não encontrado com ID: "
+                            + dto.getIdModal());
+        }
+
+        Reserva reserva = new Reserva();
+
+        reserva.setData(dto.getData());
+        reserva.setHoraPartida(dto.getHoraPartida());
+        reserva.setLocalizador(dto.getLocalizador());
+
+        reserva.setTipoViagem(dto.getTipoViagem());
+        reserva.setTipoModal(dto.getTipoModal());
+        reserva.setTipoPassagem(dto.getTipoPassagem());
+
+        reserva.setIdModal(dto.getIdModal());
+
         reserva.setStatusReserva(StatusReserva.PENDENTE);
-        
-        return reservaRepository.save(reserva);
+
+        Reserva reservaSalva = reservaRepository.save(reserva);
+
+        if (dto.getRotas() != null && !dto.getRotas().isEmpty()) {
+
+            for (RotaDaReservaDTO rotaDTO : dto.getRotas()) {
+
+                Rota rota = rotaRepository.findById(
+                                rotaDTO.getRotaId())
+                        .orElseThrow(() ->
+                                new EntityNotFoundException(
+                                        "Rota não encontrada com ID: "
+                                                + rotaDTO.getRotaId()));
+
+                RotaDaReserva trecho = new RotaDaReserva();
+
+                trecho.setReserva(reservaSalva);
+                trecho.setRota(rota);
+                trecho.setOrdem(rotaDTO.getOrdem());
+
+                rotaDaReservaRepository.save(trecho);
+            }
+        }
+
+        return reservaSalva;
     }
 
-    public Reserva atualizar(Long id, Reserva reservaAtualizada) {
+    public Reserva atualizar(Long id, ReservaDTO dto) {
+
         Reserva reserva = buscarPorId(id);
 
-        if (reservaAtualizada.getData() != null) {
-            reserva.setData(reservaAtualizada.getData());
+        if (dto.getData() != null) {
+            reserva.setData(dto.getData());
         }
 
-        if (reservaAtualizada.getHoraPartida() != null) {
-            reserva.setHoraPartida(reservaAtualizada.getHoraPartida());
+        if (dto.getHoraPartida() != null) {
+            reserva.setHoraPartida(dto.getHoraPartida());
         }
 
-        if (reservaAtualizada.getStatusReserva() != null) {
-            reserva.setStatusReserva(reservaAtualizada.getStatusReserva());
+        if (dto.getLocalizador() != null) {
+            reserva.setLocalizador(dto.getLocalizador());
         }
 
-        if (reservaAtualizada.getTipoModal() != null) {
-            reserva.setTipoModal(reservaAtualizada.getTipoModal());
+        if (dto.getTipoViagem() != null) {
+            reserva.setTipoViagem(dto.getTipoViagem());
         }
 
-        if (reservaAtualizada.getLocalizador() != null) {
-            reserva.setLocalizador(reservaAtualizada.getLocalizador());
+        if (dto.getTipoModal() != null) {
+            reserva.setTipoModal(dto.getTipoModal());
         }
 
-        if (reservaAtualizada.getTipoPassagem() != null) {
-            reserva.setTipoPassagem(reservaAtualizada.getTipoPassagem());
+        if (dto.getTipoPassagem() != null) {
+            reserva.setTipoPassagem(dto.getTipoPassagem());
         }
 
-        if (reservaAtualizada.getIdRota() != null) {
-            reserva.setIdRota(reservaAtualizada.getIdRota());
+        if (dto.getStatusReserva() != null) {
+            reserva.setStatusReserva(dto.getStatusReserva());
         }
 
-        if (reservaAtualizada.getIdModal() != null) {
-            reserva.setIdModal(reservaAtualizada.getIdModal());
+        if (dto.getIdModal() != null) {
+
+            if (!modalRepository.existsById(dto.getIdModal())) {
+                throw new EntityNotFoundException(
+                        "Modal não encontrado com ID: "
+                                + dto.getIdModal());
+            }
+
+            reserva.setIdModal(dto.getIdModal());
         }
 
         return reservaRepository.save(reserva);
     }
 
     public void deletar(Long id) {
+
         if (!reservaRepository.existsById(id)) {
-            throw new EntityNotFoundException("Reserva não encontrada com ID: " + id);
+            throw new EntityNotFoundException(
+                    "Reserva não encontrada com ID: " + id);
         }
+
         reservaRepository.deleteById(id);
     }
 }

@@ -1,10 +1,12 @@
 package com.projectvvv.domain.service;
 
+import com.projectvvv.domain.dto.ReservaDTO;
 import com.projectvvv.domain.model.*;
 import com.projectvvv.domain.repository.PagamentoRepository;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Service
@@ -48,44 +50,44 @@ public class PagamentoService {
 
         Float valorFinal = pagamento.getValorPago();
 
-        // Regra do Juros
-        
-        if (pagamento.getStatusPagamento() == StatusPagamento.FINALIZADO){
-            throw new RuntimeException("Pagamento já finalizado. Não é possível realizar o pagamento novamente.");
+        // Não permitir pagar novamente
+        if (pagamento.getStatusPagamento()
+                == StatusPagamento.FINALIZADO) {
+
+            throw new RuntimeException(
+                    "Pagamento já finalizado. Não é possível realizar o pagamento novamente.");
         }
-        
+
+        // Regra de juros para cartão acima de 4 parcelas
         if (pagamento.getTipoPagamento()
                 == TipoPagamento.CARTAO_CREDITO
-                &&
-                pagamento.getParcelas() > 4) {
+                && pagamento.getParcelas() > 4) {
 
             valorFinal = valorFinal * 1.05f;
         }
 
         pagamento.setValorPago(valorFinal);
 
-        // Aprova o pagamento
-
+        // Aprova pagamento
         pagamento.setStatusPagamento(
                 StatusPagamento.FINALIZADO);
 
         pagamento.setCliente(cliente);
-        
 
         Pagamento pagamentoSalvo =
                 pagamentoRepository.save(pagamento);
 
-        // Confirma a reserva
+        // Confirma reserva
+        ReservaDTO reservaDTO = new ReservaDTO();
 
-        reserva.setStatusReserva(
+        reservaDTO.setStatusReserva(
                 StatusReserva.CONCLUIDO);
 
         reservaService.atualizar(
                 reserva.getCodigoReserva(),
-                reserva);
+                reservaDTO);
 
-        // Atualiza a Capacidade do Modal
-
+        // Atualiza capacidade do modal
         Modal modal =
                 modalService.buscarPorId(
                         reserva.getIdModal());
@@ -97,9 +99,7 @@ public class PagamentoService {
                 modal.getId(),
                 modal);
 
-    
-        // GERAR TICKET
-
+        // Gera ticket
         ticketService.criar(
                 reserva,
                 pagamentoSalvo,
@@ -109,20 +109,32 @@ public class PagamentoService {
     }
 
     public Pagamento cancelarPagamento(Long id) {
-        Pagamento pagamento = pagamentoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pagamento não encontrado para cancelamento."));
 
-        if (pagamento.getStatusPagamento() != StatusPagamento.FINALIZADO) {
-            throw new RuntimeException("Apenas pagamentos finalizados podem ser cancelados.");
+        Pagamento pagamento =
+                pagamentoRepository.findById(id)
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "Pagamento não encontrado para cancelamento."));
+
+        if (pagamento.getStatusPagamento()
+                != StatusPagamento.FINALIZADO) {
+
+            throw new RuntimeException(
+                    "Apenas pagamentos finalizados podem ser cancelados.");
         }
 
-        pagamento.setStatusPagamento(StatusPagamento.CANCELADO);
+        pagamento.setStatusPagamento(
+                StatusPagamento.CANCELADO);
+
         return pagamentoRepository.save(pagamento);
     }
 
     public Pagamento buscarPorId(Long id) {
+
         return pagamentoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pagamento não encontrado."));
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Pagamento não encontrado."));
     }
 
     public List<Pagamento> listarTodos() {
@@ -130,9 +142,12 @@ public class PagamentoService {
     }
 
     public void deletar(Long id) {
+
         if (!pagamentoRepository.existsById(id)) {
-            throw new RuntimeException("Pagamento não encontrado para exclusão.");
+            throw new RuntimeException(
+                    "Pagamento não encontrado para exclusão.");
         }
+
         pagamentoRepository.deleteById(id);
     }
 }

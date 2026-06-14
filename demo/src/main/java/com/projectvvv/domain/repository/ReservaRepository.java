@@ -13,7 +13,5 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
 
     List<Reserva> findByStatusReserva(StatusReserva statusReserva);
 
-    List<Reserva> findByIdRota(Long idRota);
-
     List<Reserva> findByIdModal(Long idModal);
 }
