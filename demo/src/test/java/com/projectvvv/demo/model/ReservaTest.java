@@ -1,6 +1,7 @@
 package com.projectvvv.demo.model;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import org.junit.jupiter.api.Test;
 
@@ -16,14 +17,17 @@ public class ReservaTest {
     void ReservaConstructorTest() {
 
         Long codigoReserva = 1L;
-        Date data = new Date();
-        String horaPartida = "10:00";
+        LocalDate data = LocalDate.of(2026, 6, 20);
+        LocalTime horaPartida = LocalTime.of(10, 0);
+
         StatusReserva statusReserva = StatusReserva.CONCLUIDO;
         TipoViagem tipoViagem = TipoViagem.DIRETA;
         TipoModal tipoModal = TipoModal.NAVIO;
+
         String localizador = "ABC123";
+
         TipoPassagem tipoPassagem = TipoPassagem.LEITO;
-        Long idRota = 2L;
+
         Long idModal = 3L;
 
         Reserva reserva = new Reserva(
@@ -35,7 +39,6 @@ public class ReservaTest {
                 tipoModal,
                 localizador,
                 tipoPassagem,
-                idRota,
                 idModal
         );
 
@@ -47,7 +50,6 @@ public class ReservaTest {
         assert reserva.getTipoModal() == tipoModal;
         assert reserva.getLocalizador().equals(localizador);
         assert reserva.getTipoPassagem() == tipoPassagem;
-        assert reserva.getIdRota().equals(idRota);
         assert reserva.getIdModal().equals(idModal);
     }
 }

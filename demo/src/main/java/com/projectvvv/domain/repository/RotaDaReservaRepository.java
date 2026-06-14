@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface RotaDaReservaRepository
         extends JpaRepository<RotaDaReserva, Long> {
-    List<RotaDaReserva> findByReservaId(Long reservaId);
+    List<RotaDaReserva> findByReservaCodigoReserva(Long codigoReserva);
 
 }

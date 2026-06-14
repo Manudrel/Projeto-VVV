@@ -56,9 +56,9 @@ public class RotaDaReservaService {
                         new RuntimeException("Trecho não encontrado"));
     }
 
-    public List<RotaDaReserva> buscarPorReserva(Long reservaId) {
+    public List<RotaDaReserva> buscarPorReserva(Long codigoReserva) {
 
-        return repository.findByReservaId(reservaId);
+        return repository.findByReservaCodigoReserva(codigoReserva);
 
     }
 

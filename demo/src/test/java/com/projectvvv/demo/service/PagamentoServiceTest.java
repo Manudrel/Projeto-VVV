@@ -73,10 +73,14 @@ class PagamentoServiceTest {
         assertEquals(100.0f, resultado.getValorPago()); 
         assertEquals(StatusPagamento.FINALIZADO, resultado.getStatusPagamento());
         assertEquals(StatusReserva.CONCLUIDO, reserva.getStatusReserva());
-        assertEquals(29, modal.getCapacidade()); 
+        assertEquals(29, modal.getCapacidade());
 
-        
-        Mockito.verify(reservaService).atualizar(any(), eq(reserva));
+
+        Mockito.verify(reservaService)
+                .atualizar(
+                        eq(reserva.getCodigoReserva()),
+                        any()
+                );
         Mockito.verify(modalService).atualizar(eq(10L), eq(modal));
         Mockito.verify(ticketService).criar(eq(reserva), any(Pagamento.class), eq(cliente));
     }
