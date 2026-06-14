@@ -18,16 +18,22 @@ public class AuthController {
         return "auth/login";
     }
 
-     @GetMapping("/cadastro-cliente")
+    @GetMapping("/cadastro-cliente")
     public String cadastroCliente(Model model) {
         model.addAttribute("clienteForm", new ClienteForm());
         return "auth/cadastro-cliente";
     }
 
+    @PostMapping("/cadastro-cliente")
+    public String salvarCliente(@ModelAttribute ClienteForm form) {
+        // TODO: salvar cliente via service
+        return "redirect:/dashboard";
+    }
+
     @GetMapping("/cadastro-funcionario")
     public String cadastroFuncionario(Model model) {
         FuncionarioForm form = new FuncionarioForm();
-        form.setCargo("Gerente"); // pré-define como Gerente, já que vem do login
+        form.setCargo("Gerente");
         model.addAttribute("funcionarioForm", form);
         return "auth/cadastro-funcionario";
     }
