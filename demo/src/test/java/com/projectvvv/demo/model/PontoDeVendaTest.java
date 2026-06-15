@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import com.projectvvv.domain.model.PontoDeVenda;
 
-public class PontoDeVendaTestaTest {
+public class PontoDeVendaTest {
     
     @Test
     void PontoDeVendaConstructorTest(){
