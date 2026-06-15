@@ -3,12 +3,14 @@ package com.projectvvv.domain.controller;
 import com.projectvvv.domain.model.Transportadora;
 import com.projectvvv.domain.service.TransportadoraService;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
-@RequestMapping("/transportadoras")
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/transportadoras")
 public class TransportadoraController {
 
     private final TransportadoraService service;
@@ -19,59 +21,43 @@ public class TransportadoraController {
         this.service = service;
     }
 
-    @GetMapping
-    public String listar(Model model) {
-
-        model.addAttribute(
-                "transportadoras",
-                service.listarTodas()
-        );
-
-        return "transportadoras";
-    }
-
-    @GetMapping("/novo")
-    public String novoFormulario(Model model) {
-
-        model.addAttribute(
-                "transportadora",
-                new Transportadora()
-        );
-
-        return "transportadora-form";
-    }
-
     @PostMapping
-    public String salvar(
-            @ModelAttribute Transportadora transportadora
+    public ResponseEntity<Transportadora> criar(
+            @RequestBody Transportadora transportadora
     ) {
 
-        service.salvar(transportadora);
+        return ResponseEntity
+                .status(201)
+                .body(service.salvar(transportadora));
+    }
 
-        return "redirect:/transportadoras";
+    @GetMapping
+    public ResponseEntity<List<Transportadora>> listar() {
+
+        return ResponseEntity.ok(
+                service.listarTodas()
+        );
     }
 
     @GetMapping("/{id}")
-    public String buscarPorId(
-            @PathVariable Long id,
-            Model model
+    public ResponseEntity<Transportadora> buscarPorId(
+            @PathVariable Long id
     ) {
 
-        model.addAttribute(
-                "transportadora",
+        return ResponseEntity.ok(
                 service.buscarPorId(id)
         );
-
-        return "transportadora-detalhe";
     }
 
-    @GetMapping("/deletar/{id}")
-    public String deletar(
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletar(
             @PathVariable Long id
     ) {
 
         service.deletar(id);
 
-        return "redirect:/transportadoras";
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 }
