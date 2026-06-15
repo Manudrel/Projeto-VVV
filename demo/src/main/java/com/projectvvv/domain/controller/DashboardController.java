@@ -1,7 +1,6 @@
 package com.projectvvv.domain.controller;
 
 import com.projectvvv.domain.model.Funcionario;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class DashboardController {
 
     @GetMapping("/dashboard")
-    public String dashboard(Model model, @AuthenticationPrincipal Funcionario usuarioLogado) {
+    public String dashboard(Model model, Funcionario usuarioLogado) {
         model.addAttribute("usuario", usuarioLogado); // precisa de .getNome() e .getCargo()
         model.addAttribute("reservasPendentesHoje", 12);
         // model.addAttribute("ticketsEmitidosHoje", 47);
