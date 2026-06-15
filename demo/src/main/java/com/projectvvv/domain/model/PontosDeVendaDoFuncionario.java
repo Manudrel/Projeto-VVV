@@ -24,6 +24,9 @@ public class PontosDeVendaDoFuncionario {
     )
     private PontoDeVenda pontoDeVenda;
 
+    @Column(nullable = false)
+    private Short diaTrabalho;
+
     public PontosDeVendaDoFuncionario() {
     }
 
@@ -45,5 +48,13 @@ public class PontosDeVendaDoFuncionario {
 
     public void setPontoDeVenda(PontoDeVenda pontoDeVenda) {
         this.pontoDeVenda = pontoDeVenda;
+    }
+
+    public Short getDiaTrabalho() {
+        return diaTrabalho;
+    }
+
+    public void setDiaTrabalho(Short diaTrabalho) {
+        this.diaTrabalho = diaTrabalho;
     }
 }
