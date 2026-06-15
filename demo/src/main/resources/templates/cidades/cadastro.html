@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Cidades — SCVP | VVV</title>
+
+    <link rel="stylesheet" th:href="@{/css/variables.css}" href="/css/variables.css" />
+    <link rel="stylesheet" th:href="@{/css/components.css}" href="/css/components.css" />
+    <link rel="stylesheet" th:href="@{/css/app.css}" href="/css/app.css" />
+</head>
+
+<body>
+
+<div class="sidebar-backdrop"></div>
+
+<div class="app-shell">
+
+    <!-- SIDEBAR -->
+    <aside class="app-sidebar">
+
+        <div class="sidebar-brand">
+            <span class="brand-logo">VVV</span>
+
+            <span class="brand-text">
+                <span class="brand-name">
+                    Vai &amp; Volta
+                </span>
+
+                <span class="brand-tagline">
+                    SCVP
+                </span>
+            </span>
+        </div>
+
+        <nav class="sidebar-nav" aria-label="Navegação principal">
+
+            <div class="nav-section-title">
+                Operação
+            </div>
+
+            <ul class="nav-list">
+
+                <li class="nav-item">
+                    <a th:href="@{/dashboard}">
+                        <span class="nav-icon">🏠</span>
+                        Dashboard
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a th:href="@{/reservas/nova}">
+                        <span class="nav-icon">➕</span>
+                        Nova Reserva
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a th:href="@{/reservas/consultar}">
+                        <span class="nav-icon">📋</span>
+                        Consultar Reservas
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a th:href="@{/clientes/cadastro}">
+                        <span class="nav-icon">👤</span>
+                        Cadastrar Cliente
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a th:href="@{/modais}">
+                        <span class="nav-icon">🚍</span>
+                        Central de Modais
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a th:href="@{/cidades}" class="active">
+                        <span class="nav-icon">🏙️</span>
+                        Cidades
+                    </a>
+                </li>
+
+            </ul>
+
+        </nav>
+
+        <div class="sidebar-footer">
+            SCVP v1.0 •
+            <span th:text="${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy')}">
+                14/06/2026
+            </span>
+        </div>
+
+    </aside>
+
+    <!-- HEADER -->
+    <header class="app-header">
+
+        <div class="header-left">
+
+            <button class="menu-toggle"
+                    data-menu-toggle
+                    aria-label="Abrir menu">
+
+                ☰
+
+            </button>
+
+            <h1 class="page-title">
+                Cadastro de Cidades
+            </h1>
+
+        </div>
+
+        <div class="user-menu">
+
+            <div class="user-info">
+
+                <span class="user-name">
+                    Marcella
+                </span>
+
+                <span class="user-role">
+                    Gerente
+                </span>
+
+            </div>
+
+            <span class="user-avatar">
+                M
+            </span>
+
+            <form method="post"
+                  th:action="@{/auth/logout}"
+                  style="margin:0;">
+
+                <button type="submit"
+                        class="btn btn-ghost btn-sm">
+
+                    Sair
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </header>
+
+    <!-- MAIN -->
+    <main class="app-main">
+
+        <div class="page-header">
+
+            <nav class="breadcrumb" aria-label="Trilha">
+
+                <a th:href="@{/dashboard}">
+                    Início
+                </a>
+
+                <span aria-hidden="true">›</span>
+
+                <span>Cidades</span>
+
+            </nav>
+
+            <h1>Cadastro de Cidades</h1>
+
+        </div>
+
+        <!-- Mensagem -->
+        <div th:if="${mensagem}"
+             class="alert alert-success"
+             th:text="${mensagem}">
+        </div>
+
+        <div class="grid"
+             style="grid-template-columns:1fr 1.5fr;align-items:start;">
+
+            <!-- FORM -->
+            <section class="card">
+
+                <div class="card-header">
+                    <h2 class="card-title">
+                        Nova cidade
+                    </h2>
+                </div>
+
+                <div class="card-body">
+
+                    <form method="post"
+                          th:action="@{/cidades}"
+                          th:object="${cidadeDTO}"
+                          novalidate>
+
+                        <!-- Nome -->
+                        <div class="form-group">
+
+                            <label class="form-label"
+                                   for="c-nome">
+
+                                Nome
+                                <span class="required">*</span>
+
+                            </label>
+
+                            <input id="c-nome"
+                                   th:field="*{uf}"
+                                   class="form-control"
+                                   required />
+
+                            <small class="text-danger"
+                                   th:if="${#fields.hasErrors('nome')}"
+                                   th:errors="*{nome}">
+                            </small>
+
+                        </div>
+
+                        <!-- UF -->
+                        <div class="form-group">
+
+                            <label class="form-label"
+                                   for="c-uf">
+
+                                UF
+                                <span class="required">*</span>
+
+                            </label>
+
+                            <input id="c-uf"
+                                   th:field="*{uf}"
+                                   class="form-control"
+                                   maxlength="2"
+                                   style="text-transform:uppercase;"
+                                   required />
+
+                            <small class="text-danger"
+                                   th:if="${#fields.hasErrors('uf')}"
+                                   th:errors="*{uf}">
+                            </small>
+
+                        </div>
+
+                        <!-- Código IATA -->
+                        <div class="form-group">
+
+                            <label class="form-label"
+                                   for="c-cod">
+
+                                Código IATA
+                                <span class="required">*</span>
+
+                            </label>
+
+                            <input id="c-cod"
+                                   th:field="*{codigoIata}"
+                                   class="form-control"
+                                   maxlength="3"
+                                   minlength="3"
+                                   placeholder="Ex.: GRU"
+                                   pattern="[A-Z]{3}"
+                                   style="text-transform:uppercase;"
+                                   required />
+
+                            <span class="form-hint">
+                                Deve conter 3 letras maiúsculas.
+                            </span>
+
+                            <small class="text-danger"
+                                   th:if="${#fields.hasErrors('codigoIata')}"
+                                   th:errors="*{codigoIata}">
+                            </small>
+
+                        </div>
+
+                        <!-- País -->
+                        <div class="form-group">
+
+                            <label class="form-label"
+                                for="c-pais">
+
+                                País
+                                <span class="required">*</span>
+
+                            </label>
+
+                            <input id="c-pais"
+                                th:field="*{pais}"
+                                class="form-control"
+                                value="Brasil"
+                                required />
+
+                        </div>
+
+                        <button class="btn btn-primary btn-block"
+                                type="submit">
+
+                            Cadastrar cidade
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </section>
+
+            <!-- TABELA -->
+            <div class="table-wrapper">
+
+            <table class="table">
+
+                <thead>
+
+                <tr>
+
+                    <th>Código</th>
+                    <th>Cidade</th>
+                    <th>Estado</th>
+                    <th>País</th>
+
+                    <th class="text-right">
+                        Ações
+                    </th>
+
+                </tr>
+
+                </thead>
+
+                <tbody>
+
+                <tr th:each="cidade : ${cidades}">
+
+                    <td>
+                        <code th:text="${cidade.codigoIata}">
+                            GRU
+                        </code>
+                    </td>
+
+                    <td th:text="${cidade.uf}">
+                        São Paulo
+                    </td>
+
+                    <td th:text="${cidade.nome}">
+                        SP
+                    </td>
+
+                    <td th:text="${cidade.pais}">
+                        Brasil
+                    </td>
+
+                    <td class="actions">
+
+                        <button class="btn btn-ghost btn-sm">
+                            Editar
+                        </button>
+
+                    </td>
+
+                </tr>
+
+                <!-- Caso lista vazia -->
+                <tr th:if="${#lists.isEmpty(cidades)}">
+
+                    <td colspan="5"
+                        class="text-center">
+
+                        Nenhuma cidade cadastrada.
+
+                    </td>
+
+                </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+        </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+<script th:src="@{/js/app.js}"></script>
+
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/auth-layout :: head('Cadastro de Cliente')}"></head>
+<body>
+
+<div class="auth-container">
+    <div class="auth-card card">
+        <div class="auth-header">
+            <h1>Cadastrar Cliente</h1>
+            <p>Preencha os dados do cliente</p>
+        </div>
+
+        <form class="auth-form" th:action="@{/funcionario/clientes/cadastro}" method="post"
+              th:object="${clienteForm}">
+
+            <div class="form-group">
+                <label for="nome">Nome Completo</label>
+                <input class="form-control" type="text" id="nome" th:field="*{nome}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="cpf">CPF</label>
+                <input class="form-control" type="text" id="cpf" th:field="*{cpf}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="telefone">Telefone</label>
+                <input class="form-control" type="tel" id="telefone" th:field="*{telefone}">
+            </div>
+
+            <div class="form-group">
+                <label for="idade">Idade</label>
+                <input class="form-control" type="number" id="idade" th:field="*{idade}" min="0" max="120">
+            </div>
+
+            <div class="form-group">
+                <label for="profissao">Profissão</label>
+                <input class="form-control" type="text" id="profissao" th:field="*{profissao}">
+            </div>
+
+            <div class="form-group">
+                <label for="endereco">Endereço</label>
+                <input class="form-control" type="text" id="endereco" th:field="*{endereco}">
+            </div>
+
+            <button type="submit" class="btn-primary">Cadastrar Cliente</button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

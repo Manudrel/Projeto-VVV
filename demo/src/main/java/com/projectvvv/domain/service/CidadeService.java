@@ -1,7 +1,9 @@
 package com.projectvvv.domain.service;
 
+import com.projectvvv.domain.dto.CidadeDTO;
 import com.projectvvv.domain.model.Cidade;
 import com.projectvvv.domain.repository.CidadeRepository;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,25 +11,48 @@ import java.util.List;
 @Service
 public class CidadeService {
 
-    private final CidadeRepository cidadeRepository;
+    private final CidadeRepository repository;
 
-    public CidadeService(CidadeRepository cidadeRepository) {
-        this.cidadeRepository = cidadeRepository;
+    public CidadeService(
+            CidadeRepository repository
+    ) {
+        this.repository = repository;
     }
+
+    // SALVAR
+    public Cidade salvar(CidadeDTO dto) {
+
+        Cidade cidade = new Cidade();
+
+        cidade.setEstado(dto.getNome());
+
+        cidade.setCidade(
+                dto.getUf().toUpperCase()
+        );
+
+        cidade.setPais(dto.getPais());
+
+        cidade.setCodigoIata(
+                dto.getCodigoIata().toUpperCase()
+        );
+
+        return repository.save(cidade);
+    }
+
 
     // Criar cidade
     public Cidade salvar(Cidade cidade) {
-        return cidadeRepository.save(cidade);
+        return repository.save(cidade);
     }
 
     // Buscar todas as cidades
     public List<Cidade> listarTodas() {
-        return cidadeRepository.findAll();
+        return repository.findAll();
     }
 
     // Buscar cidade por ID
     public Cidade buscarPorId(Long id) {
-        return cidadeRepository.findById(id)
+        return repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cidade não encontrada com ID: " + id));
     }
 
@@ -39,12 +64,13 @@ public class CidadeService {
         cidade.setEstado(cidadeAtualizada.getEstado());
         cidade.setPais(cidadeAtualizada.getPais());
 
-        return cidadeRepository.save(cidade);
+        return repository.save(cidade);
     }
 
     // Excluir cidade
     public void deletar(Long id) {
         Cidade cidade = buscarPorId(id);
-        cidadeRepository.delete(cidade);
+        repository.delete(cidade);
     }
+
 }

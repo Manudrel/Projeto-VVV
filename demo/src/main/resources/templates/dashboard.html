@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - ProjectVVV</title>
+
+    <link rel="stylesheet" th:href="@{/css/variables.css}">
+    <link rel="stylesheet" th:href="@{/css/components.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+
+<body>
+
+<div class="dashboard-layout">
+
+    <!-- ===================== SIDEBAR ===================== -->
+    <aside class="sidebar">
+
+        <div class="sidebar-header">
+            <div class="sidebar-logo">VVV</div>
+            <div class="sidebar-brand">
+                <strong>Vai &amp; Volta</strong>
+                <span>SCVP</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <div class="nav-section-label">Operação</div>
+
+            <a th:href="@{/dashboard}"
+               class="nav-link active">
+                <span class="nav-icon">🏠</span>
+                Dashboard
+            </a>
+
+            <a th:href="@{/reservas/nova}" class="nav-link">
+                <span class="nav-icon">➕</span>
+                Nova Reserva
+            </a>
+
+            <a th:href="@{/reservas/consultar}" class="nav-link">
+                <span class="nav-icon">📋</span>
+                Consultar Reservas
+            </a>
+
+            <a th:href="@{/auth/cadastro-cliente}" class="nav-link">
+                <span class="nav-icon">👤</span>
+                Cadastrar Cliente
+            </a>
+
+            <a th:href="@{/modais}" class="nav-link">
+                <span class="nav-icon">🚌</span>
+                Central de Modais
+            </a>
+
+            <a th:href="@{/cidades}" class="nav-link">
+                <span class="nav-icon">🏙️</span>
+                Cidades
+            </a>
+
+            <!-- Itens visíveis apenas para o Gerente -->
+            <div class="nav-section-label" sec:authorize="hasRole('GERENTE')">
+                Administração
+            </div>
+
+            <a sec:authorize="hasRole('GERENTE')"
+               th:href="@{/gerente/funcionarios}" class="nav-link">
+                <span class="nav-icon">👥</span>
+                Funcionários
+            </a>
+
+            <a sec:authorize="hasRole('GERENTE')"
+               th:href="@{/pontos-venda}" class="nav-link">
+                <span class="nav-icon">🏬</span>
+                Pontos de Venda
+            </a>
+
+            <a sec:authorize="hasRole('GERENTE')"
+               th:href="@{/transportadoras}" class="nav-link">
+                <span class="nav-icon">🚚</span>
+                Transportadoras
+            </a>
+
+            <a sec:authorize="hasRole('GERENTE')"
+               th:href="@{/vendas-online}" class="nav-link">
+                <span class="nav-icon">✅</span>
+                Aprovação Vendas Online
+            </a>
+
+        </nav>
+
+        <div class="sidebar-footer">
+            SCVP v1.0 &bull; <span th:text="${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy')}">14/06/2026</span>
+        </div>
+
+    </aside>
+
+    <!-- ===================== CONTEÚDO PRINCIPAL ===================== -->
+    <div class="main-content">
+
+        <!-- Topbar -->
+        <header class="topbar">
+
+            <p class="topbar-greeting">
+                Olá, Marcella 👋
+            </p>
+
+            <div class="topbar-user">
+                <div class="topbar-user-info">
+                    <strong>Marcella</strong>
+                    <span>Gerente</span>
+                </div>
+
+                <div class="user-avatar">M</div>
+
+                <form class="logout-form" th:action="@{/auth/logout}" method="post">
+                    <button type="submit" class="logout-link">Sair</button>
+                </form>
+            </div>
+
+        </header>
+
+        <!-- Conteúdo -->
+        <main class="content">
+
+            <p class="breadcrumb">Início</p>
+            <h1 class="page-title">
+                Olá, Marcella 👋
+            </h1>
+
+            <!-- Banner informativo -->
+            <div class="info-banner">
+                <div class="info-banner-icon">i</div>
+                <div>
+                    <p>
+                        Você está autenticada como
+                        <strong>Gerente</strong>
+                    </p>
+                    <p class="info-secondary">
+                        O menu lateral mostra apenas as funcionalidades autorizadas para o seu cargo.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Cards de estatísticas -->
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <div class="stat-icon icon-blue">📋</div>
+                    <div>
+                        <p class="stat-value" th:text="${reservasPendentesHoje}">X</p>
+                        <p class="stat-label">Reservas pendentes hoje</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon icon-pink">🎫</div>
+                    <div>
+                        <p class="stat-value" th:text="${ticketsEmitidosHoje}">X</p>
+                        <p class="stat-label">Tickets emitidos no dia</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon icon-green">✅</div>
+                    <div>
+                        <p class="stat-value">
+                            R$ <span th:text="${#numbers.formatDecimal(faturamentoDoDia, 1, 'POINT', 2, 'COMMA')}">X</span>
+                        </p>
+                        <p class="stat-label">Faturamento do dia</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon icon-yellow">🛠️</div>
+                    <div>
+                        <p class="stat-value" th:text="${modaisEmManutencao}">X</p>
+                        <p class="stat-label">Modais em manutenção</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Ações rápidas -->
+            <h2 class="section-title">Ações rápidas</h2>
+
+            <div class="action-grid">
+
+                <a th:href="@{/reservas/nova}" class="action-card">
+                    <div class="action-icon icon-blue">➕</div>
+                    <h3>Nova Reserva</h3>
+                    <p>Iniciar venda em nome de um cliente.</p>
+                </a>
+
+                <a th:href="@{/reservas}" class="action-card">
+                    <div class="action-icon icon-pink">📋</div>
+                    <h3>Consultar Reservas</h3>
+                    <p>Buscar, confirmar ou cancelar reservas.</p>
+                </a>
+
+                <a th:href="@{/auth/cadastro-cliente}" class="action-card">
+                    <div class="action-icon icon-purple">👤</div>
+                    <h3>Cadastrar Cliente</h3>
+                    <p>Novo cadastro presencial.</p>
+                </a>
+
+                <a th:href="@{/modais}" class="action-card">
+                    <div class="action-icon icon-blue">🚌</div>
+                    <h3>Central de Modais</h3>
+                    <p>Status, manutenção e capacidade.</p>
+                </a>
+
+                <a sec:authorize="hasRole('GERENTE')"
+                   th:href="@{/gerente/funcionarios}" class="action-card">
+                    <div class="action-icon icon-purple">👥</div>
+                    <h3>Funcionários</h3>
+                    <p>Cadastrar e autorizar equipe.</p>
+                </a>
+
+                <a sec:authorize="hasRole('GERENTE')"
+                   th:href="@{/pontos-venda}" class="action-card">
+                    <div class="action-icon icon-blue">🏬</div>
+                    <h3>Pontos de Venda</h3>
+                    <p>Cadastro e gestão de filiais.</p>
+                </a>
+
+                <a sec:authorize="hasRole('GERENTE')"
+                   th:href="@{/transportadoras}" class="action-card">
+                    <div class="action-icon icon-yellow">🚚</div>
+                    <h3>Transportadoras</h3>
+                    <p>Parceiros operacionais.</p>
+                </a>
+
+                <a sec:authorize="hasRole('GERENTE')"
+                   th:href="@{/vendas-online}" class="action-card">
+                    <div class="action-icon icon-green">✅</div>
+                    <h3>Aprovação de Vendas Online</h3>
+                    <p>Fila do Gerente de Negócios Virtuais.</p>
+                </a>
+
+            </div>
+
+        </main>
+
+    </div>
+
+</div>
+
+</body>
+</html>
