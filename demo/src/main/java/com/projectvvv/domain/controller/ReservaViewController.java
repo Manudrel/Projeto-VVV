@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/reservas")
 public class ReservaViewController {
 
-    @GetMapping
+    @GetMapping("/consultar")
     public String consultarReservas() {
         return "reservas/consultar";
     }
