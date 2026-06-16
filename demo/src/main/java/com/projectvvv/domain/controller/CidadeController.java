@@ -21,11 +21,6 @@ public class CidadeController {
         return cidadeService.salvar(cidade);
     }
 
-    @GetMapping
-    public List<Cidade> listarTodas() {
-        return cidadeService.listarTodas();
-    }
-
     @GetMapping("/{id}")
     public Cidade buscarPorId(@PathVariable Long id) {
         return cidadeService.buscarPorId(id);

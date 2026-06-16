@@ -23,9 +23,9 @@
       <nav class="sidebar-nav" aria-label="Navegação principal">
         <div class="nav-section-title">Operação</div>
         <ul class="nav-list">
-          <li class="nav-item"><a th:href="@{/home}" href="/home" class=""><span class="nav-icon">🏠</span>Dashboard</a></li>
+          <li class="nav-item"><a th:href="@{/dashboard}" href="/dashboard" class=""><span class="nav-icon">🏠</span>Dashboard</a></li>
           <li class="nav-item"><a th:href="@{/reservas/nova}" href="/reservas/nova" class=""><span class="nav-icon">➕</span>Nova Reserva</a></li>
-          <li class="nav-item"><a th:href="@{/reservas}" href="/reservas" class="active"><span class="nav-icon">📋</span>Consultar Reservas</a></li>
+          <li class="nav-item"><a th:href="@{/reservas/consultar}" href="/reservas/consultar" class="active"><span class="nav-icon">📋</span>Consultar Reservas</a></li>
           <li class="nav-item"><a th:href="@{/clientes/cadastro}" href="/clientes/cadastro" class=""><span class="nav-icon">👤</span>Cadastrar Cliente</a></li>
           <li class="nav-item"><a th:href="@{/modais}" href="/modais" class=""><span class="nav-icon">🚍</span>Central de Modais</a></li>
           <li class="nav-item"><a th:href="@{/cidades}" href="/cidades" class=""><span class="nav-icon">🏙️</span>Cidades</a></li>
@@ -34,7 +34,7 @@
         <!-- Bloco visível apenas para Gerente (th:if no template Thymeleaf) -->
         <div class="nav-section-title" th:if="${usuarioLogado.cargo.name() == 'Gerente'}">Administração</div>
         <ul class="nav-list">
-          <li class="nav-item" th:if="${usuarioLogado.cargo.name() == 'Gerente'}"><a th:href="@{/funcionarios}" href="/funcionarios" class=""><span class="nav-icon">👥</span>Funcionários</a></li>
+          <li class="nav-item" th:if="${usuarioLogado.cargo.name() == 'Gerente'}"><a th:href="@{/gerente/funcionarios}" href="/gerente/funcionarios" class=""><span class="nav-icon">👥</span>Funcionários</a></li>
           <li class="nav-item" th:if="${usuarioLogado.cargo.name() == 'Gerente'}"><a th:href="@{/pontos-venda}" href="/pontos-venda" class=""><span class="nav-icon">🏬</span>Pontos de Venda</a></li>
           <li class="nav-item" th:if="${usuarioLogado.cargo.name() == 'Gerente'}"><a th:href="@{/transportadoras}" href="/transportadoras" class=""><span class="nav-icon">🚚</span>Transportadoras</a></li>
           <li class="nav-item" th:if="${usuarioLogado.cargo.name() == 'Gerente'}"><a th:href="@{/vendas-online/aprovacao}" href="/vendas-online/aprovacao" class=""><span class="nav-icon">✅</span>Aprovação Vendas Online</a></li>
@@ -66,7 +66,7 @@
     <!-- MAIN -->
     <main class="app-main">
       <div class="page-header">
-        <nav class="breadcrumb" aria-label="Trilha"><a th:href="@{/home}" href="/home">Início</a> <span aria-hidden='true'>›</span> <a th:href="@{/reservas}" href="/reservas">Reservas</a> <span aria-hidden='true'>›</span> <span>VVV-3F8A2K</span></nav>
+        <nav class="breadcrumb" aria-label="Trilha"><a th:href="@{/dashboard}" href="/dashboard">Início</a> <span aria-hidden='true'>›</span> <a th:href="@{/reservas}" href="/reservas">Reservas</a> <span aria-hidden='true'>›</span> <span>VVV-3F8A2K</span></nav>
         <h1>Reserva VVV-3F8A2K</h1>
       </div>
       
