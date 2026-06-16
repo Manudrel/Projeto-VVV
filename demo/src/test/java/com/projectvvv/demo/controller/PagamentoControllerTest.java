@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -86,7 +87,7 @@ class PagamentoControllerTest {
         Mockito.verify(pagamentoService, Mockito.times(1)).deletar(id);
     }
 
-/*     @Test
+    @Test
     @DisplayName("PATCH /api/pagamentos/{id}/cancelar - Deve cancelar o pagamento e retornar status 204")
     void deveCancelarPagamento() throws Exception {
         Long id = 1L;
@@ -95,5 +96,5 @@ class PagamentoControllerTest {
                 .andExpect(status().isNoContent());
 
         Mockito.verify(pagamentoService, Mockito.times(1)).cancelarPagamento(id);
-    } */
+    }
 }
