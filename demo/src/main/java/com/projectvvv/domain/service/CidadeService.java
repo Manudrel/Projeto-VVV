@@ -24,9 +24,9 @@ public class CidadeService {
 
         Cidade cidade = new Cidade();
 
-        cidade.setEstado(dto.getNome());
+        cidade.setCidade(dto.getNome());
 
-        cidade.setCidade(
+        cidade.setEstado(
                 dto.getUf().toUpperCase()
         );
 

@@ -2,6 +2,7 @@ package com.projectvvv.domain.controller;
 
 import com.projectvvv.domain.dto.ClienteForm;
 import com.projectvvv.domain.dto.FuncionarioForm;
+import com.projectvvv.domain.model.Cargo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,7 +51,7 @@ public class AuthController {
     @GetMapping("/cadastro-funcionario")
     public String cadastroFuncionario(Model model) {
         FuncionarioForm form = new FuncionarioForm();
-        form.setCargo("Gerente");
+        form.setCargo(Cargo.GERENTE);
         model.addAttribute("funcionarioForm", form);
         return "auth/cadastro-funcionario";
     }

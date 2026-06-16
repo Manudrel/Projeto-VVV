@@ -1,12 +1,14 @@
 package com.projectvvv.domain.dto;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 public class ClienteForm {
 
     private String nome;
     private String cpf;
     private String telefone;
-    private Integer idade;
-    private String profissao;
+    private LocalDate dataNascimento;
     private String endereco;
 
     public ClienteForm() {
@@ -36,21 +38,15 @@ public class ClienteForm {
         this.telefone = telefone;
     }
 
-    public Integer getIdade() {
-        return idade;
+    public LocalDate getDataNascimento() {
+        return dataNascimento;
     }
 
-    public void setIdade(Integer idade) {
-        this.idade = idade;
+    public void setDataNascimento(LocalDate dataNascimento) {
+        this.dataNascimento = dataNascimento;
     }
 
-    public String getProfissao() {
-        return profissao;
-    }
 
-    public void setProfissao(String profissao) {
-        this.profissao = profissao;
-    }
 
     public String getEndereco() {
         return endereco;
