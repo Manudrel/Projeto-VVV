@@ -118,7 +118,7 @@
 
                 <div class="user-avatar">M</div>
 
-                <form class="logout-form" th:action="@{/auth/logout}" method="post">
+                <form class="logout-form" th:action="@{/}" method="post">
                     <button type="submit" class="logout-link">Sair</button>
                 </form>
             </div>
@@ -197,7 +197,7 @@
                     <p>Iniciar venda em nome de um cliente.</p>
                 </a>
 
-                <a th:href="@{/reservas}" class="action-card">
+                <a th:href="@{/reservas/consultar}" class="action-card">
                     <div class="action-icon icon-pink">📋</div>
                     <h3>Consultar Reservas</h3>
                     <p>Buscar, confirmar ou cancelar reservas.</p>
@@ -216,7 +216,7 @@
                 </a>
 
                 <a sec:authorize="hasRole('GERENTE')"
-                   th:href="@{funcionarios/listar}" class="action-card">
+                   th:href="@{gerente/funcionarios}" class="action-card">
                     <div class="action-icon icon-purple">👥</div>
                     <h3>Funcionários</h3>
                     <p>Cadastrar e autorizar equipe.</p>
