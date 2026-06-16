@@ -19,15 +19,18 @@ public class Cidade {
     @Column(length = 100)
     private String pais;
 
+    @Column(length = 10)
+    private String codigoIata;
 
     // Construtores
     public Cidade(){}
 
-    public Cidade(Long id, String estado, String cidade, String pais) {
+    public Cidade(Long id, String estado, String cidade, String pais, String codigoIata) {
         this.id = id;
         this.estado = estado;
         this.cidade = cidade;
         this.pais = pais;
+        this.codigoIata = codigoIata;
     }
 
     // Getters e Setters
@@ -61,5 +64,13 @@ public class Cidade {
 
     public void setPais(String pais) {
         this.pais = pais;
+    }
+
+    public String getCodigoIata() {
+        return codigoIata;
+    }
+
+    public void setCodigoIata(String codigoIata) {
+        this.codigoIata = codigoIata;
     }
 }

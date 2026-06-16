@@ -12,12 +12,14 @@ public class CidadeTest {
         String estado = "São Paulo";
         String cidade = "São Paulo";
         String pais = "Brasil";
+        String codigoIata = "GRU";
 
-        Cidade cidadeObj = new Cidade(id, estado, cidade, pais);
+        Cidade cidadeObj = new Cidade(id, estado, cidade, pais, codigoIata);
 
         assert cidadeObj.getId().equals(id);
         assert cidadeObj.getEstado().equals(estado);
         assert cidadeObj.getCidade().equals(cidade);
         assert cidadeObj.getPais().equals(pais);
+        assert cidadeObj.getCodigoIata().equals(codigoIata);
     }
 }
