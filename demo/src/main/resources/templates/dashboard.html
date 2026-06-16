@@ -87,7 +87,7 @@
             </a>
 
             <a sec:authorize="hasRole('GERENTE')"
-               th:href="@{/vendas-online}" class="nav-link">
+               th:href="@{/vendas-online/aprovacao}" class="nav-link">
                 <span class="nav-icon">✅</span>
                 Aprovação Vendas Online
             </a>
@@ -237,7 +237,7 @@
                 </a>
 
                 <a sec:authorize="hasRole('GERENTE')"
-                   th:href="@{/vendas-online}" class="action-card">
+                   th:href="@{/vendas-online/aprovacao}" class="action-card">
                     <div class="action-icon icon-green">✅</div>
                     <h3>Aprovação de Vendas Online</h3>
                     <p>Fila do Gerente de Negócios Virtuais.</p>

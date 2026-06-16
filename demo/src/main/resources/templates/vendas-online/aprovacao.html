@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aprovação de Vendas Online — SCVP | VVV</title>
+    <link rel="stylesheet" th:href="@{/css/variables.css}" href="/css/variables.css" />
+    <link rel="stylesheet" th:href="@{/css/components.css}" href="/css/components.css" />
+    <link rel="stylesheet" th:href="@{/css/app.css}" href="/css/app.css" />
+</head>
+<body>
+  <div class="sidebar-backdrop"></div>
+  <div class="app-shell">
+    <!-- SIDEBAR -->
+    <aside class="app-sidebar">
+      <div class="sidebar-brand">
+        <span class="brand-logo">VVV</span>
+        <span class="brand-text">
+          <span class="brand-name">Vai &amp; Volta</span>
+          <span class="brand-tagline">SCVP</span>
+        </span>
+      </div>
+      <nav class="sidebar-nav" aria-label="Navegação principal">
+        <div class="nav-section-title">Operação</div>
+        <ul class="nav-list">
+          <li class="nav-item"><a th:href="@{/dashboard}" href="/dashboard" class=""><span class="nav-icon">🏠</span>Dashboard</a></li>
+          <li class="nav-item"><a th:href="@{/reservas/nova}" href="/reservas/nova" class=""><span class="nav-icon">➕</span>Nova Reserva</a></li>
+          <li class="nav-item"><a th:href="@{/reservas/consultar}" href="/reservas/consultar" class=""><span class="nav-icon">📋</span>Consultar Reservas</a></li>
+          <li class="nav-item"><a th:href="@{/clientes/cadastro}" href="/clientes/cadastro" class=""><span class="nav-icon">👤</span>Cadastrar Cliente</a></li>
+          <li class="nav-item"><a th:href="@{/modais}" href="/modais" class=""><span class="nav-icon">🚍</span>Central de Modais</a></li>
+          <li class="nav-item"><a th:href="@{/cidades}" href="/cidades" class=""><span class="nav-icon">🏙️</span>Cidades</a></li>
+        </ul>
+
+        <!-- Bloco visível apenas para Gerente (th:if no template Thymeleaf) -->
+        <div class="nav-section-title" th:if="${usuarioLogado != null && usuarioLogado.cargo == 'Gerente'}">Administração</div>
+        <ul class="nav-list">
+        <li class="nav-item" th:if="${usuarioLogado != null && usuarioLogado.cargo == 'Gerente'}">
+            <a th:href="@{gerente/funcionarios}" href="gerente/funcionarios" class=""><span class="nav-icon">👥</span>Funcionários</a>
+        </li>
+        <li class="nav-item" th:if="${usuarioLogado != null && usuarioLogado.cargo == 'Gerente'}">
+            <a th:href="@{/pontos-venda}" href="/pontos-venda" class=""><span class="nav-icon">🏬</span>Pontos de Venda</a>
+        </li>
+        <li class="nav-item" th:if="${usuarioLogado != null && usuarioLogado.cargo == 'Gerente'}">
+            <a th:href="@{/transportadoras}" href="/transportadoras" class=""><span class="nav-icon">🚚</span>Transportadoras</a>
+        </li>
+        <li class="nav-item" th:if="${usuarioLogado != null && usuarioLogado.cargo == 'Gerente'}">
+            <a th:href="@{/vendas-online/aprovacao}" href="/vendas-online/aprovacao" class="active"><span class="nav-icon">✅</span>Aprovação Vendas Online</a>
+        </li>
+        </ul>
+      </nav>
+      <div class="sidebar-footer">
+        SCVP v1.0 • <span th:text="${#dates.format(#dates.createNow(), 'dd/MM/yyyy')}">14/06/2026</span>
+      </div>
+    </aside>
+
+    <!-- HEADER -->
+    <header class="app-header">
+      <div class="header-left">
+        <button class="menu-toggle" data-menu-toggle aria-label="Abrir menu">☰</button>
+        <h1 class="page-title">Aprovação de Vendas Online</h1>
+      </div>
+      <div class="user-menu">
+        <div class="user-info">
+          <span class="user-name" th:text="${usuarioLogado.nome}">Marcella</span>
+          <span class="user-role" th:text="${usuarioLogado.cargo}">Gerente</span>
+        </div>
+        <span class="user-avatar" th:text="${#strings.substring(usuarioLogado.nome,0,1)}">M</span>
+        <form method="post" action="/logout" style="margin:0;">
+          <button type="submit" class="btn btn-ghost btn-sm" title="Sair">Sair</button>
+        </form>
+      </div>
+    </header>
+
+    <!-- MAIN -->
+    <main class="app-main">
+      <div class="page-header">
+        <nav class="breadcrumb" aria-label="Trilha"><a th:href="@{/dashboard}" href="/dashboard">Início</a> <span aria-hidden='true'>›</span> <span>Administração</span> <span aria-hidden='true'>›</span> <span>Aprovação de Vendas Online</span></nav>
+        <h1>Aprovação de Vendas Online</h1>
+      </div>
+      
+<div class="alert alert-info"><span class="alert-icon">🛒</span>
+  <div><div class="alert-title">Gerente de Negócios Virtuais</div>
+  <span>Pedidos originados de canais online aguardam aprovação manual antes da emissão do ticket.</span></div>
+</div>
+
+<h2>Pendentes de aprovação</h2>
+<div class="table-wrapper mb-6">
+  <table class="table">
+    <thead><tr><th>Cliente</th><th>Viagem</th><th>Valor</th><th>Pagamento</th><th>Solicitada em</th><th class="text-right">Ações</th></tr></thead>
+    <tbody>
+      <tr><td>Lucas Andrade</td><td>SAO → REC • Avião • 30/06</td><td>R$ 612,00</td><td>Crédito 6x</td><td>14/06/2026 09:12</td>
+        <td class="actions">
+          <button class="btn btn-primary btn-sm">Aprovar</button>
+          <button class="btn btn-danger btn-sm">Cancelar</button>
+        </td></tr>
+      <tr><td>Beatriz Nunes</td><td>RIO → CWB • Ônibus • 28/06</td><td>R$ 198,50</td><td>PIX</td><td>14/06/2026 08:47</td>
+        <td class="actions">
+          <button class="btn btn-primary btn-sm">Aprovar</button>
+          <button class="btn btn-danger btn-sm">Cancelar</button>
+        </td></tr>
+    </tbody>
+  </table>
+</div>
+
+<h2>Histórico</h2>
+<div class="table-wrapper">
+  <table class="table">
+    <thead><tr><th>Cliente</th><th>Viagem</th><th>Valor</th><th>Status</th><th>Decidida em</th><th>Gerente</th></tr></thead>
+    <tbody>
+      <tr><td>Renato Lima</td><td>SAO → SSA • Avião</td><td>R$ 489,00</td><td><span class="badge badge-success">Aprovada</span></td><td>13/06/2026 17:02</td><td>Maria Souza</td></tr>
+      <tr><td>Camila Reis</td><td>RIO → BHZ • Ônibus</td><td>R$ 122,00</td><td><span class="badge badge-danger">Cancelada</span></td><td>13/06/2026 16:30</td><td>Maria Souza</td></tr>
+    </tbody>
+  </table>
+</div>
+
+    </main>
+  </div>
+
+  <script th:src="@{/js/app.js}" src="/js/app.js"></script>
+</body>
+</html>
