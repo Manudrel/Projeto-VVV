@@ -29,6 +29,10 @@ public class Funcionario {
     @Column
     private Cargo cargo;
 
+    @Column(nullable = false)
+    private String senha;
+
+
     @OneToMany(
         mappedBy = "funcionario",
         cascade = CascadeType.ALL,
@@ -125,4 +129,9 @@ public class Funcionario {
     public void setCargoEnum(Cargo cargo) {
         this.cargo = cargo;
     }
+
+    public String getSenha() { return senha; }
+
+    public void setSenha(String senha) { this.senha = senha; }
+
 }    
