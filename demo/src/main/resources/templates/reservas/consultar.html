@@ -23,7 +23,7 @@
       <nav class="sidebar-nav" aria-label="Navegação principal">
         <div class="nav-section-title">Operação</div>
         <ul class="nav-list">
-          <li class="nav-item"><a th:href="@{/home}" href="/home" class=""><span class="nav-icon">🏠</span>Dashboard</a></li>
+          <li class="nav-item"><a th:href="@{/dashboard}" href="/dashboard" class=""><span class="nav-icon">🏠</span>Dashboard</a></li>
           <li class="nav-item"><a th:href="@{/reservas/nova}" href="/reservas/nova" class=""><span class="nav-icon">➕</span>Nova Reserva</a></li>
           <li class="nav-item"><a th:href="@{/reservas}" href="/reservas" class="active"><span class="nav-icon">📋</span>Consultar Reservas</a></li>
           <li class="nav-item"><a th:href="@{/clientes/cadastro}" href="/clientes/cadastro" class=""><span class="nav-icon">👤</span>Cadastrar Cliente</a></li>
@@ -66,7 +66,7 @@
     <!-- MAIN -->
     <main class="app-main">
       <div class="page-header">
-        <nav class="breadcrumb" aria-label="Trilha"><a th:href="@{/home}" href="/home">Início</a> <span aria-hidden='true'>›</span> <span>Reservas</span></nav>
+        <nav class="breadcrumb" aria-label="Trilha"><a th:href="@{/dashboard}" href="/dashboard">Início</a> <span aria-hidden='true'>›</span> <span>Reservas</span></nav>
         <h1>Consultar Reservas</h1>
       </div>
       
