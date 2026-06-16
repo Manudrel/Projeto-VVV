@@ -9,11 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
-class UsuarioLogadoMock {
-    public String getNome() { return "Marcella"; }
-    public String getCargo() { return "Gerente"; } 
-}
-
 @Controller
 @RequestMapping("/gerente/funcionarios")
 public class FuncionarioViewController {
