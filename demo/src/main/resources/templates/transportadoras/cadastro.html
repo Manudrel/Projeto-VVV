@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pontos de Venda — SCVP | VVV</title>
+  <title>Transportadoras — SCVP | VVV</title>
   <link rel="stylesheet" th:href="@{/css/variables.css}" href="/css/variables.css" />
   <link rel="stylesheet" th:href="@{/css/components.css}" href="/css/components.css" />
   <link rel="stylesheet" th:href="@{/css/app.css}" href="/css/app.css" />
@@ -32,16 +32,16 @@
         </ul>
 
         <!-- Bloco visível apenas para Gerente (th:if no template Thymeleaf) -->
-        <div class="nav-section-title" th:if="${usuarioLogado != null && usuarioLogado.cargo == 'Gerente'}">Administração</div>
+       <div class="nav-section-title" th:if="${usuarioLogado != null && usuarioLogado.cargo == 'Gerente'}">Administração</div>
         <ul class="nav-list">
         <li class="nav-item" th:if="${usuarioLogado != null && usuarioLogado.cargo == 'Gerente'}">
             <a th:href="@{gerente/funcionarios}" href="gerente/funcionarios" class=""><span class="nav-icon">👥</span>Funcionários</a>
         </li>
         <li class="nav-item" th:if="${usuarioLogado != null && usuarioLogado.cargo == 'Gerente'}">
-            <a th:href="@{/pontos-venda}" href="/pontos-venda" class="active"><span class="nav-icon">🏬</span>Pontos de Venda</a>
+            <a th:href="@{/pontos-venda}" href="/pontos-venda" class=""><span class="nav-icon">🏬</span>Pontos de Venda</a>
         </li>
         <li class="nav-item" th:if="${usuarioLogado != null && usuarioLogado.cargo == 'Gerente'}">
-            <a th:href="@{/transportadoras}" href="/transportadoras" class=""><span class="nav-icon">🚚</span>Transportadoras</a>
+            <a th:href="@{/transportadoras}" href="/transportadoras" class="active"><span class="nav-icon">🚚</span>Transportadoras</a>
         </li>
         <li class="nav-item" th:if="${usuarioLogado != null && usuarioLogado.cargo == 'Gerente'}">
             <a th:href="@{/vendas-online/aprovacao}" href="/vendas-online/aprovacao" class=""><span class="nav-icon">✅</span>Aprovação Vendas Online</a>
@@ -57,7 +57,7 @@
     <header class="app-header">
       <div class="header-left">
         <button class="menu-toggle" data-menu-toggle aria-label="Abrir menu">☰</button>
-        <h1 class="page-title">Pontos de Venda</h1>
+        <h1 class="page-title">Transportadoras</h1>
       </div>
       <div class="user-menu">
         <div class="user-info">
@@ -74,30 +74,19 @@
     <!-- MAIN -->
     <main class="app-main">
       <div class="page-header">
-        <nav class="breadcrumb" aria-label="Trilha"><a th:href="@{/home}" href="/home">Início</a> <span aria-hidden='true'>›</span> <span>Administração</span> <span aria-hidden='true'>›</span> <span>Pontos de Venda</span></nav>
-        <h1>Pontos de Venda</h1>
+        <nav class="breadcrumb" aria-label="Trilha"><a th:href="@{/home}" href="/home">Início</a> <span aria-hidden='true'>›</span> <span>Administração</span> <span aria-hidden='true'>›</span> <span>Transportadoras</span></nav>
+        <h1>Transportadoras</h1>
       </div>
       
-<div class="alert alert-info"><span class="alert-icon">🔒</span>
-  <div><div class="alert-title">Restrito a Gerentes</div>
-  <span>Apenas usuários com cargo <code>Gerente</code> acessam o cadastro de pontos de venda.</span></div>
-</div>
-
 <section class="card form-card mb-6">
-  <div class="card-header"><h2 class="card-title">Cadastrar ponto de venda</h2></div>
+  <div class="card-header"><h2 class="card-title">Cadastrar transportadora</h2></div>
   <div class="card-body">
-    <form method="post" action="/pontos-venda" novalidate>
+    <form method="post" action="/transportadoras" novalidate>
       <div class="form-row">
-        <div class="form-group"><label class="form-label" for="p-nome">Nome <span class="required">*</span></label>
-          <input id="p-nome" name="nome" class="form-control" required /></div>
-        <div class="form-group"><label class="form-label" for="p-cnpj">CNPJ <span class="required">*</span></label>
-          <input id="p-cnpj" name="cnpj" class="form-control" placeholder="00.000.000/0000-00" required /></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label" for="p-tel">Telefone <span class="required">*</span></label>
-          <input id="p-tel" name="telefone" class="form-control" required /></div>
-        <div class="form-group"><label class="form-label" for="p-end">Endereço <span class="required">*</span></label>
-          <input id="p-end" name="endereco" class="form-control" required /></div>
+        <div class="form-group"><label class="form-label" for="t-nome">Nome <span class="required">*</span></label>
+          <input id="t-nome" name="nome" class="form-control" required /></div>
+        <div class="form-group"><label class="form-label" for="t-cnpj">CNPJ <span class="required">*</span></label>
+          <input id="t-cnpj" name="cnpj" class="form-control" placeholder="00.000.000/0000-00" required /></div>
       </div>
       <div class="btn-group mt-4" style="justify-content:flex-end;">
         <button type="submit" class="btn btn-primary">Cadastrar</button>
@@ -108,12 +97,11 @@
 
 <div class="table-wrapper">
   <table class="table">
-    <thead><tr><th>Nome</th><th>CNPJ</th><th>Telefone</th><th>Gerente responsável</th><th class="text-right">Ações</th></tr></thead>
+    <thead><tr><th>Nome</th><th>CNPJ</th><th>Modais associados</th><th class="text-right">Ações</th></tr></thead>
     <tbody>
-      <tr><td>PDV Centro — São Paulo/SP</td><td>12.345.678/0001-00</td><td>(11) 3000-0001</td><td>Maria Souza</td>
-        <td class="actions"><button class="btn btn-ghost btn-sm">Editar</button><button class="btn btn-danger btn-sm">Remover</button></td></tr>
-      <tr><td>PDV Aeroporto — Guarulhos/SP</td><td>22.111.000/0001-44</td><td>(11) 3000-0002</td><td>Carlos Mendes</td>
-        <td class="actions"><button class="btn btn-ghost btn-sm">Editar</button><button class="btn btn-danger btn-sm">Remover</button></td></tr>
+      <tr><td>LATAM</td><td>02.012.862/0001-60</td><td><span class="badge badge-info">✈️ 12 aviões</span></td><td class="actions"><button class="btn btn-ghost btn-sm">Detalhes</button></td></tr>
+      <tr><td>Viação Cometa</td><td>33.000.118/0001-00</td><td><span class="badge badge-info">🚌 38 ônibus</span></td><td class="actions"><button class="btn btn-ghost btn-sm">Detalhes</button></td></tr>
+      <tr><td>MarLine</td><td>44.555.666/0001-77</td><td><span class="badge badge-info">🚢 4 navios</span></td><td class="actions"><button class="btn btn-ghost btn-sm">Detalhes</button></td></tr>
     </tbody>
   </table>
 </div>
