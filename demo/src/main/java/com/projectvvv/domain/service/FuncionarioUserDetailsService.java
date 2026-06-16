@@ -18,18 +18,17 @@ import java.util.List;
 public class FuncionarioUserDetailsService implements UserDetailsService {
 
     private final FuncionarioRepository funcionarioRepository;
-    private final PasswordEncoder passwordEncoder;
+
 
 
     public FuncionarioUserDetailsService(
-            FuncionarioRepository funcionarioRepository,
-            PasswordEncoder passwordEncoder) {
+            FuncionarioRepository funcionarioRepository) {
 
         this.funcionarioRepository = funcionarioRepository;
-        this.passwordEncoder = passwordEncoder;
+
     }
 
-/*
+
     @Override
     public UserDetails loadUserByUsername(String cpf)
             throws UsernameNotFoundException {
@@ -63,37 +62,5 @@ public class FuncionarioUserDetailsService implements UserDetailsService {
 
 
 
- */
-@Override
-public UserDetails loadUserByUsername(String cpf)
-        throws UsernameNotFoundException {
 
-    System.out.println("CPF recebido no login: " + cpf);
-
-    Funcionario funcionario =
-            funcionarioRepository.findByCpf(cpf)
-                    .orElseThrow(() ->
-                            new UsernameNotFoundException(
-                                    "Não achou CPF"));
-
-    System.out.println("Funcionário encontrado: " + funcionario.getNome());
-
-    String role = funcionario.getCargo() == Cargo.GERENTE
-            ? "ROLE_GERENTE"
-            : "ROLE_FUNCIONARIO";
-
-
-    System.out.println(
-            "Senha confere? " +
-                    passwordEncoder.matches(
-                            "admin123",
-                            funcionario.getSenha()
-                    )
-    );
-    return new User(
-            funcionario.getCpf(),
-            funcionario.getSenha(),
-            List.of(new SimpleGrantedAuthority(role))
-    );
-}
 }
