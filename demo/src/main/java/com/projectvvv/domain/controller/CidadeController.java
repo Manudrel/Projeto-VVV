@@ -6,10 +6,6 @@ import com.projectvvv.domain.service.CidadeService;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
-
 @RestController
 @RequestMapping("/api/cidades")
 public class CidadeController {
@@ -18,11 +14,6 @@ public class CidadeController {
 
     public CidadeController(CidadeService cidadeService) {
         this.cidadeService = cidadeService;
-    }
-
-    @GetMapping
-    public List<Cidade> listarTodas() {
-        return cidadeService.listarTodas();
     }
 
     @PostMapping
@@ -36,8 +27,7 @@ public class CidadeController {
     }
 
     @PutMapping("/{id}")
-    public Cidade atualizar(@PathVariable Long id,
-                            @RequestBody Cidade cidadeAtualizada) {
+    public Cidade atualizar(@PathVariable Long id, @RequestBody Cidade cidadeAtualizada) {
         return cidadeService.atualizar(id, cidadeAtualizada);
     }
 
