@@ -1,11 +1,15 @@
 package com.projectvvv.demo.controller;
 
-import com.projectvvv.domain.controller.ReservaController;
-import com.projectvvv.domain.model.Reserva;
-import com.projectvvv.domain.service.ReservaService;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.projectvvv.domain.dto.ReservaDTO;
-import tools.jackson.databind.ObjectMapper;
+import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,12 +20,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.List;
+import com.projectvvv.domain.controller.ReservaController;
+import com.projectvvv.domain.dto.ReservaDTO;
+import com.projectvvv.domain.model.Reserva;
+import com.projectvvv.domain.service.ReservaService;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import tools.jackson.databind.ObjectMapper;
 
 
 @WebMvcTest(ReservaController.class)

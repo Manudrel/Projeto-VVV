@@ -1,6 +1,7 @@
 package com.projectvvv.demo.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
@@ -58,8 +59,7 @@ class ClienteRepositoryTest {
     @DisplayName("existsByCpf - Deve retornar false quando o CPF não estiver cadastrado")
     void deveRetornarFalseSeCpfNaoExistir() {
         boolean existe = clienteRepository.existsByCpf("00000000000");
-
-        assert(existe); 
+        assertFalse(existe);
     }
 
     @Test

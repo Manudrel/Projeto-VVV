@@ -17,8 +17,9 @@ public class FuncionarioTest {
         Cargo cargo = Cargo.GERENTE;
         String telefone = "21987654321";
         LocalDate dataNascimento = LocalDate.of(1990, 1, 1);
+        String senha = "senha123";
 
-        Funcionario funcionarioObj = new Funcionario(id, nome, cpf, endereco, cargo, telefone, dataNascimento);
+        Funcionario funcionarioObj = new Funcionario(id, nome, cpf, endereco, telefone, senha, cargo, dataNascimento);
 
         assert funcionarioObj.getId() == id;
         assert funcionarioObj.getNome().equals(nome);

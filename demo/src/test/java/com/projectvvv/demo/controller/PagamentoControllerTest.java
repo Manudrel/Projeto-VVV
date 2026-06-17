@@ -20,9 +20,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.projectvvv.domain.controller.PagamentoController;
 import com.projectvvv.domain.model.Pagamento;
 import com.projectvvv.domain.service.PagamentoService;
-import com.projectvvv.domain.controller.PagamentoController;
 
 import tools.jackson.databind.ObjectMapper;
 

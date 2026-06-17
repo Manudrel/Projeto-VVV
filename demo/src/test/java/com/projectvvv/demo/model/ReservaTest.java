@@ -39,7 +39,7 @@ public class ReservaTest {
                 tipoModal,
                 localizador,
                 tipoPassagem,
-                idModal
+                idModal, null
         );
 
         assert reserva.getCodigoReserva().equals(codigoReserva);
