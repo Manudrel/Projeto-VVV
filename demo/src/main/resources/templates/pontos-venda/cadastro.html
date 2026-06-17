@@ -7,12 +7,15 @@
   <link rel="stylesheet" th:href="@{/css/variables.css}" />
   <link rel="stylesheet" th:href="@{/css/components.css}" />
   <link rel="stylesheet" th:href="@{/css/app.css}" />
+  <link rel="stylesheet" th:href="@{/css/sidebar.css}" />
 </head>
 <body>
 <div class="sidebar-backdrop"></div>
 <div class="app-shell">
 
   <!-- SIDEBAR omitida, igual ao padrão do projeto -->
+
+  <div th:replace="~{fragments/sidebar :: sidebar('nova-reserva')}"></div>
 
   <main class="app-main">
     <div class="page-header">
