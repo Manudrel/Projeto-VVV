@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout & Ticket — SCVP | VVV</title>
+
+  <!-- ================================================================
+       VARIÁVEIS DE DESIGN (replica variables.css do projeto)
+       ================================================================ -->
+  <style>
+    /* ── tokens ── */
+    :root {
+      --clr-brand:        #1e5f74;
+      --clr-brand-dark:   #164f61;
+      --clr-brand-light:  #d0e9ef;
+      --clr-accent:       #f0a500;
+      --clr-accent-dark:  #c98700;
+      --clr-success:      #2e7d32;
+      --clr-success-bg:   #e8f5e9;
+      --clr-warning:      #e65100;
+      --clr-warning-bg:   #fff3e0;
+      --clr-danger:       #c62828;
+
+      --clr-bg:           #f5f7f9;
+      --clr-surface:      #ffffff;
+      --clr-border:       #dce3ea;
+      --clr-text:         #1a2332;
+      --clr-text-muted:   #6b7b8d;
+
+      --sidebar-width:    240px;
+      --header-height:    56px;
+      --radius:           8px;
+      --radius-lg:        12px;
+      --shadow-sm:        0 1px 3px rgba(0,0,0,.08);
+      --shadow-md:        0 4px 12px rgba(0,0,0,.12);
+
+      --font-base: 'Segoe UI', system-ui, sans-serif;
+    }
+
+    /* ── reset mínimo ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-base);
+      font-size: 14px;
+      background: var(--clr-bg);
+      color: var(--clr-text);
+      line-height: 1.5;
+    }
+
+    /* ================================================================
+       LAYOUT: APP-SHELL  (sidebar + main)
+       ================================================================ */
+    .app-shell {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ── sidebar ── */
+    .sidebar {
+      width: var(--sidebar-width);
+      background: var(--clr-brand);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      position: fixed;
+      top: 0; left: 0;
+      height: 100vh;
+      overflow-y: auto;
+      z-index: 100;
+    }
+    .sidebar-logo {
+      padding: 20px 16px;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: .5px;
+      border-bottom: 1px solid rgba(255,255,255,.12);
+    }
+    .sidebar-logo span { opacity: .65; font-size: 12px; font-weight: 400; display: block; }
+    .sidebar-nav { padding: 12px 0; flex: 1; }
+    .nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 16px;
+      color: rgba(255,255,255,.75);
+      text-decoration: none;
+      font-size: 13.5px;
+      border-radius: 0;
+      cursor: pointer;
+      transition: background .15s, color .15s;
+    }
+    .nav-item:hover  { background: rgba(255,255,255,.08); color: #fff; }
+    .nav-item.active { background: rgba(255,255,255,.15); color: #fff; font-weight: 600; }
+    .nav-section-label {
+      padding: 16px 16px 4px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,.4);
+    }
+
+    /* ── header ── */
+    .content-area {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .app-header {
+      height: var(--header-height);
+      background: var(--clr-surface);
+      border-bottom: 1px solid var(--clr-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: var(--shadow-sm);
+    }
+    .page-title { font-size: 16px; font-weight: 600; }
+    .user-menu { display: flex; align-items: center; gap: 10px; }
+    .user-name  { font-size: 13px; font-weight: 600; }
+    .user-role  { font-size: 11px; color: var(--clr-text-muted); display: block; }
+    .user-avatar {
+      width: 32px; height: 32px;
+      background: var(--clr-brand);
+      color: #fff;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 13px;
+    }
+
+    /* ── main content ── */
+    .app-main {
+      flex: 1;
+      padding: 28px 28px;
+      max-width: 980px;
+    }
+    .page-header { margin-bottom: 20px; }
+    .page-header h1 { font-size: 22px; font-weight: 700; margin-top: 4px; }
+    .breadcrumb {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 12px; color: var(--clr-text-muted);
+      margin-bottom: 4px;
+    }
+    .breadcrumb a { color: var(--clr-brand); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+
+    /* ================================================================
+       CARD
+       ================================================================ */
+    .card {
+      background: var(--clr-surface);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+    .card-header {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--clr-border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .card-title { font-size: 14px; font-weight: 600; }
+    .card-body  { padding: 20px; }
+
+    /* ================================================================
+       WIZARD STEPS
+       ================================================================ */
+    .wizard-steps {
+      display: flex;
+      list-style: none;
+      gap: 0;
+      margin-bottom: 28px;
+      padding: 0;
+      border-bottom: 2px solid var(--clr-border);
+    }
+    .wizard-step {
+      display: flex; align-items: center; gap: 8px;
+      padding: 12px 20px;
+      font-size: 13px;
+      color: var(--clr-text-muted);
+      cursor: default;
+      position: relative;
+    }
+    .wizard-step.active  { color: var(--clr-brand); font-weight: 700; }
+    .wizard-step.done    { color: var(--clr-success); }
+    .wizard-step.active::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0; right: 0;
+      height: 2px;
+      background: var(--clr-brand);
+    }
+    .wizard-step .num {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: var(--clr-border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700;
+    }
+    .wizard-step.active .num { background: var(--clr-brand); color: #fff; }
+    .wizard-step.done .num   { background: var(--clr-success); color: #fff; }
+
+    /* ================================================================
+       WIZARD PANES
+       ================================================================ */
+    .wizard-pane         { display: none; }
+    .wizard-pane.active  { display: block; }
+
+    .wizard-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 28px;
+      padding-top: 20px;
+      border-top: 1px solid var(--clr-border);
+    }
+
+    /* ================================================================
+       BOTÕES
+       ================================================================ */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 8px 18px;
+      border-radius: var(--radius);
+      border: 1px solid transparent;
+      font-size: 13px; font-weight: 600;
+      cursor: pointer;
+      transition: background .15s, box-shadow .15s, transform .1s;
+      text-decoration: none;
+    }
+    .btn:active { transform: scale(.98); }
+    .btn-primary {
+      background: var(--clr-brand); color: #fff;
+      border-color: var(--clr-brand);
+    }
+    .btn-primary:hover  { background: var(--clr-brand-dark); }
+    .btn-secondary {
+      background: var(--clr-surface); color: var(--clr-text);
+      border-color: var(--clr-border);
+    }
+    .btn-secondary:hover { background: var(--clr-bg); }
+    .btn-accent {
+      background: var(--clr-accent); color: #fff;
+      border-color: var(--clr-accent);
+    }
+    .btn-accent:hover { background: var(--clr-accent-dark); }
+    .btn-ghost {
+      background: transparent; color: var(--clr-text-muted);
+    }
+    .btn-ghost:hover { background: var(--clr-bg); }
+    .btn-lg { padding: 11px 24px; font-size: 14px; }
+    .btn-sm { padding: 5px 12px; font-size: 12px; }
+
+    /* ================================================================
+       FORMULÁRIO
+       ================================================================ */
+    .form-row   { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    .form-label { font-size: 12px; font-weight: 600; color: var(--clr-text-muted); text-transform: uppercase; letter-spacing: .5px; }
+    .form-control {
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius);
+      padding: 8px 12px;
+      font-size: 13.5px;
+      color: var(--clr-text);
+      background: var(--clr-surface);
+      transition: border-color .15s, box-shadow .15s;
+      width: 100%;
+    }
+    .form-control:focus {
+      outline: none;
+      border-color: var(--clr-brand);
+      box-shadow: 0 0 0 3px rgba(30,95,116,.12);
+    }
+    .form-hint { font-size: 11px; color: var(--clr-text-muted); }
+    .required  { color: var(--clr-danger); }
+
+    /* ================================================================
+       TABELA DE RESERVAS
+       ================================================================ */
+    .table-wrapper { overflow-x: auto; border: 1px solid var(--clr-border); border-radius: var(--radius); }
+    .table {
+      width: 100%; border-collapse: collapse;
+      font-size: 13px;
+    }
+    .table thead th {
+      background: var(--clr-bg);
+      padding: 10px 14px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      color: var(--clr-text-muted);
+      border-bottom: 1px solid var(--clr-border);
+    }
+    .table tbody td {
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--clr-border);
+      vertical-align: middle;
+    }
+    .table tbody tr:last-child td { border-bottom: none; }
+    .table tbody tr.selected td  { background: var(--clr-brand-light); }
+    .table tbody tr:hover td      { background: var(--clr-bg); cursor: pointer; }
+    .table tbody tr.selected:hover td { background: var(--clr-brand-light); }
+
+    /* badge de status */
+    .badge {
+      display: inline-flex; align-items: center;
+      padding: 2px 8px;
+      border-radius: 99px;
+      font-size: 11px; font-weight: 600;
+    }
+    .badge-pending  { background: #fff3cd; color: #856404; }
+    .badge-active   { background: var(--clr-success-bg); color: var(--clr-success); }
+    .badge-info     { background: var(--clr-brand-light); color: var(--clr-brand-dark); }
+
+    /* ================================================================
+       ETAPA 1 — CARDS DE RESERVA SELECIONÁVEL
+       ================================================================ */
+    .reserva-card {
+      border: 2px solid var(--clr-border);
+      border-radius: var(--radius-lg);
+      padding: 16px 18px;
+      cursor: pointer;
+      transition: border-color .2s, box-shadow .2s;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+    .reserva-card:hover         { border-color: var(--clr-brand); box-shadow: 0 2px 8px rgba(30,95,116,.12); }
+    .reserva-card.selected      { border-color: var(--clr-brand); background: var(--clr-brand-light); }
+    .reserva-card input[type="radio"] { margin-top: 3px; accent-color: var(--clr-brand); }
+
+    .reserva-card-body { flex: 1; }
+    .reserva-card-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+    .reserva-card-meta  { font-size: 12px; color: var(--clr-text-muted); display: flex; flex-wrap: wrap; gap: 10px; }
+    .reserva-card-meta span::before { content: '• '; }
+    .reserva-card-meta span:first-child::before { content: ''; }
+    .reserva-card-price {
+      text-align: right;
+      white-space: nowrap;
+    }
+    .price-label  { font-size: 11px; color: var(--clr-text-muted); }
+    .price-value  { font-size: 18px; font-weight: 700; color: var(--clr-brand); }
+    .price-taxa   { font-size: 11px; color: var(--clr-text-muted); }
+
+    /* ================================================================
+       ETAPA 2 — RESUMO + PAGAMENTO
+       ================================================================ */
+    .checkout-grid {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .summary-list { list-style: none; }
+    .summary-list li {
+      display: flex;
+      justify-content: space-between;
+      padding: 9px 0;
+      border-bottom: 1px solid var(--clr-border);
+      font-size: 13px;
+    }
+    .summary-list li:last-child  { border-bottom: none; }
+    .summary-list li.total {
+      font-weight: 700; font-size: 15px;
+      color: var(--clr-brand);
+      padding-top: 12px;
+    }
+    .summary-list li span:first-child { color: var(--clr-text-muted); }
+
+    /* card de desconto criança */
+    .alert {
+      display: flex; gap: 12px;
+      padding: 12px 16px;
+      border-radius: var(--radius);
+      font-size: 13px;
+    }
+    .alert-warning { background: var(--clr-warning-bg); border-left: 3px solid var(--clr-accent); }
+    .alert-icon    { font-size: 20px; flex-shrink: 0; }
+    .alert-title   { font-weight: 700; margin-bottom: 2px; }
+
+    /* campo de cartão de crédito */
+    .card-number-wrapper {
+      position: relative;
+    }
+    .card-number-wrapper .card-icons {
+      position: absolute;
+      right: 10px; top: 50%;
+      transform: translateY(-50%);
+      display: flex; gap: 4px;
+      font-size: 18px;
+      opacity: .6;
+    }
+    .card-number-wrapper input { padding-right: 80px; }
+
+    /* sticky do bloco de pagamento */
+    .payment-sticky {
+      position: sticky;
+      top: calc(var(--header-height) + 16px);
+    }
+    .payment-total-box {
+      background: var(--clr-brand);
+      color: #fff;
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      margin-bottom: 14px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .payment-total-box .label { font-size: 12px; opacity: .8; }
+    .payment-total-box .value { font-size: 24px; font-weight: 700; }
+
+    .payment-methods { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+    .method-btn {
+      flex: 1; min-width: 70px;
+      padding: 8px 4px;
+      border: 2px solid var(--clr-border);
+      border-radius: var(--radius);
+      background: var(--clr-surface);
+      cursor: pointer;
+      text-align: center;
+      font-size: 12px; font-weight: 600;
+      color: var(--clr-text-muted);
+      transition: border-color .15s, color .15s;
+    }
+    .method-btn:hover  { border-color: var(--clr-brand); color: var(--clr-brand); }
+    .method-btn.active { border-color: var(--clr-brand); color: var(--clr-brand); background: var(--clr-brand-light); }
+    .method-btn .method-icon { font-size: 20px; display: block; margin-bottom: 2px; }
+
+    /* ================================================================
+       ETAPA 3 — TICKET
+       ================================================================ */
+    .ticket-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      padding: 16px 0;
+    }
+    .ticket-success-msg {
+      text-align: center;
+    }
+    .ticket-success-msg .success-icon {
+      font-size: 48px;
+      display: block;
+      margin-bottom: 8px;
+      animation: popIn .4s cubic-bezier(.34,1.56,.64,1) both;
+    }
+    @keyframes popIn {
+      from { transform: scale(0); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+    .ticket-success-msg h2 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+    .ticket-success-msg p  { color: var(--clr-text-muted); font-size: 13px; }
+
+    /* ── o ticket em si ── */
+    .ticket {
+      width: 100%;
+      max-width: 580px;
+      background: var(--clr-surface);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* cabeçalho colorido do ticket */
+    .ticket-header {
+      background: linear-gradient(135deg, var(--clr-brand) 0%, #2d8ba6 100%);
+      color: #fff;
+      padding: 20px 24px 28px;
+      position: relative;
+    }
+    .ticket-header .airline-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      opacity: .75;
+      margin-bottom: 6px;
+    }
+    .ticket-header .route {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+    .ticket-header .iata { font-size: 36px; font-weight: 800; line-height: 1; }
+    .ticket-header .route-arrow { font-size: 22px; opacity: .7; flex: 1; text-align: center; }
+    .ticket-header .modal-badge {
+      position: absolute;
+      top: 20px; right: 24px;
+      background: rgba(255,255,255,.18);
+      border-radius: 99px;
+      padding: 4px 12px;
+      font-size: 12px; font-weight: 600;
+    }
+
+    /* recorte serrilhado entre header e body */
+    .ticket-notch {
+      display: flex;
+      align-items: center;
+      position: relative;
+      height: 0;
+    }
+    .ticket-notch::before,
+    .ticket-notch::after {
+      content: '';
+      width: 22px; height: 22px;
+      background: var(--clr-bg);
+      border-radius: 50%;
+      position: absolute;
+      top: -11px;
+    }
+    .ticket-notch::before { left: -11px; }
+    .ticket-notch::after  { right: -11px; }
+    .ticket-notch .dash {
+      flex: 1;
+      border-top: 2px dashed var(--clr-border);
+      margin: 0 14px;
+    }
+
+    /* body do ticket */
+    .ticket-body {
+      padding: 20px 24px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .ticket-field .field-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--clr-text-muted);
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+    .ticket-field .field-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--clr-text);
+    }
+
+    /* rodapé do ticket com QR + código de barras */
+    .ticket-footer {
+      border-top: 1px solid var(--clr-border);
+      padding: 16px 24px;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+    .ticket-qr {
+      width: 72px; height: 72px;
+      flex-shrink: 0;
+    }
+    .ticket-barcode {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .barcode-img {
+      display: flex;
+      gap: 1px;
+      height: 40px;
+      align-items: stretch;
+    }
+    .barcode-img span {
+      display: block;
+      background: var(--clr-text);
+      border-radius: 1px;
+    }
+    .barcode-num {
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--clr-text-muted);
+      text-align: center;
+    }
+    .ticket-locator {
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .ticket-locator .loc-label { font-size: 10px; color: var(--clr-text-muted); text-transform: uppercase; letter-spacing: 1px; }
+    .ticket-locator .loc-code  { font-size: 22px; font-weight: 800; color: var(--clr-brand); letter-spacing: 2px; }
+
+    /* ações pós-ticket */
+    .ticket-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* ================================================================
+       UTILITÁRIOS
+       ================================================================ */
+    .mt-4   { margin-top: 16px; }
+    .mb-4   { margin-bottom: 16px; }
+    .hidden { display: none !important; }
+    .text-center { text-align: center; }
+    .flex   { display: flex; }
+    .gap-3  { gap: 12px; }
+    .stack  { display: flex; flex-direction: column; gap: 10px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    /* divider com label */
+    .divider-label {
+      display: flex; align-items: center; gap: 10px;
+      color: var(--clr-text-muted); font-size: 11px;
+      margin: 14px 0;
+    }
+    .divider-label::before,
+    .divider-label::after {
+      content: ''; flex: 1;
+      border-top: 1px solid var(--clr-border);
+    }
+
+    /* pix qr placeholder */
+    .pix-container { text-align: center; padding: 16px 0; }
+    .pix-qr {
+      width: 140px; height: 140px;
+      margin: 0 auto 10px;
+      background: var(--clr-bg);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 64px;
+    }
+    .pix-key {
+      display: inline-block;
+      background: var(--clr-bg);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius);
+      padding: 8px 14px;
+      font-size: 12px;
+      font-family: monospace;
+      margin-top: 6px;
+    }
+    .pix-hint { font-size: 12px; color: var(--clr-text-muted); margin-top: 6px; }
+
+    /* responsividade básica */
+    @media (max-width: 840px) {
+      .checkout-grid { grid-template-columns: 1fr; }
+      .payment-sticky { position: static; }
+      .sidebar { transform: translateX(-100%); transition: transform .25s; }
+      .sidebar.open { transform: translateX(0); }
+      .content-area { margin-left: 0; }
+    }
+  </style>
+</head>
+
+<body>
+<div class="app-shell">
+
+  <!-- ════════════════════════════════════════════
+       SIDEBAR (idêntica ao padrão do projeto)
+       ════════════════════════════════════════════ -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      SCVP <span>Sistema de Vendas e Passagens</span>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Principal</div>
+      <a class="nav-item" href="/dashboard">🏠 Dashboard</a>
+      <a class="nav-item active" href="/reservas">🎫 Reservas</a>
+      <a class="nav-item" href="/clientes">👥 Clientes</a>
+      <div class="nav-section-label">Operações</div>
+      <a class="nav-item" href="/passagens">🗺️ Passagens</a>
+      <a class="nav-item" href="/modais">🚌 Modais</a>
+      <a class="nav-item" href="/rotas">📍 Rotas</a>
+      <div class="nav-section-label">Sistema</div>
+      <a class="nav-item" href="/relatorios">📊 Relatórios</a>
+      <a class="nav-item" href="/configuracoes">⚙️ Configurações</a>
+    </nav>
+  </aside>
+
+  <!-- ════════════════════════════════════════════
+       ÁREA DE CONTEÚDO
+       ════════════════════════════════════════════ -->
+  <div class="content-area">
+
+    <!-- HEADER -->
+    <header class="app-header">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <h1 class="page-title">Checkout &amp; Emissão de Ticket</h1>
+      </div>
+      <div class="user-menu">
+        <div class="user-info">
+          <span class="user-name">Maria Souza</span>
+          <span class="user-role">Gerente</span>
+        </div>
+        <span class="user-avatar">M</span>
+        <button class="btn btn-ghost btn-sm">Sair</button>
+      </div>
+    </header>
+
+    <!-- MAIN -->
+    <main class="app-main">
+
+      <!-- Breadcrumb -->
+      <div class="page-header">
+        <nav class="breadcrumb" aria-label="Trilha">
+          <a href="/dashboard">Início</a>
+          <span aria-hidden="true">›</span>
+          <a href="/reservas">Reservas</a>
+          <span aria-hidden="true">›</span>
+          <span>Checkout</span>
+        </nav>
+        <h1>Checkout &amp; Emissão de Ticket</h1>
+      </div>
+
+      <!-- CARD PRINCIPAL -->
+      <div class="card">
+        <div class="card-body">
+
+          <!-- ── INDICADORES DE ETAPA ── -->
+          <ol class="wizard-steps" role="tablist" id="wizard-tabs">
+            <li class="wizard-step active" id="tab-1"><span class="num">1</span> Reserva</li>
+            <li class="wizard-step"         id="tab-2"><span class="num">2</span> Pagamento</li>
+            <li class="wizard-step"         id="tab-3"><span class="num">3</span> Ticket</li>
+          </ol>
+
+          <!-- ══════════════════════════════════════
+               ETAPA 1 — ESCOLHER RESERVA EXISTENTE
+               ══════════════════════════════════════ -->
+          <section class="wizard-pane active" id="pane-1" aria-label="Escolher Reserva">
+            <h3 style="margin-bottom:16px;">Selecione a reserva para checkout</h3>
+
+            <!-- Filtros rápidos -->
+            <div class="form-row mb-4">
+              <div class="form-group">
+                <label class="form-label" for="busca-reserva">Buscar por cliente ou código</label>
+                <input id="busca-reserva" class="form-control" placeholder="Ex.: João Pereira ou #RES-0042" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="filtro-modal">Modal</label>
+                <select id="filtro-modal" class="form-control">
+                  <option value="">Todos</option>
+                  <option>✈️ Avião</option>
+                  <option>🚌 Ônibus</option>
+                  <option>🚆 Trem</option>
+                  <option>🚢 Navio</option>
+                </select>
+              </div>
+              <div class="form-group" style="align-self:end;">
+                <button class="btn btn-secondary" onclick="filtrarReservas()">🔍 Filtrar</button>
+              </div>
+            </div>
+
+            <!-- Lista de reservas selecionáveis -->
+            <div id="lista-reservas" class="stack">
+
+              <!-- Reserva 1 -->
+              <label class="reserva-card" id="card-res-1" onclick="selecionarReserva('res-1', this)">
+                <input type="radio" name="reservaId" value="res-1" />
+                <div class="reserva-card-body">
+                  <div class="reserva-card-title">
+                    ✈️&nbsp; LATAM 3024 &mdash; São Paulo (GRU) → Salvador (SSA)
+                  </div>
+                  <div class="reserva-card-meta">
+                    <span>João Pereira</span>
+                    <span>CPF: 012.345.678-90</span>
+                    <span>22/06/2026 &bull; Saída 08:30</span>
+                    <span>Econômica</span>
+                    <span><span class="badge badge-pending">Pendente</span></span>
+                  </div>
+                </div>
+                <div class="reserva-card-price">
+                  <div class="price-label">Tarifa</div>
+                  <div class="price-value">R$&nbsp;489,00</div>
+                  <div class="price-taxa">+ R$ 24,00 embarque</div>
+                </div>
+              </label>
+
+              <!-- Reserva 2 -->
+              <label class="reserva-card" id="card-res-2" onclick="selecionarReserva('res-2', this)">
+                <input type="radio" name="reservaId" value="res-2" />
+                <div class="reserva-card-body">
+                  <div class="reserva-card-title">
+                    🚌&nbsp; Viação Cometa &mdash; Campinas (CPQ) → Rio de Janeiro (GIG)
+                  </div>
+                  <div class="reserva-card-meta">
+                    <span>Ana Lima</span>
+                    <span>CPF: 987.654.321-00</span>
+                    <span>23/06/2026 &bull; Saída 22:00</span>
+                    <span>Semi-Leito</span>
+                    <span><span class="badge badge-pending">Pendente</span></span>
+                  </div>
+                </div>
+                <div class="reserva-card-price">
+                  <div class="price-label">Tarifa</div>
+                  <div class="price-value">R$&nbsp;189,00</div>
+                  <div class="price-taxa">+ R$ 10,00 embarque</div>
+                </div>
+              </label>
+
+              <!-- Reserva 3 -->
+              <label class="reserva-card" id="card-res-3" onclick="selecionarReserva('res-3', this)">
+                <input type="radio" name="reservaId" value="res-3" />
+                <div class="reserva-card-body">
+                  <div class="reserva-card-title">
+                    🚆&nbsp; Vale Expresso &mdash; Curitiba (CWB) → São Paulo (GRU)
+                  </div>
+                  <div class="reserva-card-meta">
+                    <span>Pedro Alves</span>
+                    <span>CPF: 111.222.333-44</span>
+                    <span>25/06/2026 &bull; Saída 06:15</span>
+                    <span>Leito</span>
+                    <span><span class="badge badge-pending">Pendente</span></span>
+                  </div>
+                </div>
+                <div class="reserva-card-price">
+                  <div class="price-label">Tarifa</div>
+                  <div class="price-value">R$&nbsp;259,00</div>
+                  <div class="price-taxa">+ R$ 15,00 embarque</div>
+                </div>
+              </label>
+
+            </div><!-- /lista-reservas -->
+
+            <!-- Aviso: nenhuma selecionada -->
+            <div id="aviso-selecao" class="alert alert-warning mt-4 hidden">
+              <span class="alert-icon">⚠️</span>
+              <div>
+                <div class="alert-title">Selecione uma reserva</div>
+                <span>Escolha uma reserva acima para continuar o checkout.</span>
+              </div>
+            </div>
+
+            <div class="wizard-nav">
+              <span></span>
+              <button type="button" class="btn btn-primary" onclick="irParaPagamento()">
+                Próximo → Pagamento
+              </button>
+            </div>
+          </section>
+
+          <!-- ══════════════════════════════════════
+               ETAPA 2 — RESUMO + PAGAMENTO
+               ══════════════════════════════════════ -->
+          <section class="wizard-pane" id="pane-2" aria-label="Pagamento">
+            <h3 style="margin-bottom:20px;">Resumo e pagamento</h3>
+
+            <div class="checkout-grid">
+
+              <!-- Coluna esquerda: resumo detalhado -->
+              <div>
+
+                <!-- Detalhes da viagem -->
+                <div class="card mb-4">
+                  <div class="card-header">
+                    <span class="card-title">Detalhes da viagem</span>
+                    <span id="resumo-modal-badge" class="badge badge-info">✈️ Avião</span>
+                  </div>
+                  <div class="card-body">
+                    <ul class="summary-list">
+                      <li><span>Cliente</span>        <span id="resumo-cliente">—</span></li>
+                      <li><span>CPF</span>             <span id="resumo-cpf">—</span></li>
+                      <li><span>Trajeto</span>         <span id="resumo-trajeto">—</span></li>
+                      <li><span>Modal</span>           <span id="resumo-modal">—</span></li>
+                      <li><span>Tipo de passagem</span><span id="resumo-tipo">—</span></li>
+                      <li><span>Data / Saída</span>    <span id="resumo-data">—</span></li>
+                    </ul>
+                  </div>
+                </div>
+
+                <!-- Valores -->
+                <div class="card mb-4">
+                  <div class="card-header"><span class="card-title">Valores</span></div>
+                  <div class="card-body">
+                    <ul class="summary-list">
+                      <li><span>Tarifa base</span>      <span id="resumo-tarifa">—</span></li>
+                      <li><span>Taxa de embarque</span>  <span id="resumo-taxa">—</span></li>
+                      <li class="total"><span>Total</span><span id="resumo-total">—</span></li>
+                    </ul>
+                  </div>
+                </div>
+
+                <!-- Alerta criança (condicional) -->
+                <div class="alert alert-warning" id="alerta-crianca" style="display:none;">
+                  <span class="alert-icon">👶</span>
+                  <div>
+                    <div class="alert-title">Passageiro entre 2 e 10 anos</div>
+                    <span>Aplique o desconto de 40% e vincule um adulto responsável.</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Coluna direita: formulário de pagamento (sticky) -->
+              <div class="payment-sticky">
+                <div class="payment-total-box">
+                  <div>
+                    <div class="label">Total a pagar</div>
+                    <div class="value" id="payment-total">R$ 0,00</div>
+                  </div>
+                  <span style="font-size:32px;">💳</span>
+                </div>
+
+                <!-- Seleção do método -->
+                <div class="card">
+                  <div class="card-header"><span class="card-title">Forma de pagamento</span></div>
+                  <div class="card-body">
+
+                    <div class="payment-methods">
+                      <button class="method-btn active" onclick="setMetodo('dinheiro', this)">
+                        <span class="method-icon">💵</span>Dinheiro
+                      </button>
+                      <button class="method-btn" onclick="setMetodo('pix', this)">
+                        <span class="method-icon">📱</span>PIX
+                      </button>
+                      <button class="method-btn" onclick="setMetodo('debito', this)">
+                        <span class="method-icon">💳</span>Débito
+                      </button>
+                      <button class="method-btn" onclick="setMetodo('credito', this)">
+                        <span class="method-icon">💎</span>Crédito
+                      </button>
+                    </div>
+
+                    <!-- ── Painel: Dinheiro ── -->
+                    <div id="metodo-dinheiro">
+                      <div class="form-group mt-4">
+                        <label class="form-label" for="troco-de">Valor recebido (R$)</label>
+                        <input id="troco-de" type="number" step="0.01" class="form-control"
+                               placeholder="Ex.: 550,00" oninput="calcTroco()" />
+                      </div>
+                      <div class="form-group mt-4">
+                        <label class="form-label">Troco</label>
+                        <div class="form-control" id="troco-valor"
+                             style="background:var(--clr-bg);font-weight:700;color:var(--clr-brand);">
+                          R$ 0,00
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- ── Painel: PIX ── -->
+                    <div id="metodo-pix" class="pix-container hidden">
+                      <div class="pix-qr">
+                        <!-- QR fictício via SVG embutido -->
+                        <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+                          <rect width="60" height="60" fill="#fff"/>
+                          <!-- padrão de módulos simplificado para efeito visual -->
+                          <g fill="#1a2332">
+                            <rect x="2"  y="2"  width="18" height="18" rx="1"/>
+                            <rect x="40" y="2"  width="18" height="18" rx="1"/>
+                            <rect x="2"  y="40" width="18" height="18" rx="1"/>
+                            <rect x="6"  y="6"  width="10" height="10" fill="#fff"/>
+                            <rect x="44" y="6"  width="10" height="10" fill="#fff"/>
+                            <rect x="6"  y="44" width="10" height="10" fill="#fff"/>
+                            <rect x="8"  y="8"  width="6"  height="6"  />
+                            <rect x="46" y="8"  width="6"  height="6"  />
+                            <rect x="8"  y="46" width="6"  height="6"  />
+                            <!-- módulos aleatórios no centro -->
+                            <rect x="22" y="2"  width="4" height="4" /><rect x="28" y="2"  width="4" height="4" />
+                            <rect x="34" y="2"  width="4" height="4" /><rect x="22" y="8"  width="4" height="4" />
+                            <rect x="30" y="8"  width="4" height="4" /><rect x="22" y="14" width="4" height="4" />
+                            <rect x="34" y="14" width="4" height="4" /><rect x="2"  y="22" width="4" height="4" />
+                            <rect x="8"  y="22" width="4" height="4" /><rect x="16" y="22" width="4" height="4" />
+                            <rect x="22" y="22" width="4" height="4" /><rect x="30" y="22" width="4" height="4" />
+                            <rect x="36" y="22" width="4" height="4" /><rect x="42" y="22" width="4" height="4" />
+                            <rect x="54" y="22" width="4" height="4" /><rect x="2"  y="28" width="4" height="4" />
+                            <rect x="14" y="28" width="4" height="4" /><rect x="22" y="28" width="4" height="4" />
+                            <rect x="28" y="28" width="4" height="4" /><rect x="38" y="28" width="4" height="4" />
+                            <rect x="48" y="28" width="4" height="4" /><rect x="54" y="28" width="4" height="4" />
+                            <rect x="4"  y="34" width="4" height="4" /><rect x="12" y="34" width="4" height="4" />
+                            <rect x="22" y="34" width="4" height="4" /><rect x="32" y="34" width="4" height="4" />
+                            <rect x="40" y="34" width="4" height="4" /><rect x="52" y="34" width="4" height="4" />
+                            <rect x="22" y="40" width="4" height="4" /><rect x="30" y="40" width="4" height="4" />
+                            <rect x="40" y="40" width="4" height="4" /><rect x="50" y="40" width="4" height="4" />
+                            <rect x="22" y="46" width="4" height="4" /><rect x="28" y="46" width="4" height="4" />
+                            <rect x="36" y="46" width="4" height="4" /><rect x="44" y="50" width="4" height="4" />
+                            <rect x="22" y="52" width="4" height="4" /><rect x="30" y="52" width="4" height="4" />
+                            <rect x="40" y="52" width="4" height="4" /><rect x="52" y="52" width="4" height="4" />
+                          </g>
+                        </svg>
+                      </div>
+                      <p class="pix-hint">Escaneie com o app do seu banco</p>
+                      <div class="pix-key">00020126580014br.gov.bcb.pix.vvv.scvp@pagamento.com.br</div>
+                      <p class="pix-hint" style="margin-top:8px;">Chave válida por <strong>15 minutos</strong></p>
+                    </div>
+
+                    <!-- ── Painel: Débito ── -->
+                    <div id="metodo-debito" class="hidden">
+                      <div class="form-group mt-4">
+                        <label class="form-label" for="deb-numero">Número do cartão</label>
+                        <div class="card-number-wrapper">
+                          <input id="deb-numero" class="form-control"
+                                 placeholder="0000 0000 0000 0000" maxlength="19"
+                                 oninput="mascaraCartao(this)" />
+                          <span class="card-icons">💳</span>
+                        </div>
+                      </div>
+                      <div class="form-row mt-4">
+                        <div class="form-group">
+                          <label class="form-label" for="deb-validade">Validade</label>
+                          <input id="deb-validade" class="form-control" placeholder="MM/AA" maxlength="5"
+                                 oninput="mascaraValidade(this)" />
+                        </div>
+                        <div class="form-group">
+                          <label class="form-label" for="deb-cvv">CVV</label>
+                          <input id="deb-cvv" class="form-control" placeholder="000" maxlength="3" type="password" />
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- ── Painel: Crédito ── -->
+                    <div id="metodo-credito" class="hidden">
+                      <div class="form-group mt-4">
+                        <label class="form-label" for="cred-numero">Número do cartão</label>
+                        <div class="card-number-wrapper">
+                          <input id="cred-numero" class="form-control"
+                                 placeholder="0000 0000 0000 0000" maxlength="19"
+                                 oninput="mascaraCartao(this)" />
+                          <span class="card-icons">💎</span>
+                        </div>
+                      </div>
+                      <div class="form-row mt-4">
+                        <div class="form-group">
+                          <label class="form-label" for="cred-nome">Nome no cartão</label>
+                          <input id="cred-nome" class="form-control" placeholder="NOME COMPLETO" />
+                        </div>
+                      </div>
+                      <div class="form-row mt-4">
+                        <div class="form-group">
+                          <label class="form-label" for="cred-validade">Validade</label>
+                          <input id="cred-validade" class="form-control" placeholder="MM/AA" maxlength="5"
+                                 oninput="mascaraValidade(this)" />
+                        </div>
+                        <div class="form-group">
+                          <label class="form-label" for="cred-cvv">CVV</label>
+                          <input id="cred-cvv" class="form-control" placeholder="000" maxlength="3" type="password" />
+                        </div>
+                      </div>
+                      <div class="divider-label">Parcelamento</div>
+                      <div class="form-group">
+                        <select id="parcelas" class="form-control">
+                          <option>1x de R$ 513,00 sem juros</option>
+                          <option>2x de R$ 256,50 sem juros</option>
+                          <option>3x de R$ 171,00 sem juros</option>
+                          <option>4x de R$ 128,25 sem juros</option>
+                          <option>6x de R$ 89,78 com juros (5% a.m.)</option>
+                          <option>12x de R$ 46,32 com juros (5% a.m.)</option>
+                        </select>
+                        <span class="form-hint">Acima de 4x são aplicados juros de 5% a.m.</span>
+                      </div>
+                    </div>
+
+                  </div><!-- /card-body -->
+                </div><!-- /card -->
+              </div><!-- /coluna direita -->
+            </div><!-- /checkout-grid -->
+
+            <div class="wizard-nav">
+              <button type="button" class="btn btn-secondary" onclick="irParaEtapa(1)">← Voltar</button>
+              <button type="button" class="btn btn-accent btn-lg" onclick="confirmarPagamento()">
+                ✔ Confirmar e Emitir Ticket
+              </button>
+            </div>
+          </section>
+
+          <!-- ══════════════════════════════════════
+               ETAPA 3 — TICKET GERADO
+               ══════════════════════════════════════ -->
+          <section class="wizard-pane" id="pane-3" aria-label="Ticket Emitido">
+            <div class="ticket-wrapper">
+
+              <!-- Mensagem de sucesso -->
+              <div class="ticket-success-msg">
+                <span class="success-icon">✅</span>
+                <h2>Reserva confirmada!</h2>
+                <p>Ticket emitido com sucesso. Apresente na hora do embarque.</p>
+              </div>
+
+              <!-- ── O TICKET ── -->
+              <div class="ticket">
+
+                <!-- Cabeçalho do ticket -->
+                <div class="ticket-header">
+                  <div class="airline-label" id="ticket-modal-label">LATAM AIRLINES · VVV</div>
+                  <div class="route">
+                    <span class="iata" id="ticket-origem-iata">GRU</span>
+                    <span class="route-arrow" id="ticket-seta">→</span>
+                    <span class="iata" id="ticket-destino-iata">SSA</span>
+                  </div>
+                  <div style="font-size:12px;opacity:.8;">
+                    <span id="ticket-origem-cidade">São Paulo</span>
+                    <span style="margin:0 8px;">→</span>
+                    <span id="ticket-destino-cidade">Salvador</span>
+                  </div>
+                  <span class="modal-badge" id="ticket-modal-badge">✈️ Avião</span>
+                </div>
+
+                <!-- Recorte serrilhado -->
+                <div class="ticket-notch">
+                  <div class="dash"></div>
+                </div>
+
+                <!-- Corpo do ticket -->
+                <div class="ticket-body">
+                  <div class="ticket-field">
+                    <div class="field-label">Passageiro</div>
+                    <div class="field-value" id="ticket-passageiro">João Pereira</div>
+                  </div>
+                  <div class="ticket-field">
+                    <div class="field-label">Data</div>
+                    <div class="field-value" id="ticket-data">22 Jun 2026</div>
+                  </div>
+                  <div class="ticket-field">
+                    <div class="field-label">Saída</div>
+                    <div class="field-value" id="ticket-saida">08:30</div>
+                  </div>
+                  <div class="ticket-field">
+                    <div class="field-label">Tipo</div>
+                    <div class="field-value" id="ticket-tipo">Econômica</div>
+                  </div>
+                  <div class="ticket-field">
+                    <div class="field-label">Assentos</div>
+                    <div class="field-value" id="ticket-assento">14C</div>
+                  </div>
+                  <div class="ticket-field">
+                    <div class="field-label">Valor pago</div>
+                    <div class="field-value" id="ticket-valor" style="color:var(--clr-brand);">R$ 513,00</div>
+                  </div>
+                </div>
+
+                <!-- Rodapé com código de barras e QR -->
+                <div class="ticket-footer">
+
+                  <!-- QR code fictício (SVG) -->
+                  <div class="ticket-qr">
+                    <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" width="72" height="72">
+                      <rect width="60" height="60" fill="#fff"/>
+                      <g fill="#1a2332">
+                        <rect x="2"  y="2"  width="16" height="16" rx="1"/>
+                        <rect x="42" y="2"  width="16" height="16" rx="1"/>
+                        <rect x="2"  y="42" width="16" height="16" rx="1"/>
+                        <rect x="5"  y="5"  width="10" height="10" fill="#fff"/>
+                        <rect x="45" y="5"  width="10" height="10" fill="#fff"/>
+                        <rect x="5"  y="45" width="10" height="10" fill="#fff"/>
+                        <rect x="7"  y="7"  width="6"  height="6" />
+                        <rect x="47" y="7"  width="6"  height="6" />
+                        <rect x="7"  y="47" width="6"  height="6" />
+                        <rect x="20" y="2"  width="3" height="3" /><rect x="25" y="4"  width="3" height="3" />
+                        <rect x="30" y="2"  width="3" height="3" /><rect x="35" y="5"  width="3" height="3" />
+                        <rect x="20" y="8"  width="3" height="3" /><rect x="28" y="10" width="3" height="3" />
+                        <rect x="20" y="14" width="3" height="3" /><rect x="32" y="12" width="3" height="3" />
+                        <rect x="2"  y="20" width="3" height="3" /><rect x="7"  y="22" width="3" height="3" />
+                        <rect x="14" y="20" width="3" height="3" /><rect x="20" y="22" width="3" height="3" />
+                        <rect x="27" y="20" width="3" height="3" /><rect x="33" y="22" width="3" height="3" />
+                        <rect x="40" y="20" width="3" height="3" /><rect x="50" y="22" width="3" height="3" />
+                        <rect x="57" y="20" width="3" height="3" /><rect x="2"  y="28" width="3" height="3" />
+                        <rect x="12" y="26" width="3" height="3" /><rect x="20" y="28" width="3" height="3" />
+                        <rect x="26" y="26" width="3" height="3" /><rect x="36" y="28" width="3" height="3" />
+                        <rect x="46" y="26" width="3" height="3" /><rect x="55" y="28" width="3" height="3" />
+                        <rect x="4"  y="34" width="3" height="3" /><rect x="10" y="32" width="3" height="3" />
+                        <rect x="20" y="34" width="3" height="3" /><rect x="30" y="32" width="3" height="3" />
+                        <rect x="38" y="34" width="3" height="3" /><rect x="50" y="32" width="3" height="3" />
+                        <rect x="20" y="40" width="3" height="3" /><rect x="28" y="38" width="3" height="3" />
+                        <rect x="38" y="40" width="3" height="3" /><rect x="48" y="42" width="3" height="3" />
+                        <rect x="20" y="46" width="3" height="3" /><rect x="26" y="48" width="3" height="3" />
+                        <rect x="34" y="46" width="3" height="3" /><rect x="42" y="50" width="3" height="3" />
+                        <rect x="20" y="52" width="3" height="3" /><rect x="28" y="54" width="3" height="3" />
+                        <rect x="38" y="52" width="3" height="3" /><rect x="50" y="54" width="3" height="3" />
+                      </g>
+                    </svg>
+                  </div>
+
+                  <!-- Código de barras fictício -->
+                  <div class="ticket-barcode">
+                    <div class="barcode-img" id="barcode-img">
+                      <!-- gerado via JS -->
+                    </div>
+                    <div class="barcode-num" id="barcode-num">0000 0000 0000 0000 0000</div>
+                  </div>
+
+                  <!-- Localizador -->
+                  <div class="ticket-locator">
+                    <div class="loc-label">Localizador</div>
+                    <div class="loc-code" id="ticket-localizador">VVV042</div>
+                  </div>
+
+                </div><!-- /ticket-footer -->
+              </div><!-- /ticket -->
+
+              <!-- Ações pós-ticket -->
+              <div class="ticket-actions">
+                <button class="btn btn-primary btn-lg" onclick="window.print()">🖨️ Imprimir Ticket</button>
+                <button class="btn btn-secondary btn-lg" onclick="location.href='/reservas'">📋 Ver Reservas</button>
+                <button class="btn btn-secondary btn-lg" onclick="novaReserva()">➕ Nova Reserva</button>
+              </div>
+
+            </div><!-- /ticket-wrapper -->
+          </section>
+
+        </div><!-- /card-body -->
+      </div><!-- /card -->
+
+    </main>
+  </div><!-- /content-area -->
+</div><!-- /app-shell -->
+
+
+<!-- ================================================================
+     JAVASCRIPT
+     ================================================================ -->
+<script>
+  /* ── Dados fictícios das reservas ── */
+  const RESERVAS = {
+    'res-1': {
+      cliente: 'João Pereira',
+      cpf:     '012.345.678-90',
+      trajeto: 'GRU → SSA',
+      origemIata: 'GRU', destinoIata: 'SSA',
+      origemCidade: 'São Paulo', destinoCidade: 'Salvador',
+      modal:   'LATAM 3024 (Avião)',
+      modalBadge: '✈️ Avião',
+      modalLabel: 'LATAM AIRLINES · VVV',
+      tipo:    'Econômica',
+      data:    '22/06/2026 · 08:30',
+      dataTicket: '22 Jun 2026',
+      saida:   '08:30',
+      assento: '14C',
+      tarifa:  489.00,
+      taxa:    24.00,
+    },
+    'res-2': {
+      cliente: 'Ana Lima',
+      cpf:     '987.654.321-00',
+      trajeto: 'CPQ → GIG',
+      origemIata: 'CPQ', destinoIata: 'GIG',
+      origemCidade: 'Campinas', destinoCidade: 'Rio de Janeiro',
+      modal:   'Viação Cometa (Ônibus)',
+      modalBadge: '🚌 Ônibus',
+      modalLabel: 'VIAÇÃO COMETA · VVV',
+      tipo:    'Semi-Leito',
+      data:    '23/06/2026 · 22:00',
+      dataTicket: '23 Jun 2026',
+      saida:   '22:00',
+      assento: '08',
+      tarifa:  189.00,
+      taxa:    10.00,
+    },
+    'res-3': {
+      cliente: 'Pedro Alves',
+      cpf:     '111.222.333-44',
+      trajeto: 'CWB → GRU',
+      origemIata: 'CWB', destinoIata: 'GRU',
+      origemCidade: 'Curitiba', destinoCidade: 'São Paulo',
+      modal:   'Vale Expresso (Trem)',
+      modalBadge: '🚆 Trem',
+      modalLabel: 'VALE EXPRESSO · VVV',
+      tipo:    'Leito',
+      data:    '25/06/2026 · 06:15',
+      dataTicket: '25 Jun 2026',
+      saida:   '06:15',
+      assento: '22A',
+      tarifa:  259.00,
+      taxa:    15.00,
+    },
+  };
+
+  /* reserva atualmente selecionada */
+  let reservaSelecionada = null;
+  /* método de pagamento selecionado */
+  let metodoPagamento = 'dinheiro';
+
+  /* ── Etapa 1: seleciona uma reserva ── */
+  function selecionarReserva(id, labelEl) {
+    reservaSelecionada = id;
+    // remove selected de todos
+    document.querySelectorAll('.reserva-card').forEach(c => c.classList.remove('selected'));
+    labelEl.classList.add('selected');
+  }
+
+  /* ── Avança para etapa 2 (pagamento) ── */
+  function irParaPagamento() {
+    if (!reservaSelecionada) {
+      document.getElementById('aviso-selecao').classList.remove('hidden');
+      return;
+    }
+    document.getElementById('aviso-selecao').classList.add('hidden');
+
+    const r = RESERVAS[reservaSelecionada];
+    const total = r.tarifa + r.taxa;
+
+    // Preenche resumo
+    document.getElementById('resumo-cliente').textContent   = r.cliente;
+    document.getElementById('resumo-cpf').textContent       = r.cpf;
+    document.getElementById('resumo-trajeto').textContent   = r.trajeto;
+    document.getElementById('resumo-modal').textContent     = r.modal;
+    document.getElementById('resumo-modal-badge').textContent = r.modalBadge;
+    document.getElementById('resumo-tipo').textContent      = r.tipo;
+    document.getElementById('resumo-data').textContent      = r.data;
+    document.getElementById('resumo-tarifa').textContent    = `R$ ${r.tarifa.toFixed(2).replace('.',',')}`;
+    document.getElementById('resumo-taxa').textContent      = `R$ ${r.taxa.toFixed(2).replace('.',',')}`;
+    document.getElementById('resumo-total').textContent     = `R$ ${total.toFixed(2).replace('.',',')}`;
+    document.getElementById('payment-total').textContent    = `R$ ${total.toFixed(2).replace('.',',')}`;
+
+    // Atualiza opções de parcelamento conforme total
+    atualizarParcelas(total);
+
+    irParaEtapa(2);
+  }
+
+  /* ── Avança para etapa 3 (ticket) ── */
+  function confirmarPagamento() {
+    const r = RESERVAS[reservaSelecionada];
+    const total = r.tarifa + r.taxa;
+    const localizador = 'VVV' + String(Math.floor(Math.random() * 999)).padStart(3,'0');
+
+    // Preenche o ticket
+    document.getElementById('ticket-modal-label').textContent   = r.modalLabel;
+    document.getElementById('ticket-origem-iata').textContent   = r.origemIata;
+    document.getElementById('ticket-destino-iata').textContent  = r.destinoIata;
+    document.getElementById('ticket-origem-cidade').textContent = r.origemCidade;
+    document.getElementById('ticket-destino-cidade').textContent= r.destinoCidade;
+    document.getElementById('ticket-modal-badge').textContent   = r.modalBadge;
+    document.getElementById('ticket-passageiro').textContent    = r.cliente;
+    document.getElementById('ticket-data').textContent          = r.dataTicket;
+    document.getElementById('ticket-saida').textContent         = r.saida;
+    document.getElementById('ticket-tipo').textContent          = r.tipo;
+    document.getElementById('ticket-assento').textContent       = r.assento;
+    document.getElementById('ticket-valor').textContent         = `R$ ${total.toFixed(2).replace('.',',')}`;
+    document.getElementById('ticket-localizador').textContent   = localizador;
+
+    // Gera código de barras fictício
+    gerarCodigoBarras();
+
+    // Gera número do código
+    const codNum = Array.from({length:5}, () =>
+      String(Math.floor(Math.random()*10000)).padStart(4,'0')).join(' ');
+    document.getElementById('barcode-num').textContent = codNum;
+
+    irParaEtapa(3);
+  }
+
+  /* ── Navega entre etapas ── */
+  function irParaEtapa(num) {
+    // oculta todos os panes
+    document.querySelectorAll('.wizard-pane').forEach(p => p.classList.remove('active'));
+    // ativa o pane correto
+    document.getElementById(`pane-${num}`).classList.add('active');
+
+    // atualiza tabs
+    document.querySelectorAll('.wizard-step').forEach((tab, i) => {
+      tab.classList.remove('active', 'done');
+      if (i + 1 < num) tab.classList.add('done');
+      if (i + 1 === num) tab.classList.add('active');
+    });
+
+    // rola para o topo do card
+    document.querySelector('.card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  /* ── Troca método de pagamento ── */
+  function setMetodo(metodo, btn) {
+    metodoPagamento = metodo;
+    // atualiza botões
+    document.querySelectorAll('.method-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    // exibe painel correto
+    ['dinheiro','pix','debito','credito'].forEach(m => {
+      const el = document.getElementById(`metodo-${m}`);
+      el.classList.toggle('hidden', m !== metodo);
+    });
+  }
+
+  /* ── Calcula troco (dinheiro) ── */
+  function calcTroco() {
+    if (!reservaSelecionada) return;
+    const r = RESERVAS[reservaSelecionada];
+    const total = r.tarifa + r.taxa;
+    const recebido = parseFloat(document.getElementById('troco-de').value) || 0;
+    const troco = Math.max(0, recebido - total);
+    document.getElementById('troco-valor').textContent =
+      `R$ ${troco.toFixed(2).replace('.',',')}`;
+  }
+
+  /* ── Máscara cartão ── */
+  function mascaraCartao(input) {
+    let v = input.value.replace(/\D/g,'').slice(0,16);
+    v = v.replace(/(.{4})/g, '$1 ').trim();
+    input.value = v;
+  }
+
+  /* ── Máscara validade ── */
+  function mascaraValidade(input) {
+    let v = input.value.replace(/\D/g,'').slice(0,4);
+    if (v.length > 2) v = v.slice(0,2) + '/' + v.slice(2);
+    input.value = v;
+  }
+
+  /* ── Atualiza opções de parcelas dinamicamente ── */
+  function atualizarParcelas(total) {
+    const sel = document.getElementById('parcelas');
+    if (!sel) return;
+    const opts = [
+      [1, false], [2, false], [3, false], [4, false],
+      [6, true],  [12, true]
+    ];
+    sel.innerHTML = opts.map(([n, juros]) => {
+      const taxa = juros ? Math.pow(1.05, n) : 1;
+      const parc = (total * taxa / n).toFixed(2).replace('.',',');
+      const label = juros ? `${n}x de R$ ${parc} com juros (5% a.m.)` : `${n}x de R$ ${parc} sem juros`;
+      return `<option>${label}</option>`;
+    }).join('');
+  }
+
+  /* ── Gera barras do código de barras fictício ── */
+  function gerarCodigoBarras() {
+    const container = document.getElementById('barcode-img');
+    container.innerHTML = '';
+    // padrão aleatório de barras finas/largas
+    for (let i = 0; i < 60; i++) {
+      const span = document.createElement('span');
+      const largura = Math.random() > 0.7 ? 3 : 1;
+      const espaco  = Math.random() > 0.5;
+      span.style.width = (espaco ? '0' : largura) + 'px';
+      if (!espaco) {
+        span.style.height = Math.random() > 0.3 ? '100%' : '70%';
+        span.style.alignSelf = 'center';
+        span.style.background = 'var(--clr-text)';
+      }
+      container.appendChild(span);
+    }
+  }
+
+  /* ── Nova reserva: volta à etapa 1 e reseta ── */
+  function novaReserva() {
+    reservaSelecionada = null;
+    document.querySelectorAll('.reserva-card').forEach(c => c.classList.remove('selected'));
+    document.querySelectorAll('input[name="reservaId"]').forEach(r => r.checked = false);
+    irParaEtapa(1);
+  }
+
+  /* ── Filtro simples de reservas (busca textual) ── */
+  function filtrarReservas() {
+    const termo = document.getElementById('busca-reserva').value.toLowerCase();
+    document.querySelectorAll('.reserva-card').forEach(card => {
+      const texto = card.textContent.toLowerCase();
+      card.style.display = texto.includes(termo) || termo === '' ? '' : 'none';
+    });
+  }
+</script>
+
+</body>
+</html>
