@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Cadastrar Funcionário — SCVP</title>
+    <link rel="stylesheet" th:href="@{/css/variables.css}" />
+    <link rel="stylesheet" th:href="@{/css/components.css}" />
+    <link rel="stylesheet" th:href="@{/css/app.css}" />
+</head>
+<body>
+<div class="app-shell">
+
+    <main class="app-main">
+        <div class="page-header">
+            <nav class="breadcrumb">
+                <a th:href="@{/dashboard}">Início</a> ›
+                <a th:href="@{/gerente/funcionarios}">Funcionários</a> ›
+                <span>Cadastrar</span>
+            </nav>
+            <h1>Cadastrar Funcionário</h1>
+        </div>
+
+        <div th:if="${mensagem}"
+             th:class="'alert alert-' + ${tipoMensagem}"
+             th:text="${mensagem}">
+        </div>
+
+        <section class="card form-card">
+            <div class="card-header">
+                <h2 class="card-title">Dados do funcionário</h2>
+            </div>
+            <div class="card-body">
+                <form method="post" th:action="@{/gerente/funcionarios/cadastro}"
+                      th:object="${funcionarioForm}" novalidate>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="nome">
+                                Nome Completo <span class="required">*</span>
+                            </label>
+                            <input id="nome" th:field="*{nome}"
+                                   class="form-control" required />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="cpf">
+                                CPF <span class="required">*</span>
+                            </label>
+                            <input id="cpf" th:field="*{cpf}"
+                                   class="form-control" required />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="telefone">Telefone</label>
+                            <input id="telefone" th:field="*{telefone}"
+                                   type="tel" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="dataNascimento">
+                                Data de Nascimento <span class="required">*</span>
+                            </label>
+                            <input id="dataNascimento" th:field="*{dataNascimento}"
+                                   type="date" class="form-control" required />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="endereco">Endereço</label>
+                        <input id="endereco" th:field="*{endereco}"
+                               class="form-control" />
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="cargo">
+                                Cargo <span class="required">*</span>
+                            </label>
+                            <select id="cargo" th:field="*{cargo}" class="form-control">
+                                <option th:each="c : ${cargos}"
+                                        th:value="${c}"
+                                        th:text="${c}">
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="pontoDeVendaId">
+                                Ponto de Venda
+                            </label>
+                            <select id="pontoDeVendaId" th:field="*{pontoDeVendaId}"
+                                    class="form-control">
+                                <option value="">Nenhum</option>
+                                <option th:each="pv : ${pontosDeVenda}"
+                                        th:value="${pv.codigoPonto}"
+                                        th:text="${pv.nome}">
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="senha">
+                                Senha <span class="required">*</span>
+                            </label>
+                            <input id="senha" th:field="*{senha}"
+                                   type="password" class="form-control" required />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="confirmarSenha">
+                                Confirmar Senha <span class="required">*</span>
+                            </label>
+                            <input id="confirmarSenha" th:field="*{confirmarSenha}"
+                                   type="password" class="form-control" required />
+                        </div>
+                    </div>
+
+                    <div class="btn-group mt-4" style="justify-content:flex-end; gap:10px">
+                        <a th:href="@{/gerente/funcionarios}"
+                           class="btn btn-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-primary">
+                            Cadastrar funcionário
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+</div>
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

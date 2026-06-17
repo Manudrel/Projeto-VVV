@@ -73,4 +73,8 @@ public class TransportadoraService {
     private String normalizarCnpj(String cnpj) {
         return cnpj == null ? null : cnpj.replaceAll("\\D", "");
     }
+
+
+
+
 }

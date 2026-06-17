@@ -22,6 +22,8 @@ public class ReservaDTO {
 
     private Long idModal;
 
+    private Float valor;
+
     private List<RotaDaReservaDTO> rotas;
 
     public ReservaDTO() {
@@ -89,6 +91,14 @@ public class ReservaDTO {
 
     public void setIdModal(Long idModal) {
         this.idModal = idModal;
+    }
+
+    public Float getValor() {
+        return valor;
+    }
+
+    public void setValor(Float valor) {
+        this.valor = valor;
     }
 
     public List<RotaDaReservaDTO> getRotas() {

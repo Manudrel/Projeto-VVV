@@ -42,21 +42,17 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests(auth -> auth
-
-                        // páginas públicas
                         .requestMatchers(
                                 "/auth/**",
                                 "/css/**"
                         ).permitAll()
 
-
                         // apenas gerente
                         .requestMatchers(
+                                "/gerente/**",
                                 "/api/funcionarios/**"
                         ).hasRole("GERENTE")
 
-
-                        // qualquer outra rota precisa estar autenticada
                         .anyRequest().authenticated()
                 )
 

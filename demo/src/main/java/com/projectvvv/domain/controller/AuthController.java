@@ -3,19 +3,13 @@ package com.projectvvv.domain.controller;
 import com.projectvvv.domain.dto.ClienteForm;
 import com.projectvvv.domain.dto.FuncionarioForm;
 import com.projectvvv.domain.model.Cargo;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import com.projectvvv.domain.model.Funcionario;
 import com.projectvvv.domain.service.FuncionarioService;
+import com.projectvvv.domain.service.PontoDeVendaService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -24,11 +18,14 @@ public class AuthController {
 
     private final FuncionarioService funcionarioService;
     private final PasswordEncoder passwordEncoder;
+    private final PontoDeVendaService pontoDeVendaService;
 
     public AuthController(FuncionarioService funcionarioService,
-                          PasswordEncoder passwordEncoder) {
+                          PasswordEncoder passwordEncoder,
+                          PontoDeVendaService pontoDeVendaService) {
         this.funcionarioService = funcionarioService;
         this.passwordEncoder = passwordEncoder;
+        this.pontoDeVendaService = pontoDeVendaService;
     }
 
     @GetMapping("/login")
@@ -50,24 +47,29 @@ public class AuthController {
 
     @GetMapping("/cadastro-funcionario")
     public String cadastroFuncionario(Model model) {
-        FuncionarioForm form = new FuncionarioForm();
-        form.setCargo(Cargo.GERENTE);
-        model.addAttribute("funcionarioForm", form);
+        model.addAttribute("funcionarioForm", new FuncionarioForm());
+        model.addAttribute("pontosDeVenda", pontoDeVendaService.listarTodos());
         return "auth/cadastro-funcionario";
     }
 
     @PostMapping("/cadastro-funcionario")
-    public String salvarFuncionario(@ModelAttribute FuncionarioForm form) {
-        // TODO: salvar funcionário com cargo definido pelo form
-        return "redirect:/auth/login";
-    }
-
-    @PostMapping("/cadastro")
-    public String cadastrar(Funcionario funcionario,
-                            BindingResult result,
-                            RedirectAttributes attrs) {
-        funcionario.setSenha(passwordEncoder.encode(funcionario.getSenha()));
-        funcionarioService.criar(funcionario);
+    public String salvarFuncionario(@ModelAttribute FuncionarioForm form,
+                                    RedirectAttributes ra) {
+        try {
+            Funcionario f = new Funcionario();
+            f.setNome(form.getNome());
+            f.setCpf(form.getCpf());
+            f.setTelefone(form.getTelefone());
+            f.setDataNascimento(form.getDataNascimento());
+            f.setEndereco(form.getEndereco());
+            f.setCargo(Cargo.FUNCIONARIO);
+            f.setSenha(passwordEncoder.encode(form.getSenha()));
+            funcionarioService.criar(f);
+            ra.addFlashAttribute("mensagem", "Cadastro realizado! Faça login.");
+        } catch (RuntimeException e) {
+            ra.addFlashAttribute("erro", e.getMessage());
+            return "redirect:/auth/cadastro-funcionario";
+        }
         return "redirect:/auth/login";
     }
 }

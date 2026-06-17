@@ -14,10 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -39,7 +36,6 @@ public class FuncionarioViewController {
         this.funcionarioRepository = funcionarioRepository;
     }
 
-    // GET /gerente/funcionarios
     @GetMapping
     public String listar(Model model, Authentication authentication) {
         model.addAttribute("funcionarios", funcionarioService.listarTodos());
@@ -47,21 +43,21 @@ public class FuncionarioViewController {
         return "funcionarios/listar";
     }
 
-    // GET /gerente/funcionarios/cadastro
     @GetMapping("/cadastro")
     public String formulario(Model model, Authentication authentication) {
         model.addAttribute("funcionarioForm", new FuncionarioForm());
         model.addAttribute("pontosDeVenda", pontoDeVendaRepository.findAll());
+        model.addAttribute("cargos", Cargo.values());
         model.addAttribute("funcionarioLogado", buscarLogado(authentication));
-        return "auth/cadastro-funcionario";
+        return "gerente/cadastro-funcionario";
     }
 
-    // POST /gerente/funcionarios/cadastro
     @PostMapping("/cadastro")
     public String cadastrar(
             @Valid @ModelAttribute("funcionarioForm") FuncionarioForm form,
             BindingResult result,
             Model model,
+            Authentication authentication,
             RedirectAttributes redirectAttributes) {
 
         if (form.getSenha() != null
@@ -71,7 +67,9 @@ public class FuncionarioViewController {
 
         if (result.hasErrors()) {
             model.addAttribute("pontosDeVenda", pontoDeVendaRepository.findAll());
-            return "gerente/funcionarios/cadastro";
+            model.addAttribute("cargos", Cargo.values());
+            model.addAttribute("funcionarioLogado", buscarLogado(authentication));
+            return "gerente/cadastro-funcionario";
         }
 
         Funcionario funcionario = new Funcionario();
@@ -83,13 +81,11 @@ public class FuncionarioViewController {
         funcionario.setSenha(form.getSenha());
         funcionario.setCargo(form.getCargo() != null ? form.getCargo() : Cargo.FUNCIONARIO);
 
-        // Criação livre: o gerente pode definir o cargo (FUNCIONARIO ou GERENTE).
         funcionarioService.criar(funcionario);
 
-        redirectAttributes.addFlashAttribute(
-                "mensagem", "Funcionário cadastrado com sucesso.");
+        redirectAttributes.addFlashAttribute("mensagem", "Funcionário cadastrado com sucesso.");
 
-        return "redirect:/dashboard";
+        return "redirect:/gerente/funcionarios";
     }
 
     private Funcionario buscarLogado(Authentication authentication) {

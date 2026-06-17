@@ -3,6 +3,8 @@ package com.projectvvv.domain.service;
 import com.projectvvv.domain.model.PontoDeVenda;
 import com.projectvvv.domain.repository.PontoDeVendaRepository;
 import org.springframework.stereotype.Service;
+import com.projectvvv.domain.dto.PontoVendaDTO;
+
 
 import java.util.List;
 
@@ -70,5 +72,15 @@ public class PontoDeVendaService {
         }
 
         repository.deleteById(id);
+    }
+
+
+    public PontoDeVenda salvarDoDTO(PontoVendaDTO dto) {
+        PontoDeVenda ponto = new PontoDeVenda();
+        ponto.setNome(dto.getNome());
+        ponto.setCnpj(dto.getCnpj());
+        ponto.setTelefone(dto.getTelefone());
+        ponto.setEndereco(dto.getEndereco());
+        return criar(ponto); // já valida CNPJ duplicado
     }
 }

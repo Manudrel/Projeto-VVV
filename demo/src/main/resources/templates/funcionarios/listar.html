@@ -46,7 +46,13 @@
 
         <div class="flex-between mb-4">
             <p class="text-muted mb-0">Apenas Gerentes podem cadastrar, autorizar e remover funcionários.</p>
-            <a th:href="@{/gerente/funcionarios/cadastro}" class="btn btn-primary">+ Cadastrar funcionário</a>
+            <a th:href="@{/gerente/funcionarios/cadastro}"
+               sec:authorize="hasRole('GERENTE')"
+               class="btn btn-primary">+ Cadastrar funcionário (Dev para Gerente)</a>
+
+            <a th:href="@{/auth/cadastro-funcionario}"
+               sec:authorize="hasRole('FUNCIONARIO')"
+               class="btn btn-primary">+ Cadastrar funcionário</a>
         </div>
 
         <div class="table-wrapper">
@@ -69,7 +75,7 @@
 
                         <ul th:unless="${#lists.isEmpty(func.pontosDeVenda)}" style="margin:0; padding-left:1rem;">
                             <li th:each="pv : ${func.pontosDeVenda}">
-                                <span th:text="${pv.id}">PDV Centro</span>
+                                <span th:text="${pv.nome}">PDV Centro</span>
                             </li>
                         </ul>
                     </td>

@@ -67,6 +67,7 @@ public class ReservaService {
         reserva.setTipoPassagem(dto.getTipoPassagem());
 
         reserva.setIdModal(dto.getIdModal());
+        reserva.setValor(dto.getValor());
 
         reserva.setStatusReserva(StatusReserva.PENDENTE);
 
@@ -126,6 +127,10 @@ public class ReservaService {
 
         if (dto.getStatusReserva() != null) {
             reserva.setStatusReserva(dto.getStatusReserva());
+        }
+
+        if (dto.getValor() != null) {
+            reserva.setValor(dto.getValor());
         }
 
         if (dto.getIdModal() != null) {

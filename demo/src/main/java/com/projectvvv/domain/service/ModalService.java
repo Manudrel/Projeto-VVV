@@ -1,5 +1,6 @@
 package com.projectvvv.domain.service;
 
+
 import com.projectvvv.domain.repository.HistoricoManutencaoRepository;
 import com.projectvvv.domain.repository.ModalRepository;
 import com.projectvvv.domain.model.Modal;
@@ -7,11 +8,14 @@ import com.projectvvv.domain.model.EstadoModal;
 import com.projectvvv.domain.model.HistoricoManutencao;
 import com.projectvvv.domain.model.TipoModal;
 import org.springframework.stereotype.Service;
+import com.projectvvv.domain.dto.ModalDTO;
+
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 import java.util.UUID;
+
 
 @Service
 public class ModalService {
@@ -122,5 +126,18 @@ public class ModalService {
             throw new RuntimeException("Modal não encontrado para exclusão.");
         }
         modalRepository.deleteById(id);
+    }
+
+    // Novo método dentro da classe ModalService:
+    public Modal salvarDoDTO(ModalDTO dto) {
+        Modal modal = new Modal();
+        return criar(
+                modal,
+                dto.getTransportadoraId(),
+                dto.getTipoModal(),
+                dto.getAno(),
+                dto.getModelo(),
+                dto.getCapacidade()
+        );
     }
 }
