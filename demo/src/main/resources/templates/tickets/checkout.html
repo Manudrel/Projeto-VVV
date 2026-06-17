@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout &amp; Ticket — SCVP | VVV</title>
+  <link rel="stylesheet" th:href="@{/css/variables.css}"   href="/css/variables.css" />
+  <link rel="stylesheet" th:href="@{/css/sidebar.css}"     href="/css/sidebar.css" />
+  <link rel="stylesheet" th:href="@{/css/components.css}"  href="/css/components.css" />
+  <link rel="stylesheet" th:href="@{/css/app.css}"         href="/css/app.css" />
+  <link rel="stylesheet" th:href="@{/css/checkout.css}"    href="/css/checkout.css" />
+</head>
+
+<body>
+<div class="sidebar-backdrop"></div>
+<div class="app-shell">
+
+  <!-- ════════════════════════════════
+       SIDEBAR (fragmento reutilizável)
+       ════════════════════════════════ -->
+  <div th:replace="~{fragments/sidebar :: sidebar('reservas')}"></div>
+
+  <!-- ════════════════════════════════
+       HEADER
+       ════════════════════════════════ -->
+  <header class="app-header">
+    <div class="header-left">
+      <button class="menu-toggle" data-menu-toggle aria-label="Abrir menu">☰</button>
+      <h1 class="page-title">Checkout &amp; Emissão de Ticket</h1>
+    </div>
+    <div class="user-menu">
+      <div class="user-info">
+        <span class="user-name"  th:text="${usuario.nome}">Maria Souza</span>
+        <span class="user-role"  th:text="${usuario.cargo}">Gerente</span>
+      </div>
+      <span class="user-avatar"  th:text="${#strings.substring(usuario.nome,0,1)}">M</span>
+      <form method="post" th:action="@{/logout}" style="margin:0;">
+        <button type="submit" class="btn btn-ghost btn-sm">Sair</button>
+      </form>
+    </div>
+  </header>
+
+  <!-- ════════════════════════════════
+       MAIN
+       ════════════════════════════════ -->
+  <main class="app-main">
+
+    <!-- Breadcrumb + título -->
+    <div class="page-header">
+      <nav class="breadcrumb" aria-label="Trilha de navegação">
+        <a th:href="@{/dashboard}" href="/dashboard">Início</a>
+        <span aria-hidden="true">›</span>
+        <a th:href="@{/reservas}"  href="/reservas">Reservas</a>
+        <span aria-hidden="true">›</span>
+        <span>Checkout</span>
+      </nav>
+      <h1>Checkout &amp; Emissão de Ticket</h1>
+    </div>
+
+    <!-- Card principal do wizard -->
+    <div class="card">
+      <div class="card-body">
+
+        <!-- ── Indicadores de etapa ── -->
+        <ol class="wizard-steps" role="tablist" id="wizard-tabs">
+          <li class="wizard-step active" id="tab-1"><span class="num">1</span> Reserva</li>
+          <li class="wizard-step"        id="tab-2"><span class="num">2</span> Pagamento</li>
+          <li class="wizard-step"        id="tab-3"><span class="num">3</span> Ticket</li>
+        </ol>
+
+        <!-- ══════════════════════════════════════
+             ETAPA 1 — SELECIONAR RESERVA
+             ══════════════════════════════════════ -->
+        <section class="wizard-pane active" id="pane-1" aria-label="Escolher Reserva">
+          <h3>Selecione a reserva para checkout</h3>
+
+          <!-- Filtros -->
+          <div class="filter-bar mb-4">
+            <div class="form-group">
+              <label class="form-label" for="busca-reserva">Buscar por cliente ou código</label>
+              <input id="busca-reserva"
+                     class="form-control"
+                     type="search"
+                     placeholder="Ex.: João Pereira ou #RES-0042"
+                     autocomplete="off" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="filtro-modal">Modal</label>
+              <select id="filtro-modal" class="form-control">
+                <option value="">Todos</option>
+                <option value="aviao">✈️ Avião</option>
+                <option value="onibus">🚌 Ônibus</option>
+                <option value="trem">🚆 Trem</option>
+                <option value="navio">🚢 Navio</option>
+              </select>
+            </div>
+            <div class="form-group" style="align-self: end;">
+              <button type="button" class="btn btn-secondary" id="btn-filtrar">
+                🔍 Filtrar
+              </button>
+            </div>
+          </div>
+
+          <!-- Lista de reservas selecionáveis -->
+          <div id="lista-reservas" class="stack" role="radiogroup" aria-label="Reservas disponíveis">
+
+            <!-- Reserva 1 — Avião -->
+            <label class="reserva-card" data-id="res-1" data-modal="aviao">
+              <input type="radio" name="reservaId" value="res-1" class="visually-hidden" />
+              <div class="reserva-card-body">
+                <div class="reserva-card-title">✈️&nbsp; LATAM 3024 — São Paulo (GRU) → Salvador (SSA)</div>
+                <div class="reserva-card-meta">
+                  <span>João Pereira</span>
+                  <span>CPF: 012.345.678-90</span>
+                  <span>22/06/2026 · 08:30</span>
+                  <span>Econômica</span>
+                  <span><span class="badge badge-warning">Pendente</span></span>
+                </div>
+              </div>
+              <div class="reserva-card-price">
+                <div class="price-label">Tarifa</div>
+                <div class="price-value">R$&nbsp;489,00</div>
+                <div class="price-taxa">+ R$ 24,00 embarque</div>
+              </div>
+            </label>
+
+            <!-- Reserva 2 — Ônibus -->
+            <label class="reserva-card" data-id="res-2" data-modal="onibus">
+              <input type="radio" name="reservaId" value="res-2" class="visually-hidden" />
+              <div class="reserva-card-body">
+                <div class="reserva-card-title">🚌&nbsp; Viação Cometa — Campinas (CPQ) → Rio de Janeiro (GIG)</div>
+                <div class="reserva-card-meta">
+                  <span>Ana Lima</span>
+                  <span>CPF: 987.654.321-00</span>
+                  <span>23/06/2026 · 22:00</span>
+                  <span>Semi-Leito</span>
+                  <span><span class="badge badge-warning">Pendente</span></span>
+                </div>
+              </div>
+              <div class="reserva-card-price">
+                <div class="price-label">Tarifa</div>
+                <div class="price-value">R$&nbsp;189,00</div>
+                <div class="price-taxa">+ R$ 10,00 embarque</div>
+              </div>
+            </label>
+
+            <!-- Reserva 3 — Trem -->
+            <label class="reserva-card" data-id="res-3" data-modal="trem">
+              <input type="radio" name="reservaId" value="res-3" class="visually-hidden" />
+              <div class="reserva-card-body">
+                <div class="reserva-card-title">🚆&nbsp; Vale Expresso — Curitiba (CWB) → São Paulo (GRU)</div>
+                <div class="reserva-card-meta">
+                  <span>Pedro Alves</span>
+                  <span>CPF: 111.222.333-44</span>
+                  <span>25/06/2026 · 06:15</span>
+                  <span>Leito</span>
+                  <span><span class="badge badge-warning">Pendente</span></span>
+                </div>
+              </div>
+              <div class="reserva-card-price">
+                <div class="price-label">Tarifa</div>
+                <div class="price-value">R$&nbsp;259,00</div>
+                <div class="price-taxa">+ R$ 15,00 embarque</div>
+              </div>
+            </label>
+
+          </div><!-- /lista-reservas -->
+
+          <!-- Alerta: nenhuma reserva selecionada -->
+          <div id="aviso-selecao" class="alert alert-warning hidden" role="alert">
+            <span class="alert-icon">⚠️</span>
+            <div>
+              <div class="alert-title">Selecione uma reserva</div>
+              <span>Escolha uma das reservas acima para continuar o checkout.</span>
+            </div>
+          </div>
+
+          <div class="wizard-nav">
+            <span></span>
+            <button type="button" class="btn btn-primary" id="btn-ir-pagamento">
+              Próximo → Pagamento
+            </button>
+          </div>
+        </section>
+
+        <!-- ══════════════════════════════════════
+             ETAPA 2 — RESUMO + PAGAMENTO
+             ══════════════════════════════════════ -->
+        <section class="wizard-pane" id="pane-2" aria-label="Resumo e Pagamento">
+          <h3>Resumo e pagamento</h3>
+
+          <div class="checkout-grid">
+
+            <!-- Coluna esquerda: resumo -->
+            <div class="checkout-summary">
+
+              <!-- Detalhes da viagem -->
+              <div class="card mb-4">
+                <div class="card-header">
+                  <h4 class="card-title">Detalhes da viagem</h4>
+                  <span id="resumo-modal-badge" class="badge badge-info">✈️ Avião</span>
+                </div>
+                <div class="card-body">
+                  <ul class="summary-list">
+                    <li><span class="text-muted">Cliente</span>          <span id="resumo-cliente">—</span></li>
+                    <li><span class="text-muted">CPF</span>              <span id="resumo-cpf">—</span></li>
+                    <li><span class="text-muted">Trajeto</span>          <span id="resumo-trajeto">—</span></li>
+                    <li><span class="text-muted">Modal</span>            <span id="resumo-modal">—</span></li>
+                    <li><span class="text-muted">Tipo de passagem</span> <span id="resumo-tipo">—</span></li>
+                    <li><span class="text-muted">Data / Saída</span>     <span id="resumo-data">—</span></li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Valores -->
+              <div class="card mb-4">
+                <div class="card-header">
+                  <h4 class="card-title">Valores</h4>
+                </div>
+                <div class="card-body">
+                  <ul class="summary-list">
+                    <li><span class="text-muted">Tarifa base</span>     <span id="resumo-tarifa">—</span></li>
+                    <li><span class="text-muted">Taxa de embarque</span> <span id="resumo-taxa">—</span></li>
+                    <li class="total fw-bold">
+                      <span>Total</span>
+                      <span id="resumo-total">—</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Alerta criança (condicional) -->
+              <div class="alert alert-warning hidden" id="alerta-crianca">
+                <span class="alert-icon">👶</span>
+                <div>
+                  <div class="alert-title">Passageiro entre 2 e 10 anos</div>
+                  <span>Aplique o desconto de 40% e vincule um adulto responsável.</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Coluna direita: pagamento -->
+            <div class="payment-panel">
+
+              <!-- Total destacado -->
+              <div class="payment-total-box">
+                <div>
+                  <div class="payment-total-label">Total a pagar</div>
+                  <div class="payment-total-value" id="payment-total">R$ 0,00</div>
+                </div>
+                <span aria-hidden="true" style="font-size: 2rem;">💳</span>
+              </div>
+
+              <!-- Seleção do método -->
+              <div class="card">
+                <div class="card-header">
+                  <h4 class="card-title">Forma de pagamento</h4>
+                </div>
+                <div class="card-body">
+
+                  <div class="payment-methods" role="group" aria-label="Métodos de pagamento">
+                    <button type="button" class="method-btn active" data-metodo="dinheiro">
+                      <span class="method-icon" aria-hidden="true">💵</span>
+                      Dinheiro
+                    </button>
+                    <button type="button" class="method-btn" data-metodo="pix">
+                      <span class="method-icon" aria-hidden="true">📱</span>
+                      PIX
+                    </button>
+                    <button type="button" class="method-btn" data-metodo="debito">
+                      <span class="method-icon" aria-hidden="true">💳</span>
+                      Débito
+                    </button>
+                    <button type="button" class="method-btn" data-metodo="credito">
+                      <span class="method-icon" aria-hidden="true">💎</span>
+                      Crédito
+                    </button>
+                  </div>
+
+                  <!-- Painel: Dinheiro -->
+                  <div id="metodo-dinheiro" class="metodo-panel">
+                    <div class="form-group mt-4">
+                      <label class="form-label" for="troco-de">Valor recebido (R$)</label>
+                      <input id="troco-de"
+                             type="number"
+                             step="0.01"
+                             min="0"
+                             class="form-control"
+                             placeholder="Ex.: 550,00" />
+                    </div>
+                    <div class="form-group mt-4">
+                      <label class="form-label">Troco</label>
+                      <div class="form-control troco-display" id="troco-valor">R$ 0,00</div>
+                    </div>
+                  </div>
+
+                  <!-- Painel: PIX -->
+                  <div id="metodo-pix" class="metodo-panel hidden">
+                    <div class="pix-container">
+                      <div class="pix-qr" aria-label="QR Code PIX">
+                        <!-- QR Code representativo (SVG) -->
+                        <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" role="img" aria-hidden="true">
+                          <rect width="60" height="60" fill="#fff"/>
+                          <g fill="#1a2332">
+                            <rect x="2"  y="2"  width="18" height="18" rx="1"/>
+                            <rect x="40" y="2"  width="18" height="18" rx="1"/>
+                            <rect x="2"  y="40" width="18" height="18" rx="1"/>
+                            <rect x="6"  y="6"  width="10" height="10" fill="#fff"/>
+                            <rect x="44" y="6"  width="10" height="10" fill="#fff"/>
+                            <rect x="6"  y="44" width="10" height="10" fill="#fff"/>
+                            <rect x="8"  y="8"  width="6"  height="6" />
+                            <rect x="46" y="8"  width="6"  height="6" />
+                            <rect x="8"  y="46" width="6"  height="6" />
+                            <rect x="22" y="2"  width="4" height="4" /><rect x="28" y="2"  width="4" height="4" />
+                            <rect x="34" y="2"  width="4" height="4" /><rect x="22" y="8"  width="4" height="4" />
+                            <rect x="30" y="8"  width="4" height="4" /><rect x="22" y="14" width="4" height="4" />
+                            <rect x="34" y="14" width="4" height="4" /><rect x="2"  y="22" width="4" height="4" />
+                            <rect x="8"  y="22" width="4" height="4" /><rect x="16" y="22" width="4" height="4" />
+                            <rect x="22" y="22" width="4" height="4" /><rect x="30" y="22" width="4" height="4" />
+                            <rect x="36" y="22" width="4" height="4" /><rect x="42" y="22" width="4" height="4" />
+                            <rect x="54" y="22" width="4" height="4" /><rect x="2"  y="28" width="4" height="4" />
+                            <rect x="14" y="28" width="4" height="4" /><rect x="22" y="28" width="4" height="4" />
+                            <rect x="28" y="28" width="4" height="4" /><rect x="38" y="28" width="4" height="4" />
+                            <rect x="48" y="28" width="4" height="4" /><rect x="54" y="28" width="4" height="4" />
+                            <rect x="4"  y="34" width="4" height="4" /><rect x="12" y="34" width="4" height="4" />
+                            <rect x="22" y="34" width="4" height="4" /><rect x="32" y="34" width="4" height="4" />
+                            <rect x="40" y="34" width="4" height="4" /><rect x="52" y="34" width="4" height="4" />
+                            <rect x="22" y="40" width="4" height="4" /><rect x="30" y="40" width="4" height="4" />
+                            <rect x="40" y="40" width="4" height="4" /><rect x="50" y="40" width="4" height="4" />
+                            <rect x="22" y="46" width="4" height="4" /><rect x="28" y="46" width="4" height="4" />
+                            <rect x="36" y="46" width="4" height="4" /><rect x="44" y="50" width="4" height="4" />
+                            <rect x="22" y="52" width="4" height="4" /><rect x="30" y="52" width="4" height="4" />
+                            <rect x="40" y="52" width="4" height="4" /><rect x="52" y="52" width="4" height="4" />
+                          </g>
+                        </svg>
+                      </div>
+                      <p class="text-muted text-sm">Escaneie com o app do seu banco</p>
+                      <code class="pix-key">scvp@pagamento.com.br</code>
+                      <p class="text-muted text-sm mt-2">
+                        Chave válida por <strong>15 minutos</strong>
+                      </p>
+                    </div>
+                  </div>
+
+                  <!-- Painel: Débito -->
+                  <div id="metodo-debito" class="metodo-panel hidden">
+                    <div class="form-group mt-4">
+                      <label class="form-label" for="deb-numero">Número do cartão</label>
+                      <input id="deb-numero"
+                             class="form-control"
+                             placeholder="0000 0000 0000 0000"
+                             maxlength="19"
+                             autocomplete="cc-number"
+                             inputmode="numeric" />
+                    </div>
+                    <div class="form-row mt-4">
+                      <div class="form-group">
+                        <label class="form-label" for="deb-validade">Validade</label>
+                        <input id="deb-validade"
+                               class="form-control"
+                               placeholder="MM/AA"
+                               maxlength="5"
+                               autocomplete="cc-exp"
+                               inputmode="numeric" />
+                      </div>
+                      <div class="form-group">
+                        <label class="form-label" for="deb-cvv">CVV</label>
+                        <input id="deb-cvv"
+                               class="form-control"
+                               placeholder="000"
+                               maxlength="3"
+                               type="password"
+                               autocomplete="cc-csc"
+                               inputmode="numeric" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Painel: Crédito -->
+                  <div id="metodo-credito" class="metodo-panel hidden">
+                    <div class="form-group mt-4">
+                      <label class="form-label" for="cred-numero">Número do cartão</label>
+                      <input id="cred-numero"
+                             class="form-control"
+                             placeholder="0000 0000 0000 0000"
+                             maxlength="19"
+                             autocomplete="cc-number"
+                             inputmode="numeric" />
+                    </div>
+                    <div class="form-group mt-4">
+                      <label class="form-label" for="cred-nome">Nome no cartão</label>
+                      <input id="cred-nome"
+                             class="form-control"
+                             placeholder="NOME COMPLETO"
+                             autocomplete="cc-name" />
+                    </div>
+                    <div class="form-row mt-4">
+                      <div class="form-group">
+                        <label class="form-label" for="cred-validade">Validade</label>
+                        <input id="cred-validade"
+                               class="form-control"
+                               placeholder="MM/AA"
+                               maxlength="5"
+                               autocomplete="cc-exp"
+                               inputmode="numeric" />
+                      </div>
+                      <div class="form-group">
+                        <label class="form-label" for="cred-cvv">CVV</label>
+                        <input id="cred-cvv"
+                               class="form-control"
+                               placeholder="000"
+                               maxlength="3"
+                               type="password"
+                               autocomplete="cc-csc"
+                               inputmode="numeric" />
+                      </div>
+                    </div>
+                    <div class="form-group mt-4">
+                      <label class="form-label" for="parcelas">Parcelamento</label>
+                      <select id="parcelas" class="form-control">
+                        <!-- populado via JS conforme o total da reserva -->
+                      </select>
+                      <span class="form-hint">Acima de 4x são aplicados juros de 5% a.m.</span>
+                    </div>
+                  </div>
+
+                </div><!-- /card-body -->
+              </div><!-- /card pagamento -->
+            </div><!-- /payment-panel -->
+          </div><!-- /checkout-grid -->
+
+          <div class="wizard-nav">
+            <button type="button" class="btn btn-secondary" id="btn-voltar-reserva">← Voltar</button>
+            <button type="button" class="btn btn-accent btn-lg" id="btn-confirmar-pagamento">
+              ✔ Confirmar e Emitir Ticket
+            </button>
+          </div>
+        </section>
+
+        <!-- ══════════════════════════════════════
+             ETAPA 3 — TICKET GERADO
+             ══════════════════════════════════════ -->
+        <section class="wizard-pane" id="pane-3" aria-label="Ticket Emitido">
+          <div class="ticket-wrapper">
+
+            <!-- Mensagem de sucesso -->
+            <div class="ticket-success-msg text-center">
+              <span class="success-icon" aria-hidden="true">✅</span>
+              <h2>Reserva confirmada!</h2>
+              <p class="text-muted">Ticket emitido com sucesso. Apresente na hora do embarque.</p>
+            </div>
+
+            <!-- O Ticket -->
+            <div class="ticket-card">
+
+              <!-- Cabeçalho -->
+              <div class="ticket-card-header">
+                <div class="ticket-modal-label" id="ticket-modal-label">LATAM AIRLINES · VVV</div>
+                <div class="ticket-route">
+                  <span class="ticket-iata" id="ticket-origem-iata">GRU</span>
+                  <span class="ticket-route-arrow" aria-hidden="true">→</span>
+                  <span class="ticket-iata" id="ticket-destino-iata">SSA</span>
+                </div>
+                <div class="ticket-cities text-sm" style="opacity: .85;">
+                  <span id="ticket-origem-cidade">São Paulo</span>
+                  <span style="margin: 0 var(--space-2);">→</span>
+                  <span id="ticket-destino-cidade">Salvador</span>
+                </div>
+                <span class="badge badge-info ticket-modal-badge" id="ticket-modal-badge">✈️ Avião</span>
+              </div>
+
+              <!-- Recorte serrilhado -->
+              <div class="ticket-notch" aria-hidden="true">
+                <div class="ticket-notch-line"></div>
+              </div>
+
+              <!-- Corpo -->
+              <div class="ticket-card-body">
+                <div class="ticket-field">
+                  <div class="field-label">Passageiro</div>
+                  <div class="field-value" id="ticket-passageiro">—</div>
+                </div>
+                <div class="ticket-field">
+                  <div class="field-label">Data</div>
+                  <div class="field-value" id="ticket-data">—</div>
+                </div>
+                <div class="ticket-field">
+                  <div class="field-label">Saída</div>
+                  <div class="field-value" id="ticket-saida">—</div>
+                </div>
+                <div class="ticket-field">
+                  <div class="field-label">Tipo</div>
+                  <div class="field-value" id="ticket-tipo">—</div>
+                </div>
+                <div class="ticket-field">
+                  <div class="field-label">Assento</div>
+                  <div class="field-value" id="ticket-assento">—</div>
+                </div>
+                <div class="ticket-field">
+                  <div class="field-label">Valor pago</div>
+                  <div class="field-value ticket-valor-pago" id="ticket-valor">—</div>
+                </div>
+              </div>
+
+              <!-- Rodapé: QR + código de barras + localizador -->
+              <div class="ticket-card-footer">
+
+                <!-- QR Code fictício -->
+                <div class="ticket-qr" aria-label="QR Code do ticket">
+                  <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" width="72" height="72" role="img" aria-hidden="true">
+                    <rect width="60" height="60" fill="#fff"/>
+                    <g fill="#1a2332">
+                      <rect x="2"  y="2"  width="16" height="16" rx="1"/>
+                      <rect x="42" y="2"  width="16" height="16" rx="1"/>
+                      <rect x="2"  y="42" width="16" height="16" rx="1"/>
+                      <rect x="5"  y="5"  width="10" height="10" fill="#fff"/>
+                      <rect x="45" y="5"  width="10" height="10" fill="#fff"/>
+                      <rect x="5"  y="45" width="10" height="10" fill="#fff"/>
+                      <rect x="7"  y="7"  width="6"  height="6" />
+                      <rect x="47" y="7"  width="6"  height="6" />
+                      <rect x="7"  y="47" width="6"  height="6" />
+                      <rect x="20" y="2"  width="3" height="3" /><rect x="25" y="4"  width="3" height="3" />
+                      <rect x="30" y="2"  width="3" height="3" /><rect x="35" y="5"  width="3" height="3" />
+                      <rect x="20" y="8"  width="3" height="3" /><rect x="28" y="10" width="3" height="3" />
+                      <rect x="20" y="14" width="3" height="3" /><rect x="32" y="12" width="3" height="3" />
+                      <rect x="2"  y="20" width="3" height="3" /><rect x="7"  y="22" width="3" height="3" />
+                      <rect x="14" y="20" width="3" height="3" /><rect x="20" y="22" width="3" height="3" />
+                      <rect x="27" y="20" width="3" height="3" /><rect x="33" y="22" width="3" height="3" />
+                      <rect x="40" y="20" width="3" height="3" /><rect x="50" y="22" width="3" height="3" />
+                      <rect x="2"  y="28" width="3" height="3" /><rect x="12" y="26" width="3" height="3" />
+                      <rect x="20" y="28" width="3" height="3" /><rect x="26" y="26" width="3" height="3" />
+                      <rect x="36" y="28" width="3" height="3" /><rect x="46" y="26" width="3" height="3" />
+                      <rect x="4"  y="34" width="3" height="3" /><rect x="10" y="32" width="3" height="3" />
+                      <rect x="20" y="34" width="3" height="3" /><rect x="30" y="32" width="3" height="3" />
+                      <rect x="38" y="34" width="3" height="3" /><rect x="50" y="32" width="3" height="3" />
+                      <rect x="20" y="40" width="3" height="3" /><rect x="28" y="38" width="3" height="3" />
+                    </g>
+                  </svg>
+                </div>
+
+                <!-- Código de barras -->
+                <div class="ticket-barcode">
+                  <div class="barcode-bars" id="barcode-img" aria-hidden="true"></div>
+                  <div class="barcode-num" id="barcode-num">0000 0000 0000 0000 0000</div>
+                </div>
+
+                <!-- Localizador -->
+                <div class="ticket-locator">
+                  <div class="locator-label">Localizador</div>
+                  <div class="locator-code" id="ticket-localizador">VVV000</div>
+                </div>
+
+              </div><!-- /ticket-card-footer -->
+            </div><!-- /ticket-card -->
+
+            <!-- Ações pós-ticket -->
+            <div class="btn-group" role="group" aria-label="Ações do ticket">
+              <button type="button" class="btn btn-primary btn-lg" onclick="window.print()">
+                🖨️ Imprimir Ticket
+              </button>
+              <a th:href="@{/reservas}" href="/reservas" class="btn btn-secondary btn-lg">
+                📋 Ver Reservas
+              </a>
+              <button type="button" class="btn btn-secondary btn-lg" id="btn-nova-reserva">
+                ➕ Nova Reserva
+              </button>
+            </div>
+
+          </div><!-- /ticket-wrapper -->
+        </section>
+
+      </div><!-- /card-body -->
+    </div><!-- /card -->
+
+  </main>
+</div><!-- /app-shell -->
+
+<script th:src="@{/js/app.js}"      src="/js/app.js"></script>
+<script th:src="@{/js/checkout.js}" src="/js/checkout.js"></script>
+</body>
+</html>
