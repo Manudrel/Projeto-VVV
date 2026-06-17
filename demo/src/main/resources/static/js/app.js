@@ -31,6 +31,12 @@
                 s.classList.toggle('completed', i < current);
             });
             panes.forEach((p, i) => p.classList.toggle('active', i === current));
+
+            // Atualiza o resumo ao entrar na última etapa
+            const resumoPane = document.querySelector('[aria-label="Resumo"]');
+            if (resumoPane && resumoPane.classList.contains('active')) {
+                preencherResumo();
+            }
         }
 
         wizard.addEventListener('click', (e) => {
@@ -141,7 +147,7 @@
         });
     }
 
-    // Seleção visual das opções de modal (etapa 3)
+    // Seleção visual das opções de modal (etapa 2)
     document.querySelectorAll('.modal-option input[type="radio"]').forEach(radio => {
         radio.addEventListener('change', () => {
             document.querySelectorAll('.modal-option').forEach(opt => opt.classList.remove('selected'));
@@ -149,9 +155,64 @@
         });
     });
 
-    // Marca o primeiro como selecionado ao carregar
     const primeiroModal = document.querySelector('.modal-option input[type="radio"]:checked');
     if (primeiroModal) primeiroModal.closest('.modal-option').classList.add('selected');
+
+    // Preencher resumo dinamicamente (etapa 3)
+    function getSelectText(id) {
+        const el = document.getElementById(id);
+        if (!el) return '—';
+        return el.options[el.selectedIndex]?.text || '—';
+    }
+
+    function preencherResumo() {
+        // Trajeto
+        const origem = getSelectText('origem');
+        const destino = getSelectText('destino');
+        const trajeto = (origem !== '—' && destino !== '—') ? `${origem} → ${destino}` : '—';
+        setText('summary-trajeto', trajeto);
+
+        // Tipo de viagem
+        const tipoViagem = document.querySelector('input[name="tipoViagem"]:checked');
+        setText('summary-tipo-viagem', tipoViagem ? (tipoViagem.value === 'direta' ? 'Direta' : 'Com escalas') : '—');
+
+        // Escalas
+        const escalasSelects = document.querySelectorAll('[data-stops-list] select');
+        const escalasTexto = escalasSelects.length > 0
+            ? Array.from(escalasSelects).map(s => s.options[s.selectedIndex]?.text || '—').join(', ')
+            : 'Nenhuma';
+        setText('summary-escalas', escalasTexto);
+
+        // Data
+        const data = document.getElementById('data');
+        if (data && data.value) {
+            const [ano, mes, dia] = data.value.split('-');
+            setText('summary-data', `${dia}/${mes}/${ano}`);
+        } else {
+            setText('summary-data', '—');
+        }
+
+        // Modal selecionado
+        const modalSelecionado = document.querySelector('.modal-option.selected');
+        if (modalSelecionado) {
+            const nome = modalSelecionado.querySelector('.name')?.textContent || '—';
+            const meta = modalSelecionado.querySelector('.meta')?.textContent || '';
+            setText('summary-modal', nome);
+            setText('summary-modal-meta', meta);
+        } else {
+            setText('summary-modal', '—');
+            setText('summary-modal-meta', '');
+        }
+
+        // Tipo de passagem
+        const tipoPassagem = getSelectText('tipoPassagem');
+        setText('summary-tipo-passagem', tipoPassagem);
+    }
+
+    function setText(id, value) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value;
+    }
 
 })();
 
