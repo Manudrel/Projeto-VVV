@@ -75,7 +75,7 @@ public class SecurityConfig {
 
                         // após login vai para sua API
                         .defaultSuccessUrl(
-                                "/api/funcionarios",
+                                "/dashboard",
                                 true
                         )
 
