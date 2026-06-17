@@ -136,11 +136,23 @@
             renderClientes(clientes);
         });
 
-        // busca também ao pressionar Enter
         inputBusca.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') { e.preventDefault(); btnBuscar.click(); }
         });
     }
+
+    // Seleção visual das opções de modal (etapa 3)
+    document.querySelectorAll('.modal-option input[type="radio"]').forEach(radio => {
+        radio.addEventListener('change', () => {
+            document.querySelectorAll('.modal-option').forEach(opt => opt.classList.remove('selected'));
+            radio.closest('.modal-option').classList.add('selected');
+        });
+    });
+
+    // Marca o primeiro como selecionado ao carregar
+    const primeiroModal = document.querySelector('.modal-option input[type="radio"]:checked');
+    if (primeiroModal) primeiroModal.closest('.modal-option').classList.add('selected');
+
 })();
 
 // Dialog modal (abrir/fechar via data-attrs)
