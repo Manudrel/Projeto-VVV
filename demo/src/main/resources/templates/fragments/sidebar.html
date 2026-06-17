@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+
+<aside th:fragment="sidebar(activePage)" class="sidebar">
+
+    <div class="sidebar-header">
+        <div class="sidebar-logo">VVV</div>
+        <div class="sidebar-brand">
+            <strong>Vai &amp; Volta</strong>
+            <span>SCVP</span>
+        </div>
+    </div>
+
+    <nav class="sidebar-nav">
+
+        <div class="nav-section-label">Operação</div>
+
+        <a th:href="@{/dashboard}"
+           th:classappend="${activePage == 'dashboard'} ? 'active'"
+           class="nav-link">
+            <span class="nav-icon">🏠</span> Dashboard
+        </a>
+
+        <a th:href="@{/reservas/nova}"
+           th:classappend="${activePage == 'nova-reserva'} ? 'active'"
+           class="nav-link">
+            <span class="nav-icon">➕</span> Nova Reserva
+        </a>
+
+        <a th:href="@{/reservas/consultar}"
+           th:classappend="${activePage == 'consultar-reservas'} ? 'active'"
+           class="nav-link">
+            <span class="nav-icon">📋</span> Consultar Reservas
+        </a>
+
+        <a th:href="@{/auth/cadastro-cliente}"
+           th:classappend="${activePage == 'cadastro-cliente'} ? 'active'"
+           class="nav-link">
+            <span class="nav-icon">👤</span> Cadastrar Cliente
+        </a>
+
+        <a th:href="@{/modais}"
+           th:classappend="${activePage == 'modais'} ? 'active'"
+           class="nav-link">
+            <span class="nav-icon">🚌</span> Central de Modais
+        </a>
+
+        <a th:href="@{/cidades}"
+           th:classappend="${activePage == 'cidades'} ? 'active'"
+           class="nav-link">
+            <span class="nav-icon">🏙️</span> Cidades
+        </a>
+
+        <div class="nav-section-label" sec:authorize="hasRole('GERENTE')">
+            Administração
+        </div>
+
+        <a sec:authorize="hasRole('GERENTE')"
+           th:href="@{/gerente/funcionarios}"
+           th:classappend="${activePage == 'funcionarios'} ? 'active'"
+           class="nav-link">
+            <span class="nav-icon">👥</span> Funcionários
+        </a>
+
+        <a sec:authorize="hasRole('GERENTE')"
+           th:href="@{/pontos-venda}"
+           th:classappend="${activePage == 'pontos-venda'} ? 'active'"
+           class="nav-link">
+            <span class="nav-icon">🏬</span> Pontos de Venda
+        </a>
+
+        <a sec:authorize="hasRole('GERENTE')"
+           th:href="@{/transportadoras}"
+           th:classappend="${activePage == 'transportadoras'} ? 'active'"
+           class="nav-link">
+            <span class="nav-icon">🚚</span> Transportadoras
+        </a>
+
+        <a sec:authorize="hasRole('GERENTE')"
+           th:href="@{/vendas-online/aprovacao}"
+           th:classappend="${activePage == 'aprovacao-vendas'} ? 'active'"
+           class="nav-link">
+            <span class="nav-icon">✅</span> Aprovação Vendas Online
+        </a>
+
+    </nav>
+
+    <div class="sidebar-footer">
+        SCVP v1.0 &bull;
+        <span th:text="${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy')}">14/06/2026</span>
+    </div>
+
+</aside>
+
+</body>
+</html>

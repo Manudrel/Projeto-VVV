@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<header th:fragment="topbar" class="topbar">
+
+    <p class="topbar-greeting">
+        Olá, <span th:text="${funcionarioLogado.nome}">Nome</span> 👋
+    </p>
+
+    <div class="topbar-user">
+        <div class="topbar-user-info">
+            <strong th:text="${funcionarioLogado.nome}">Nome</strong>
+            <span th:text="${funcionarioLogado.cargo}">Cargo</span>
+        </div>
+
+        <div class="user-avatar"
+             th:text="${#strings.substring(funcionarioLogado.nome, 0, 1)}">M</div>
+
+        <form class="logout-form" th:action="@{/auth/logout}" method="post">
+            <button type="submit" class="logout-link">Sair</button>
+        </form>
+    </div>
+
+</header>
+
+</body>
+</html>

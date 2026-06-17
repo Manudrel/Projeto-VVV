@@ -17,114 +17,14 @@
 
 <div class="dashboard-layout">
 
-    <!-- ===================== SIDEBAR ===================== -->
-    <aside class="sidebar">
-
-        <div class="sidebar-header">
-            <div class="sidebar-logo">VVV</div>
-            <div class="sidebar-brand">
-                <strong>Vai &amp; Volta</strong>
-                <span>SCVP</span>
-            </div>
-        </div>
-
-        <nav class="sidebar-nav">
-
-            <div class="nav-section-label">Operação</div>
-
-            <a th:href="@{/dashboard}"
-               class="nav-link active">
-                <span class="nav-icon">🏠</span>
-                Dashboard
-            </a>
-
-            <a th:href="@{/reservas/nova}" class="nav-link">
-                <span class="nav-icon">➕</span>
-                Nova Reserva
-            </a>
-
-            <a th:href="@{/reservas/consultar}" class="nav-link">
-                <span class="nav-icon">📋</span>
-                Consultar Reservas
-            </a>
-
-            <a th:href="@{/auth/cadastro-cliente}" class="nav-link">
-                <span class="nav-icon">👤</span>
-                Cadastrar Cliente
-            </a>
-
-            <a th:href="@{/modais}" class="nav-link">
-                <span class="nav-icon">🚌</span>
-                Central de Modais
-            </a>
-
-            <a th:href="@{/cidades}" class="nav-link">
-                <span class="nav-icon">🏙️</span>
-                Cidades
-            </a>
-
-            <!-- Itens visíveis apenas para o Gerente -->
-            <div class="nav-section-label" sec:authorize="hasRole('GERENTE')">
-                Administração
-            </div>
-
-            <a sec:authorize="hasRole('GERENTE')"
-               th:href="@{/gerente/funcionarios}" class="nav-link">
-                <span class="nav-icon">👥</span>
-                Funcionários
-            </a>
-
-            <a sec:authorize="hasRole('GERENTE')"
-               th:href="@{/pontos-venda}" class="nav-link">
-                <span class="nav-icon">🏬</span>
-                Pontos de Venda
-            </a>
-
-            <a sec:authorize="hasRole('GERENTE')"
-               th:href="@{/transportadoras}" class="nav-link">
-                <span class="nav-icon">🚚</span>
-                Transportadoras
-            </a>
-
-            <a sec:authorize="hasRole('GERENTE')"
-               th:href="@{/vendas-online/aprovacao}" class="nav-link">
-                <span class="nav-icon">✅</span>
-                Aprovação Vendas Online
-            </a>
-
-        </nav>
-
-        <div class="sidebar-footer">
-            SCVP v1.0 &bull; <span th:text="${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy')}">14/06/2026</span>
-        </div>
-
-    </aside>
+    <!-- Sidebar reutilizável, passando a página ativa -->
+    <div th:replace="~{fragments/sidebar :: sidebar('dashboard')}"></div>
 
     <!-- ===================== CONTEÚDO PRINCIPAL ===================== -->
     <div class="main-content">
 
-        <!-- Topbar -->
-        <header class="topbar">
-
-            <p class="topbar-greeting">
-                Olá, <span th:text="${funcionarioLogado.nome}">Nome</span> 👋
-            </p>
-
-            <div class="topbar-user">
-                <div class="topbar-user-info">
-                    <strong th:text="${funcionarioLogado.nome}">Nome</strong>
-                    <span th:text="${funcionarioLogado.cargo}">Cargo</span>
-                </div>
-
-                <div class="user-avatar"
-                     th:text="${#strings.substring(funcionarioLogado.nome, 0, 1)}">M</div>
-
-                <form class="logout-form" th:action="@{/auth/logout}" method="post">
-                    <button type="submit" class="logout-link">Sair</button>
-                </form>
-            </div>
-
-        </header>
+        <!-- Topbar reutilizável -->
+        <div th:replace="~{fragments/topbar :: topbar}"></div>
 
         <!-- Conteúdo -->
         <main class="content">
@@ -178,7 +78,7 @@
                 </a>
 
                 <a sec:authorize="hasRole('GERENTE')"
-                   th:href="@{gerente/funcionarios}" class="action-card">
+                   th:href="@{/gerente/funcionarios}" class="action-card">
                     <div class="action-icon icon-purple">👥</div>
                     <h3>Funcionários</h3>
                     <p>Cadastrar e autorizar equipe.</p>
