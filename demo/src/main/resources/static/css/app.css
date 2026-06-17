@@ -488,3 +488,13 @@ body.dialog-open {
 .dialog-close-btn:hover {
   color: #000;
 }
+
+.modal-option {
+    cursor: pointer;
+}
+
+.modal-option.selected {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary-50, #eff6ff);
+    box-shadow: 0 0 0 2px var(--color-primary);
+}
