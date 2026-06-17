@@ -37,6 +37,10 @@
     </header>
 
     <!-- MAIN -->
+    <!-- Serializa a lista de cidades para o JS usar -->
+    <script th:inline="javascript">
+      window.CIDADES = /*[[${cidades}]]*/[];
+    </script>
     <main class="app-main">
       <div class="page-header">
         <nav class="breadcrumb" aria-label="Trilha">
@@ -93,7 +97,9 @@
               </div>
               <div id="escalas-bloco" class="hidden">
                 <label class="form-label">Cidades intermediárias</label>
-                <div data-stops-list></div>
+                <div data-stops-list>
+                  <!-- as escalas adicionadas dinamicamente vão aparecer aqui -->
+                </div>
                 <button type="button" class="btn btn-secondary btn-sm" data-add-stop>+ Adicionar escala</button>
               </div>
               <div class="form-row mt-4">

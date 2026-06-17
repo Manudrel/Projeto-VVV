@@ -59,14 +59,37 @@
     const stopsList = document.querySelector('[data-stops-list]');
     if (addStopBtn && stopsList) {
         addStopBtn.addEventListener('click', () => {
+            const index = stopsList.children.length;
             const row = document.createElement('div');
             row.className = 'flex gap-2';
             row.style.marginBottom = 'var(--space-3)';
-            row.innerHTML = `
-        <input type="text" class="form-control" placeholder="Cidade de escala" name="escala" />
-        <button type="button" class="btn btn-ghost btn-sm" aria-label="Remover">✕</button>
-      `;
-            row.querySelector('button').addEventListener('click', () => row.remove());
+
+            const select = document.createElement('select');
+            select.name = `escalas[${index}]`;
+            select.className = 'form-control';
+            select.required = true;
+
+            const defaultOpt = document.createElement('option');
+            defaultOpt.value = '';
+            defaultOpt.textContent = 'Selecione...';
+            select.appendChild(defaultOpt);
+
+            (window.CIDADES || []).forEach(cidade => {
+                const opt = document.createElement('option');
+                opt.value = cidade.id;
+                opt.textContent = `${cidade.cidade} — ${cidade.estado} (${cidade.codigoIata})`;
+                select.appendChild(opt);
+            });
+
+            const removeBtn = document.createElement('button');
+            removeBtn.type = 'button';
+            removeBtn.className = 'btn btn-ghost btn-sm';
+            removeBtn.setAttribute('aria-label', 'Remover');
+            removeBtn.textContent = '✕';
+            removeBtn.addEventListener('click', () => row.remove());
+
+            row.appendChild(select);
+            row.appendChild(removeBtn);
             stopsList.appendChild(row);
         });
     }
