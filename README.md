@@ -133,6 +133,12 @@ cd demo
 ./mvnw clean spring-boot:run
 ```
 
+### Local com Maven Pulando os Testes
+```bash
+cd demo
+.\mvnw.cmd spring-boot:run "-Dmaven.test.skip=true"
+```
+
 Ou, se você tiver Maven instalado:
 
 ```bash
