@@ -1,0 +1,344 @@
+<form method="post" th:action="@{/api/pagamentos}">
+
+    <!-- ETAPA 1 - SELECIONAR RESERVA -->
+    <section class="wizard-pane active" aria-label="Selecionar Reserva">
+
+        <h3>Reservas pendentes de pagamento</h3>
+
+        <div class="table-wrapper">
+            <table class="table">
+
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>Localizador</th>
+                    <th>Modal</th>
+                    <th>Tipo Viagem</th>
+                    <th>Data</th>
+                    <th>Hora</th>
+                    <th>Valor</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <tr th:each="reserva, stat : ${reservas}">
+
+                    <td>
+                        <input
+                                type="radio"
+                                name="reservaId"
+                                th:value="${reserva.id}"
+                                th:checked="${stat.first}">
+                    </td>
+
+                    <td th:text="${reserva.localizador}">
+                        LOC123
+                    </td>
+
+                    <td th:text="${reserva.tipoModal}">
+                        AEREO
+                    </td>
+
+                    <td th:text="${reserva.tipoViagem}">
+                        IDA
+                    </td>
+
+                    <td th:text="${reserva.data}">
+                        2026-06-20
+                    </td>
+
+                    <td th:text="${reserva.horaPartida}">
+                        08:00
+                    </td>
+
+                    <td>
+                        R$
+                        <span th:text="${reserva.valor}">
+                            0.00
+                        </span>
+                    </td>
+
+                    <td>
+                        <span class="badge badge-warning"
+                              th:text="${reserva.statusReserva}">
+                        </span>
+                    </td>
+
+                </tr>
+
+                </tbody>
+
+            </table>
+        </div>
+
+        <!-- DETALHES DA PRIMEIRA RESERVA -->
+        <div class="card mt-4"
+             th:if="${!#lists.isEmpty(reservas)}">
+
+            <div class="card-header">
+                <h4 class="card-title">
+                    Detalhes da Reserva
+                </h4>
+            </div>
+
+            <div class="card-body">
+
+                <ul class="summary-list">
+
+                    <li>
+                        <span>Localizador</span>
+                        <span th:text="${reservas[0].localizador}"></span>
+                    </li>
+
+                    <li>
+                        <span>Tipo de Modal</span>
+                        <span th:text="${reservas[0].tipoModal}"></span>
+                    </li>
+
+                    <li>
+                        <span>Tipo de Viagem</span>
+                        <span th:text="${reservas[0].tipoViagem}"></span>
+                    </li>
+
+                    <li>
+                        <span>Data</span>
+                        <span th:text="${reservas[0].data}"></span>
+                    </li>
+
+                    <li>
+                        <span>Hora de Partida</span>
+                        <span th:text="${reservas[0].horaPartida}"></span>
+                    </li>
+
+                    <li>
+                        <span>Status</span>
+                        <span th:text="${reservas[0].statusReserva}"></span>
+                    </li>
+
+                </ul>
+
+            </div>
+        </div>
+
+        <div class="wizard-nav">
+            <span></span>
+
+            <button
+                    type="button"
+                    class="btn btn-primary"
+                    data-wizard-next>
+
+                Ir para Pagamento →
+            </button>
+        </div>
+
+    </section>
+
+    <!-- ETAPA 2 - PAGAMENTO -->
+    <section class="wizard-pane" aria-label="Pagamento">
+
+        <h3>Pagamento da Reserva</h3>
+
+        <div class="grid-2">
+
+            <!-- RESUMO -->
+            <div class="card">
+
+                <div class="card-header">
+                    <h4 class="card-title">
+                        Resumo do Pedido
+                    </h4>
+                </div>
+
+                <div class="card-body"
+                     th:if="${!#lists.isEmpty(reservas)}">
+
+                    <ul class="summary-list">
+
+                        <li>
+                            <span>Localizador</span>
+                            <span th:text="${reservas[0].localizador}">
+                            </span>
+                        </li>
+
+                        <li>
+                            <span>Tipo de Modal</span>
+                            <span th:text="${reservas[0].tipoModal}">
+                            </span>
+                        </li>
+
+                        <li>
+                            <span>Tipo de Viagem</span>
+                            <span th:text="${reservas[0].tipoViagem}">
+                            </span>
+                        </li>
+
+                        <li>
+                            <span>Data</span>
+                            <span th:text="${reservas[0].data}">
+                            </span>
+                        </li>
+
+                        <li>
+                            <span>Hora</span>
+                            <span th:text="${reservas[0].horaPartida}">
+                            </span>
+                        </li>
+
+                        <li class="total">
+                            <span>Total</span>
+
+                            <span>
+                                R$
+                                <span th:text="${reservas[0].valor}">
+                                </span>
+                            </span>
+                        </li>
+
+                    </ul>
+
+                </div>
+            </div>
+
+            <!-- DADOS PAGAMENTO -->
+            <div class="card">
+
+                <div class="card-header">
+                    <h4 class="card-title">
+                        Dados de Pagamento
+                    </h4>
+                </div>
+
+                <div class="card-body">
+
+                    <input
+                            type="hidden"
+                            name="reservaId"
+                            th:value="${reservas[0].id}">
+
+                    <div class="form-group">
+
+                        <label class="form-label">
+                            Forma de Pagamento
+                        </label>
+
+                        <select
+                                class="form-control"
+                                name="formaPagamento">
+
+                            <option value="PIX">
+                                PIX
+                            </option>
+
+                            <option value="CARTAO_CREDITO">
+                                Cartão de Crédito
+                            </option>
+
+                            <option value="CARTAO_DEBITO">
+                                Cartão de Débito
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label class="form-label">
+                            Número do Cartão
+                        </label>
+
+                        <input
+                                type="text"
+                                class="form-control"
+                                name="numeroCartao">
+                    </div>
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+
+                            <label class="form-label">
+                                Validade
+                            </label>
+
+                            <input
+                                    type="text"
+                                    class="form-control"
+                                    name="validade">
+                        </div>
+
+                        <div class="form-group">
+
+                            <label class="form-label">
+                                CVV
+                            </label>
+
+                            <input
+                                    type="password"
+                                    class="form-control"
+                                    name="cvv">
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label class="form-label">
+                            Nome Impresso no Cartão
+                        </label>
+
+                        <input
+                                type="text"
+                                class="form-control"
+                                name="nomeCartao">
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="alert alert-info mt-4">
+
+            <span class="alert-icon">💳</span>
+
+            <div>
+
+                <div class="alert-title">
+                    Pagamento Seguro
+                </div>
+
+                <span>
+                    Após a confirmação o ticket será emitido automaticamente.
+                </span>
+
+            </div>
+
+        </div>
+
+        <div class="wizard-nav">
+
+            <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-wizard-prev>
+
+                ← Voltar
+            </button>
+
+            <button
+                    type="submit"
+                    class="btn btn-accent btn-lg">
+
+                Confirmar Pagamento
+            </button>
+
+        </div>
+
+    </section>
+
+</form>

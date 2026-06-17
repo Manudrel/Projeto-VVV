@@ -40,6 +40,14 @@ public class PagamentoController {
                 .body(pagamentoRealizado);
     }
 
+    @PatchMapping("/{id}/cancelar")
+    public ResponseEntity<Pagamento> cancelarPagamento(@PathVariable Long id) {
+
+        Pagamento pagamentoCancelado = pagamentoService.cancelarPagamento(id);
+
+        return ResponseEntity.ok(pagamentoCancelado);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Pagamento> buscarPorId(
             @PathVariable Long id) {
@@ -60,14 +68,6 @@ public class PagamentoController {
             @PathVariable Long id) {
 
         pagamentoService.deletar(id);
-
-        return ResponseEntity.noContent().build();
-    }
-
-    public ResponseEntity<Void> cancelarPagamento(
-            @PathVariable Long id) {
-
-        pagamentoService.cancelarPagamento(id);
 
         return ResponseEntity.noContent().build();
     }

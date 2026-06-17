@@ -54,6 +54,12 @@
             <span class="nav-icon">🏙️</span> Cidades
         </a>
 
+        <a th:href="@{/tickets}"
+           th:classappend="${activePage == 'tickets'} ? 'active'"
+           class="nav-link">
+            <span class="nav-icon">🎟️</span> Ticket
+        </a>
+
         <div class="nav-section-label" sec:authorize="hasRole('GERENTE')">
             Administração
         </div>
