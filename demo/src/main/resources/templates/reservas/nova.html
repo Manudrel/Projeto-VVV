@@ -37,17 +37,17 @@
   </header>
 
   <!-- MAIN -->
-  <!-- Serializa a lista de cidades para o JS usar -->
   <script th:inline="javascript">
     window.CIDADES = /*[[${cidades}]]*/[];
   </script>
+
   <main class="app-main">
     <div class="page-header">
       <nav class="breadcrumb" aria-label="Trilha">
         <a th:href="@{/dashboard}" href="/dashboard">Início</a>
-        <span aria-hidden='true'>›</span>
+        <span aria-hidden="true">›</span>
         <a th:href="@{/reservas}" href="/reservas">Reservas</a>
-        <span aria-hidden='true'>›</span>
+        <span aria-hidden="true">›</span>
         <span>Nova</span>
       </nav>
       <h1>Nova Reserva</h1>
@@ -57,55 +57,93 @@
       <div class="card-body">
         <ol class="wizard-steps" role="tablist">
           <li class="wizard-step active"><span class="num">1</span> Rota</li>
-          <!-- <li class="wizard-step"><span class="num">2</span> Cliente</li> -->
           <li class="wizard-step"><span class="num">2</span> Modal &amp; Passagem</li>
           <li class="wizard-step"><span class="num">3</span> Resumo</li>
-          <!-- <li class="wizard-step"><span class="num">5</span> Pagamento</li> -->
         </ol>
 
-        <form method="post" action="/reservas" novalidate>
-          <!-- ETAPA 1 -->
+        <!-- ============================== -->
+        <!-- th:object liga ao ReservaDTO   -->
+        <!-- ============================== -->
+        <form id="form-reserva" method="post" th:action="@{/reservas}"
+              th:object="${reservaDTO}" novalidate>
+
+          <!-- ====== ETAPA 1 — ROTA ====== -->
           <section class="wizard-pane active" aria-label="Rotas">
             <h3>Origem e destino</h3>
+
             <div class="form-row">
+              <!-- ORIGEM — th:field gera name="origemId" -->
               <div class="form-group">
-                <label class="form-label" for="origem">Cidade de origem <span class="required">*</span></label>
-                <select id="origem" name="origemId" class="form-control" required>
-                  <option th:each="cidade : ${cidades}" th:value="${cidade.id}"
+                <label class="form-label" for="origem">
+                  Cidade de origem <span class="required">*</span>
+                </label>
+                <select id="origem" th:field="*{origemId}" class="form-control" required>
+                  <option value="">-- selecione --</option>
+                  <option th:each="cidade : ${cidades}"
+                          th:value="${cidade.id}"
                           th:text="${cidade.cidade + ' — ' + cidade.estado + ' (' + cidade.codigoIata + ')'}">
                   </option>
                 </select>
               </div>
+
+              <!-- DESTINO — th:field gera name="destinoId" -->
               <div class="form-group">
-                <label class="form-label" for="destino">Cidade de destino <span class="required">*</span></label>
-                <select id="destino" name="destinoId" class="form-control" required>
-                  <option th:each="cidade : ${cidades}" th:value="${cidade.id}"
+                <label class="form-label" for="destino">
+                  Cidade de destino <span class="required">*</span>
+                </label>
+                <select id="destino" th:field="*{destinoId}" class="form-control" required>
+                  <option value="">-- selecione --</option>
+                  <option th:each="cidade : ${cidades}"
+                          th:value="${cidade.id}"
                           th:text="${cidade.cidade + ' — ' + cidade.estado + ' (' + cidade.codigoIata + ')'}">
-                  </option>
                   </option>
                 </select>
               </div>
             </div>
+
+            <!-- TIPO DE VIAGEM — values casam com TipoViagem enum -->
             <div class="form-group">
               <label class="form-label">Tipo de viagem</label>
               <div class="flex gap-3" style="flex-wrap:wrap;">
-                <label><input type="radio" name="tipoViagem" value="direta" checked
-                              data-toggle-target="#escalas-bloco" data-toggle-value="comEscalas" /> Direta</label>
-                <label><input type="radio" name="tipoViagem" value="comEscalas" data-toggle-target="#escalas-bloco"
-                              data-toggle-value="comEscalas" /> Com escalas</label>
+                <label>
+                  <input type="radio" th:field="*{tipoViagem}" value="DIRETA"
+                         data-toggle-target="#escalas-bloco"
+                         data-toggle-value="COM_ESCALAS" />
+                  Direta
+                </label>
+                <label>
+                  <input type="radio" th:field="*{tipoViagem}" value="COM_ESCALAS"
+                         data-toggle-target="#escalas-bloco"
+                         data-toggle-value="COM_ESCALAS" />
+                  Com escalas
+                </label>
               </div>
             </div>
+
+            <!-- ESCALAS — selects criados pelo JS com name="escalas" -->
             <div id="escalas-bloco" class="hidden">
               <label class="form-label">Cidades intermediárias</label>
-              <div data-stops-list>
-                <!-- as escalas adicionadas dinamicamente vão aparecer aqui -->
-              </div>
-              <button type="button" class="btn btn-secondary btn-sm" data-add-stop>+ Adicionar escala</button>
+              <div data-stops-list></div>
+              <button type="button" class="btn btn-secondary btn-sm" data-add-stop>
+                + Adicionar escala
+              </button>
             </div>
+
+            <!-- DATA + HORA -->
             <div class="form-row mt-4">
               <div class="form-group">
-                <label class="form-label" for="data">Data da viagem <span class="required">*</span></label>
-                <input id="data" name="data" type="date" class="form-control" required />
+                <label class="form-label" for="data">
+                  Data da viagem <span class="required">*</span>
+                </label>
+                <input id="data" th:field="*{data}" type="date"
+                       class="form-control" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="horaPartida">
+                  Hora de partida <span class="required">*</span>
+                </label>
+                <input id="horaPartida" th:field="*{horaPartida}" type="time"
+                       class="form-control" required />
               </div>
             </div>
             <div class="wizard-nav">
@@ -114,121 +152,70 @@
             </div>
           </section>
 
-
-          <!-- ETAPA 2 -->
-
-          <!-- <section class="wizard-pane" aria-label="Cliente">
-          <h3>Selecione o cliente</h3>
-          <div class="form-row">
-            <div class="form-group">
-              <label class="form-label" for="busca">Buscar por CPF ou nome</label>
-              <input id="busca" class="form-control" placeholder="Ex.: 000.000.000-00" />
-            </div>
-            <div class="form-group" style="align-self:end;">
-              <button type="button" id="btn-buscar" class="btn btn-secondary">🔍 Buscar</button>
-            </div>
-          </div>
-          <div class="table-wrapper mt-4">
-            <table class="table">
-              <thead>
-              <tr>
-                <th></th>
-                <th>Nome</th>
-                <th>CPF</th>
-                <th>Idade</th>
-                <th>Telefone</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr th:each="cliente : ${clientes}">
-                <td><input type="radio" name="clienteId" th:value="${cliente.id}" /></td>
-                <td th:text="${cliente.nome}"></td>
-                <td th:text="${cliente.cpf}"></td>
-                <td
-                        th:text="${cliente.dataNascimento != null ? T(java.time.Period).between(cliente.dataNascimento, T(java.time.LocalDate).now()).years : '—'}">
-                </td>
-                <td th:text="${cliente.telefone}"></td>
-              </tr>
-              <tr th:if="${#lists.isEmpty(clientes)}">
-                <td colspan="5" class="text-center">Nenhum cliente cadastrado.</td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="wizard-nav">
-            <span></span>
-            <button type="button" class="btn btn-primary" data-wizard-next>Próximo →</button>
-          </div>
-        </section> -->
-
-
-          <!-- ETAPA 2 -->
+          <!-- ====== ETAPA 2 — MODAL & PASSAGEM ====== -->
           <section class="wizard-pane" aria-label="Modal e Passagem">
             <h3>Escolha o modal disponível</h3>
 
             <div class="stack">
-
-              <!-- Caso não haja modais -->
               <p th:if="${#lists.isEmpty(modais)}" class="text-muted">
                 Nenhum modal disponível no momento.
               </p>
 
-              <!-- Lista dinâmica de modais -->
-              <label class="modal-option"
-                     th:each="m, iter : ${modais}">
-
+              <label class="modal-option" th:each="m, iter : ${modais}">
+                <!-- name="idModal" para casar com DTO.getIdModal() -->
                 <input type="radio"
-                       name="modalId"
+                       name="idModal"
                        th:value="${m.id}"
                        th:checked="${iter.index == 0}" />
 
-                <!-- Ícone dinâmico -->
                 <span class="icon"
-                      th:text="${m.tipoModal.name() == 'AVIAO' ? '✈️' :
-                     m.tipoModal.name() == 'ONIBUS' ? '🚌' :
-                     m.tipoModal.name() == 'TREM' ? '🚆' : '🚢'}">
+                      th:text="${m.tipoModal.name() == 'AVIAO'   ? '✈️' :
+                                m.tipoModal.name() == 'ONIBUS' ? '🚌' :
+                                m.tipoModal.name() == 'TREM'   ? '🚆' : '🚢'}">
                 </span>
 
                 <span class="info">
                   <span class="name"
-                        th:text="${m.tipoModal + ' — ' + m.modelo}">
-                  </span>
-
+                        th:text="${m.tipoModal + ' — ' + m.modelo}"></span>
                   <span class="meta"
-                        th:text="'Capacidade ' + ${m.capacidade} + ' • Ano ' + ${m.ano}">
-                  </span>
+                        th:text="'Capacidade ' + ${m.capacidade} + ' • Ano ' + ${m.ano}"></span>
                 </span>
 
                 <span class="price">—</span>
               </label>
-
             </div>
 
+            <!-- TIPO DE PASSAGEM + VALOR -->
             <div class="form-row mt-4">
               <div class="form-group">
                 <label class="form-label" for="tipoPassagem">
                   Tipo de passagem <span class="required">*</span>
                 </label>
-                <select id="tipoPassagem" name="tipoPassagem"
+                <select id="tipoPassagem" th:field="*{tipoPassagem}"
                         class="form-control" required>
-                  <option value="Economica">Econômica</option>
-                  <option value="Semi-Leito">Semi-Leito</option>
-                  <option value="Leito">Leito</option>
+                  <option value="">-- selecione --</option>
+                  <option value="ECONOMICA">Econômica</option>
+                  <option value="SEMI_LEITO">Semi-Leito</option>
+                  <option value="LEITO">Leito</option>
                 </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="valor">
+                  Valor por ticket (R$) <span class="required">*</span>
+                </label>
+                <input id="valor" th:field="*{valor}" type="number"
+                       step="0.01" min="0" placeholder="Ex.: 150.00"
+                       class="form-control" required />
               </div>
             </div>
 
             <div class="wizard-nav">
-              <button type="button" class="btn btn-secondary"
-                      data-wizard-prev>← Voltar</button>
-
-              <button type="button" class="btn btn-primary"
-                      data-wizard-next>Próximo →</button>
+              <button type="button" class="btn btn-secondary" data-wizard-prev>← Voltar</button>
+              <button type="button" class="btn btn-primary" data-wizard-next>Próximo →</button>
             </div>
           </section>
 
-
-          <!-- ETAPA 3 — RESUMO -->
+          <!-- ====== ETAPA 3 — RESUMO ====== -->
           <section class="wizard-pane" aria-label="Resumo">
             <h3>Resumo da reserva</h3>
             <div class="grid-2">
@@ -265,46 +252,123 @@
             </div>
           </section>
 
-          <!-- <section class="wizard-pane" aria-label="Pagamento">
-          <h3>Forma de pagamento</h3>
-          <div class="form-row">
-            <div class="form-group">
-              <label class="form-label" for="formaPagamento">Forma <span class="required">*</span></label>
-              <select id="formaPagamento" name="formaPagamento" class="form-control" required
-                      data-toggle-target="#parcelas-bloco" data-toggle-value="credito">
-                <option value="dinheiro">Dinheiro</option>
-                <option value="pix">PIX</option>
-                <option value="debito">Cartão de Débito</option>
-                <option value="credito">Cartão de Crédito</option>
-              </select>
-            </div>
-            <div class="form-group hidden" id="parcelas-bloco">
-              <label class="form-label" for="parcelas">Parcelas</label>
-              <select id="parcelas" name="parcelas" class="form-control">
-                <option>1x sem juros</option>
-                <option>2x sem juros</option>
-                <option>3x sem juros</option>
-                <option>4x sem juros</option>
-                <option>6x com juros (5% a.m.)</option>
-                <option>12x com juros (5% a.m.)</option>
-                <option>24x com juros (5% a.m.)</option>
-              </select>
-              <span class="form-hint">Acima de 4x são aplicados juros de 5%.</span>
-            </div>
-          </div>
-          <div class="wizard-nav">
-            <button type="button" class="btn btn-secondary" data-wizard-prev>← Voltar</button>
-            <button type="submit" class="btn btn-accent btn-lg">Confirmar Reserva e Emitir Ticket</button>
-          </div>
-        </section> -->
         </form>
       </div>
     </div>
-
   </main>
 </div>
 
 <script th:src="@{/js/app.js}" src="/js/app.js"></script>
-</body>
 
+<!-- Script das escalas -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+
+    const stopsList  = document.querySelector('[data-stops-list]');
+    const addStopBtn = document.querySelector('[data-add-stop]');
+    const cidades    = window.CIDADES || [];
+
+    // Gera <option> de cidades
+    function cidadeOptions() {
+      let html = '<option value="">-- selecione --</option>';
+      cidades.forEach(function (c) {
+        html += '<option value="' + c.id + '">'
+                + c.cidade + ' — ' + c.estado + ' (' + c.codigoIata + ')</option>';
+      });
+      return html;
+    }
+
+    // Adicionar escala
+    if (addStopBtn) {
+      addStopBtn.addEventListener('click', function () {
+        const idx = stopsList.querySelectorAll('[data-stop-item]').length;
+
+        const wrapper = document.createElement('div');
+        wrapper.setAttribute('data-stop-item', '');
+        wrapper.className = 'form-row';
+        wrapper.style.alignItems = 'end';
+
+        wrapper.innerHTML =
+                '<div class="form-group" style="flex:1">' +
+                '<label class="form-label">Escala ' + (idx + 1) + '</label>' +
+                // Sem name por padrão — JS adiciona quando selecionar
+                '<select data-stop-select class="form-control">' +
+                cidadeOptions() +
+                '</select>' +
+                '</div>' +
+                '<button type="button" class="btn btn-ghost btn-sm" data-remove-stop ' +
+                'style="margin-bottom:1rem;color:var(--color-danger,#e74c3c)">✕</button>';
+
+        stopsList.appendChild(wrapper);
+
+        // Quando selecionar cidade → ativa name="escalas" para o form enviar
+        const select = wrapper.querySelector('[data-stop-select]');
+        select.addEventListener('change', function () {
+          this.name = this.value ? 'escalas' : '';
+        });
+
+        // Remover escala
+        wrapper.querySelector('[data-remove-stop]')
+                .addEventListener('click', function () {
+                  wrapper.remove();
+                });
+      });
+    }
+
+    // Resumo (etapa 3)
+    const origemSel  = document.getElementById('origem');
+    const destinoSel = document.getElementById('destino');
+
+    function optText(sel) {
+      return sel.options[sel.selectedIndex]
+              ? sel.options[sel.selectedIndex].text
+              : '—';
+    }
+
+    window.atualizarResumo = function () {
+      // Trajeto
+      document.getElementById('summary-trajeto').textContent =
+              optText(origemSel) + '  →  ' + optText(destinoSel);
+
+      // Tipo viagem
+      var tv = document.querySelector('input[name="tipoViagem"]:checked');
+      document.getElementById('summary-tipo-viagem').textContent =
+              tv ? (tv.value === 'DIRETA' ? 'Direta' : 'Com escalas') : '—';
+
+      // Escalas
+      var stops = stopsList.querySelectorAll('[data-stop-select]');
+      if (stops.length > 0) {
+        var nomes = [];
+        stops.forEach(function (s) {
+          if (s.selectedIndex > 0) nomes.push(s.options[s.selectedIndex].text);
+        });
+        document.getElementById('summary-escalas').textContent =
+                nomes.length > 0 ? nomes.join(' → ') : 'Nenhuma';
+      } else {
+        document.getElementById('summary-escalas').textContent = 'Nenhuma';
+      }
+
+      // Data
+      document.getElementById('summary-data').textContent =
+              document.getElementById('data').value || '—';
+
+      // Modal
+      var modal = document.querySelector('input[name="idModal"]:checked');
+      if (modal) {
+        var label = modal.closest('.modal-option');
+        document.getElementById('summary-modal').textContent =
+                label ? (label.querySelector('.name') || {}).textContent || '—' : '—';
+        document.getElementById('summary-modal-meta').textContent =
+                label ? (label.querySelector('.meta') || {}).textContent || '' : '';
+      }
+
+      // Tipo passagem
+      var tp = document.getElementById('tipoPassagem');
+      document.getElementById('summary-tipo-passagem').textContent =
+              tp.options[tp.selectedIndex] ? tp.options[tp.selectedIndex].text : '—';
+    };
+  });
+</script>
+
+</body>
 </html>

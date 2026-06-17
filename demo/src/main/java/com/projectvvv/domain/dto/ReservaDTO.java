@@ -21,91 +21,56 @@ public class ReservaDTO {
     private TipoPassagem tipoPassagem;
 
     private Long idModal;
-
     private Float valor;
+
+    // ─── campos de rota (vindos do form) ───
+    private Long origemId;
+    private Long destinoId;
+    private List<Long> escalas;
+    // ────────────────────────────────────────
 
     private List<RotaDaReservaDTO> rotas;
 
-    public ReservaDTO() {
-    }
+    public ReservaDTO() {}
 
-    public LocalDate getData() {
-        return data;
-    }
+    // ─── existentes ───
+    public LocalDate getData() { return data; }
+    public void setData(LocalDate data) { this.data = data; }
 
-    public void setData(LocalDate data) {
-        this.data = data;
-    }
+    public LocalTime getHoraPartida() { return horaPartida; }
+    public void setHoraPartida(LocalTime horaPartida) { this.horaPartida = horaPartida; }
 
-    public LocalTime getHoraPartida() {
-        return horaPartida;
-    }
+    public String getLocalizador() { return localizador; }
+    public void setLocalizador(String localizador) { this.localizador = localizador; }
 
-    public void setHoraPartida(LocalTime horaPartida) {
-        this.horaPartida = horaPartida;
-    }
+    public StatusReserva getStatusReserva() { return statusReserva; }
+    public void setStatusReserva(StatusReserva statusReserva) { this.statusReserva = statusReserva; }
 
-    public String getLocalizador() {
-        return localizador;
-    }
+    public TipoViagem getTipoViagem() { return tipoViagem; }
+    public void setTipoViagem(TipoViagem tipoViagem) { this.tipoViagem = tipoViagem; }
 
-    public void setLocalizador(String localizador) {
-        this.localizador = localizador;
-    }
+    public TipoModal getTipoModal() { return tipoModal; }
+    public void setTipoModal(TipoModal tipoModal) { this.tipoModal = tipoModal; }
 
-    public StatusReserva getStatusReserva() {
-        return statusReserva;
-    }
+    public TipoPassagem getTipoPassagem() { return tipoPassagem; }
+    public void setTipoPassagem(TipoPassagem tipoPassagem) { this.tipoPassagem = tipoPassagem; }
 
-    public void setStatusReserva(StatusReserva statusReserva) {
-        this.statusReserva = statusReserva;
-    }
+    public Long getIdModal() { return idModal; }
+    public void setIdModal(Long idModal) { this.idModal = idModal; }
 
-    public TipoViagem getTipoViagem() {
-        return tipoViagem;
-    }
+    public Float getValor() { return valor; }
+    public void setValor(Float valor) { this.valor = valor; }
 
-    public void setTipoViagem(TipoViagem tipoViagem) {
-        this.tipoViagem = tipoViagem;
-    }
+    public List<RotaDaReservaDTO> getRotas() { return rotas; }
+    public void setRotas(List<RotaDaReservaDTO> rotas) { this.rotas = rotas; }
 
-    public TipoModal getTipoModal() {
-        return tipoModal;
-    }
+    // ─── novos ───
+    public Long getOrigemId() { return origemId; }
+    public void setOrigemId(Long origemId) { this.origemId = origemId; }
 
-    public void setTipoModal(TipoModal tipoModal) {
-        this.tipoModal = tipoModal;
-    }
+    public Long getDestinoId() { return destinoId; }
+    public void setDestinoId(Long destinoId) { this.destinoId = destinoId; }
 
-    public TipoPassagem getTipoPassagem() {
-        return tipoPassagem;
-    }
-
-    public void setTipoPassagem(TipoPassagem tipoPassagem) {
-        this.tipoPassagem = tipoPassagem;
-    }
-
-    public Long getIdModal() {
-        return idModal;
-    }
-
-    public void setIdModal(Long idModal) {
-        this.idModal = idModal;
-    }
-
-    public Float getValor() {
-        return valor;
-    }
-
-    public void setValor(Float valor) {
-        this.valor = valor;
-    }
-
-    public List<RotaDaReservaDTO> getRotas() {
-        return rotas;
-    }
-
-    public void setRotas(List<RotaDaReservaDTO> rotas) {
-        this.rotas = rotas;
-    }
+    public List<Long> getEscalas() { return escalas; }
+    public void setEscalas(List<Long> escalas) { this.escalas = escalas; }
 }

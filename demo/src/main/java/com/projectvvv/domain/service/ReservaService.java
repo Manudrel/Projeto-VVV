@@ -2,15 +2,12 @@ package com.projectvvv.domain.service;
 
 import java.util.List;
 
+import com.projectvvv.domain.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.projectvvv.domain.dto.ReservaDTO;
 import com.projectvvv.domain.dto.RotaDaReservaDTO;
-import com.projectvvv.domain.model.Reserva;
-import com.projectvvv.domain.model.Rota;
-import com.projectvvv.domain.model.RotaDaReserva;
-import com.projectvvv.domain.model.StatusReserva;
 import com.projectvvv.domain.repository.ModalRepository;
 import com.projectvvv.domain.repository.ReservaRepository;
 import com.projectvvv.domain.repository.RotaDaReservaRepository;
@@ -50,11 +47,9 @@ public class ReservaService {
 
     public Reserva criar(ReservaDTO dto) {
 
-        if (!modalRepository.existsById(dto.getIdModal())) {
-            throw new EntityNotFoundException(
-                    "Modal não encontrado com ID: "
-                            + dto.getIdModal());
-        }
+        Modal modal = modalRepository.findById(dto.getIdModal())
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Modal não encontrado com ID: " + dto.getIdModal()));
 
         Reserva reserva = new Reserva();
 
@@ -63,8 +58,10 @@ public class ReservaService {
         reserva.setLocalizador(dto.getLocalizador());
 
         reserva.setTipoViagem(dto.getTipoViagem());
-        reserva.setTipoModal(dto.getTipoModal());
         reserva.setTipoPassagem(dto.getTipoPassagem());
+
+        // Puxa o tipo do modal diretamente do Modal selecionado
+        reserva.setTipoModal(modal.getTipoModal());
 
         reserva.setIdModal(dto.getIdModal());
         reserva.setValor(dto.getValor());
@@ -74,18 +71,12 @@ public class ReservaService {
         Reserva reservaSalva = reservaRepository.save(reserva);
 
         if (dto.getRotas() != null && !dto.getRotas().isEmpty()) {
-
             for (RotaDaReservaDTO rotaDTO : dto.getRotas()) {
-
-                Rota rota = rotaRepository.findById(
-                                rotaDTO.getRotaId())
-                        .orElseThrow(() ->
-                                new EntityNotFoundException(
-                                        "Rota não encontrada com ID: "
-                                                + rotaDTO.getRotaId()));
+                Rota rota = rotaRepository.findById(rotaDTO.getRotaId())
+                        .orElseThrow(() -> new EntityNotFoundException(
+                                "Rota não encontrada com ID: " + rotaDTO.getRotaId()));
 
                 RotaDaReserva trecho = new RotaDaReserva();
-
                 trecho.setReserva(reservaSalva);
                 trecho.setRota(rota);
                 trecho.setOrdem(rotaDTO.getOrdem());
@@ -156,4 +147,6 @@ public class ReservaService {
 
         reservaRepository.deleteById(id);
     }
+
+
 }

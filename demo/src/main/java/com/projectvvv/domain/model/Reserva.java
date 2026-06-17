@@ -41,6 +41,7 @@ public class Reserva {
     @Column(nullable = false)
     private Long idModal;
 
+    @Column(nullable = false)
     private Float valor;
 
     public Reserva() {

@@ -3,127 +3,189 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Detalhe da Reserva — SCVP | VVV</title>
+  <title th:text="'Reserva ' + ${reserva.localizador} + ' — SCVP | VVV'">Detalhe da Reserva</title>
   <link rel="stylesheet" th:href="@{/css/variables.css}" href="/css/variables.css" />
   <link rel="stylesheet" th:href="@{/css/components.css}" href="/css/components.css" />
   <link rel="stylesheet" th:href="@{/css/app.css}" href="/css/app.css" />
+  <link rel="stylesheet" th:href="@{/css/sidebar.css}" href="/css/sidebar.css" />
 </head>
 <body>
-  <div class="sidebar-backdrop"></div>
-  <div class="app-shell">
-    <!-- SIDEBAR -->
-    <aside class="app-sidebar">
-      <div class="sidebar-brand">
-        <span class="brand-logo">VVV</span>
-        <span class="brand-text">
-          <span class="brand-name">Vai &amp; Volta</span>
-          <span class="brand-tagline">SCVP</span>
-        </span>
-      </div>
-      <nav class="sidebar-nav" aria-label="Navegação principal">
-        <div class="nav-section-title">Operação</div>
-        <ul class="nav-list">
-          <li class="nav-item"><a th:href="@{/dashboard}" href="/dashboard" class=""><span class="nav-icon">🏠</span>Dashboard</a></li>
-          <li class="nav-item"><a th:href="@{/reservas/nova}" href="/reservas/nova" class=""><span class="nav-icon">➕</span>Nova Reserva</a></li>
-          <li class="nav-item"><a th:href="@{/reservas/consultar}" href="/reservas/consultar" class="active"><span class="nav-icon">📋</span>Consultar Reservas</a></li>
-          <li class="nav-item"><a th:href="@{/clientes/cadastro}" href="/clientes/cadastro" class=""><span class="nav-icon">👤</span>Cadastrar Cliente</a></li>
-          <li class="nav-item"><a th:href="@{/modais}" href="/modais" class=""><span class="nav-icon">🚍</span>Central de Modais</a></li>
-          <li class="nav-item"><a th:href="@{/cidades}" href="/cidades" class=""><span class="nav-icon">🏙️</span>Cidades</a></li>
-        </ul>
+<div class="sidebar-backdrop"></div>
+<div class="app-shell">
 
-        <!-- Bloco visível apenas para Gerente (th:if no template Thymeleaf) -->
-        <div class="nav-section-title" th:if="${usuarioLogado.cargo.name() == 'Gerente'}">Administração</div>
-        <ul class="nav-list">
-          <li class="nav-item" th:if="${usuarioLogado.cargo.name() == 'Gerente'}"><a th:href="@{/gerente/funcionarios}" href="/gerente/funcionarios" class=""><span class="nav-icon">👥</span>Funcionários</a></li>
-          <li class="nav-item" th:if="${usuarioLogado.cargo.name() == 'Gerente'}"><a th:href="@{/pontos-venda}" href="/pontos-venda" class=""><span class="nav-icon">🏬</span>Pontos de Venda</a></li>
-          <li class="nav-item" th:if="${usuarioLogado.cargo.name() == 'Gerente'}"><a th:href="@{/transportadoras}" href="/transportadoras" class=""><span class="nav-icon">🚚</span>Transportadoras</a></li>
-          <li class="nav-item" th:if="${usuarioLogado.cargo.name() == 'Gerente'}"><a th:href="@{/vendas-online/aprovacao}" href="/vendas-online/aprovacao" class=""><span class="nav-icon">✅</span>Aprovação Vendas Online</a></li>
-        </ul>
+  <!-- SIDEBAR -->
+  <div th:replace="~{fragments/sidebar :: sidebar('consultar')}"></div>
+
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="header-left">
+      <button class="menu-toggle" data-menu-toggle aria-label="Abrir menu">☰</button>
+      <h1 class="page-title" th:text="'Reserva ' + ${reserva.localizador}">Reserva</h1>
+    </div>
+    <div class="user-menu">
+      <div class="user-info">
+        <span class="user-name">Maria Souza</span>
+        <span class="user-role">Gerente</span>
+      </div>
+      <span class="user-avatar">M</span>
+      <form method="post" action="/logout" style="margin:0;">
+        <button type="submit" class="btn btn-ghost btn-sm" title="Sair">Sair</button>
+      </form>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="app-main">
+    <div class="page-header">
+      <nav class="breadcrumb" aria-label="Trilha">
+        <a th:href="@{/dashboard}" href="/dashboard">Início</a>
+        <span aria-hidden="true">›</span>
+        <a th:href="@{/reservas/consultar}" href="/reservas/consultar">Reservas</a>
+        <span aria-hidden="true">›</span>
+        <span th:text="${reserva.localizador}">—</span>
       </nav>
-      <div class="sidebar-footer">
-        SCVP v1.0 • <span th:text="${#dates.format(#dates.createNow(), 'dd/MM/yyyy')}">14/06/2026</span>
-      </div>
-    </aside>
+      <h1 th:text="'Reserva ' + ${reserva.localizador}">Reserva</h1>
+    </div>
 
-    <!-- HEADER -->
-    <header class="app-header">
-      <div class="header-left">
-        <button class="menu-toggle" data-menu-toggle aria-label="Abrir menu">☰</button>
-        <h1 class="page-title">Reserva VVV-3F8A2K</h1>
-      </div>
-      <div class="user-menu">
-        <div class="user-info">
-          <span class="user-name" th:text="${usuarioLogado.nome}">Maria Souza</span>
-          <span class="user-role" th:text="${usuarioLogado.cargo}">Gerente</span>
+    <div class="grid-2 mb-4">
+
+      <!-- CARD: DADOS DA RESERVA -->
+      <section class="card">
+        <div class="card-header">
+          <h2 class="card-title">Dados da reserva</h2>
+
+          <span th:if="${reserva.statusReserva.name() == 'PENDENTE'}"
+                class="badge badge-warning">Pendente</span>
+          <span th:if="${reserva.statusReserva.name() == 'CONFIRMADO'}"
+                class="badge badge-success">Confirmado</span>
+          <span th:if="${reserva.statusReserva.name() == 'CANCELADA'}"
+                class="badge badge-danger">Cancelada</span>
         </div>
-        <span class="user-avatar" th:text="${#strings.substring(usuarioLogado.nome,0,1)}">M</span>
-        <form method="post" action="/logout" style="margin:0;">
-          <button type="submit" class="btn btn-ghost btn-sm" title="Sair">Sair</button>
-        </form>
-      </div>
-    </header>
 
-    <!-- MAIN -->
-    <main class="app-main">
-      <div class="page-header">
-        <nav class="breadcrumb" aria-label="Trilha"><a th:href="@{/dashboard}" href="/dashboard">Início</a> <span aria-hidden='true'>›</span> <a th:href="@{/reservas}" href="/reservas">Reservas</a> <span aria-hidden='true'>›</span> <span>VVV-3F8A2K</span></nav>
-        <h1>Reserva VVV-3F8A2K</h1>
-      </div>
-      
-<div class="grid-2 mb-4">
-  <section class="card">
-    <div class="card-header">
-      <h2 class="card-title">Dados da reserva</h2>
-      <span class="badge badge-success">Concluido</span>
-    </div>
-    <div class="card-body">
-      <ul class="summary-list">
-        <li><span>Localizador</span><span><code>VVV-3F8A2K</code></span></li>
-        <li><span>Cliente</span><span>João Pereira • CPF 123.456.789-00</span></li>
-        <li><span>Trajeto</span><span>SAO → SSA (Direta)</span></li>
-        <li><span>Modal</span><span>LATAM 3024 (Avião)</span></li>
-        <li><span>Tipo de passagem</span><span>Econômica</span></li>
-        <li><span>Data / hora</span><span>22/06/2026 — 08:30 → 11:10</span></li>
-        <li><span>Status pagamento</span><span><span class="badge badge-success">Finalizado</span></span></li>
-        <li class="total"><span>Total pago</span><span>R$ 513,00</span></li>
-      </ul>
-    </div>
-    <div class="card-footer">
-      <div class="btn-group" style="justify-content:flex-end;width:100%;">
-        <a class="btn btn-secondary" th:href="@{/reservas}" href="/reservas">Voltar</a>
-        <button class="btn btn-danger">Cancelar reserva</button>
-      </div>
-    </div>
-  </section>
+        <div class="card-body">
+          <ul class="summary-list">
+            <li>
+              <span>Localizador</span>
+              <span><code th:text="${reserva.localizador}">—</code></span>
+            </li>
+            <li>
+              <span>Trajeto</span>
+              <span>
+                  <span th:text="${reserva.tipoViagem != null ? reserva.tipoViagem : '—'}">—</span>
+                </span>
+            </li>
+            <li>
+              <span>Modal</span>
+              <span>
+                  <span th:text="${modal != null ? modal.modelo : '—'}">—</span>
+                  <span> (</span>
+                  <span th:text="${reserva.tipoModal}">—</span>
+                  <span>)</span>
+                </span>
+            </li>
+            <li>
+              <span>Tipo de passagem</span>
+              <span th:text="${reserva.tipoPassagem}">—</span>
+            </li>
+            <li>
+              <span>Data</span>
+              <span th:text="${reserva.data}">—</span>
+            </li>
+            <li>
+              <span>Hora de partida</span>
+              <span th:text="${reserva.horaPartida != null ? reserva.horaPartida : '—'}">—</span>
+            </li>
+            <li>
+              <span>Status</span>
+              <span>
+                  <span th:if="${reserva.statusReserva.name() == 'PENDENTE'}"
+                        class="badge badge-warning">Pendente</span>
+                  <span th:if="${reserva.statusReserva.name() == 'CONFIRMADO'}"
+                        class="badge badge-success">Confirmado</span>
+                  <span th:if="${reserva.statusReserva.name() == 'CANCELADA'}"
+                        class="badge badge-danger">Cancelada</span>
+                </span>
+            </li>
+            <li class="total">
+              <span>Total</span>
+              <span th:text="${reserva.valor != null ? 'R$ ' + #numbers.formatDecimal(reserva.valor, 1, 'POINT', 2, 'COMMA') : '—'}"
+                    style="font-weight:700;font-size:1.15rem;">—</span>
+            </li>
+          </ul>
+        </div>
 
-  <section class="ticket">
-    <header class="ticket-header">
-      <div>
-        <div class="text-xs text-muted">TICKET EMITIDO</div>
-        <div class="ticket-code">TKT-2026-000482</div>
-      </div>
-      <div class="text-right">
-        <div class="text-xs text-muted">Emitido em</div>
-        <div class="fw-semibold">14/06/2026 10:22</div>
-      </div>
-    </header>
-    <ul class="summary-list">
-      <li><span>Passageiro</span><span>João Pereira</span></li>
-      <li><span>Documento</span><span>CPF 123.456.789-00</span></li>
-      <li><span>Voo / Modal</span><span>LATAM 3024 — Portão A12</span></li>
-      <li><span>Embarque</span><span>22/06/2026 — 08:30 (SAO)</span></li>
-      <li><span>Assento</span><span>14C</span></li>
-    </ul>
-    <div class="btn-group mt-4">
-      <button class="btn btn-primary" onclick="window.print()">🖨️ Imprimir ticket</button>
-      <a class="btn btn-secondary" href="#">Reenviar comprovante</a>
+        <div class="card-footer">
+          <div class="btn-group" style="justify-content:flex-end;width:100%;">
+
+            <!-- Botão Confirmar (só se PENDENTE) -->
+            <form th:if="${reserva.statusReserva.name() == 'PENDENTE'}"
+                  th:action="@{/reservas/{codigoReserva}/confirmar(codigoReserva=${reserva.codigoReserva})}"
+                  method="post" style="margin:0;">
+              <button type="submit" class="btn btn-secondary">Confirmar reserva</button>
+            </form>
+
+            <!-- Botão Cancelar (só se PENDENTE ou CONFIRMADO) -->
+            <form th:if="${reserva.statusReserva.name() != 'CANCELADA'}"
+                  th:action="@{/reservas/{codigoReserva}/cancelar(codigoReserva=${reserva.codigoReserva})}"
+                  method="post" style="margin:0;">
+              <button type="submit" class="btn btn-danger">Cancelar reserva</button>
+            </form>
+
+            <a class="btn btn-ghost" th:href="@{/reservas/consultar}">← Voltar</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- CARD: ROTA / TRECHOS -->
+      <section class="card">
+        <div class="card-header">
+          <h2 class="card-title">Rota</h2>
+        </div>
+
+        <div class="card-body">
+
+          <!-- Se tem rotas cadastradas -->
+          <div th:if="${rotas != null and !rotas.isEmpty()}">
+            <div th:each="rr, iter : ${rotas}"
+                 style="padding:0.75rem 0;"
+                 th:styleappend="${!iter.last} ? 'border-bottom:1px solid var(--color-border, #333);' : ''">
+
+              <div class="flex gap-2" style="align-items:center; margin-bottom:0.5rem;">
+                  <span class="badge badge-warning"
+                        th:text="'Trecho ' + ${iter.index + 1}"
+                        style="font-size:0.75rem;"></span>
+              </div>
+
+              <ul class="summary-list" style="margin:0;">
+                <li>
+                  <span>Origem</span>
+                  <span th:text="${rr.rota.origem.cidade + ' (' + rr.rota.origem.codigoIata + ')' }">—</span>
+                </li>
+                <li>
+                  <span>Destino</span>
+                  <span th:text="${rr.rota.destino.cidade + ' (' + rr.rota.destino.codigoIata + ')' }">—</span>
+                </li>
+                <li>
+                  <span>Ordem</span>
+                  <span th:text="${rr.ordem}">—</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Se não tem rotas -->
+          <p th:if="${rotas == null or rotas.isEmpty()}"
+             class="text-muted" style="padding:1rem 0; text-align:center;">
+            Nenhuma rota vinculada.
+          </p>
+        </div>
+      </section>
+
     </div>
-  </section>
+
+  </main>
 </div>
 
-    </main>
-  </div>
-
-  <script th:src="@{/js/app.js}" src="/js/app.js"></script>
+<script th:src="@{/js/app.js}" src="/js/app.js"></script>
 </body>
 </html>
