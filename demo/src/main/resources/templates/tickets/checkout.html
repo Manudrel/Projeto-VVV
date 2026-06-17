@@ -24,21 +24,7 @@
   <!-- ════════════════════════════════
        HEADER
        ════════════════════════════════ -->
-  <header class="app-header">
-    <div class="header-left">
-      <button class="menu-toggle" data-menu-toggle aria-label="Abrir menu">☰</button>
-      <h1 class="page-title">Checkout &amp; Emissão de Ticket</h1>
-    </div>
-    <div class="user-menu">
-      <div class="user-info">
-        <span class="user-name"  th:text="${usuario.nome}">Maria Souza</span>
-        <span class="user-role"  th:text="${usuario.cargo}">Gerente</span>
-      </div>
-      <span class="user-avatar"  th:text="${#strings.substring(usuario.nome,0,1)}">M</span>
-      <form method="post" th:action="@{/logout}" style="margin:0;">
-        <button type="submit" class="btn btn-ghost btn-sm">Sair</button>
-      </form>
-    </div>
+  
   </header>
 
   <!-- ════════════════════════════════

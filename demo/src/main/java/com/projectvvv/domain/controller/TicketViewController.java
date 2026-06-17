@@ -23,7 +23,7 @@ public class TicketViewController {
         this.ticketService = ticketService;
     }
 
-    @GetMapping("/novo")
+    @GetMapping("/checkout")
     public String novoTicket(Model model) {
 
         model.addAttribute(
@@ -31,28 +31,7 @@ public class TicketViewController {
                 reservaService.buscarPorStatus(
                         StatusReserva.PENDENTE));
 
-        return "tickets/novo";
+        return "tickets/checkout";
     }
 
-    @GetMapping("/consultar")
-    public String consultarTickets(Model model) {
-
-        model.addAttribute(
-                "tickets",
-                ticketService.listarTodos());
-
-        return "tickets/consultar";
-    }
-
-    @GetMapping("/detalhe/{id}")
-    public String detalheTicket(
-            @PathVariable Long id,
-            Model model) {
-
-        model.addAttribute(
-                "ticket",
-                ticketService.buscarPorId(id));
-
-        return "tickets/detalhe";
-    }
 }
