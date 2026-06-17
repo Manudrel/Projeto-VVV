@@ -10,6 +10,7 @@
     <link rel="stylesheet" th:href="@{/css/variables.css}" href="/css/variables.css" />
     <link rel="stylesheet" th:href="@{/css/components.css}" href="/css/components.css" />
     <link rel="stylesheet" th:href="@{/css/app.css}" href="/css/app.css" />
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}" href="/css/sidebar.css" />
 </head>
 
 <body>
@@ -19,84 +20,7 @@
 <div class="app-shell">
 
     <!-- SIDEBAR -->
-    <aside class="app-sidebar">
-
-        <div class="sidebar-brand">
-            <span class="brand-logo">VVV</span>
-
-            <span class="brand-text">
-                <span class="brand-name">
-                    Vai &amp; Volta
-                </span>
-
-                <span class="brand-tagline">
-                    SCVP
-                </span>
-            </span>
-        </div>
-
-        <nav class="sidebar-nav" aria-label="Navegação principal">
-
-            <div class="nav-section-title">
-                Operação
-            </div>
-
-            <ul class="nav-list">
-
-                <li class="nav-item">
-                    <a th:href="@{/dashboard}">
-                        <span class="nav-icon">🏠</span>
-                        Dashboard
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a th:href="@{/reservas/nova}">
-                        <span class="nav-icon">➕</span>
-                        Nova Reserva
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a th:href="@{/reservas/consultar}">
-                        <span class="nav-icon">📋</span>
-                        Consultar Reservas
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a th:href="@{/auth/cadastro-cliente}">
-                        <span class="nav-icon">👤</span>
-                        Cadastrar Cliente
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a th:href="@{/modais}">
-                        <span class="nav-icon">🚍</span>
-                        Central de Modais
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a th:href="@{/cidades}" class="active">
-                        <span class="nav-icon">🏙️</span>
-                        Cidades
-                    </a>
-                </li>
-
-            </ul>
-
-        </nav>
-
-        <div class="sidebar-footer">
-            SCVP v1.0 •
-            <span th:text="${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy')}">
-                14/06/2026
-            </span>
-        </div>
-
-    </aside>
+    <div th:replace="~{fragments/sidebar :: sidebar('consultar')}"></div>
 
     <!-- HEADER -->
     <header class="app-header">
@@ -210,7 +134,7 @@
                             </label>
 
                             <input id="c-nome"
-                                   th:field="*{uf}"
+                                   th:field="*{nome}"
                                    class="form-control"
                                    required />
 
@@ -282,7 +206,7 @@
                         <div class="form-group">
 
                             <label class="form-label"
-                                for="c-pais">
+                                   for="c-pais">
 
                                 País
                                 <span class="required">*</span>
@@ -290,10 +214,10 @@
                             </label>
 
                             <input id="c-pais"
-                                th:field="*{pais}"
-                                class="form-control"
-                                value="Brasil"
-                                required />
+                                   th:field="*{pais}"
+                                   class="form-control"
+                                   value="Brasil"
+                                   required />
 
                         </div>
 
@@ -313,79 +237,79 @@
             <!-- TABELA -->
             <div class="table-wrapper">
 
-            <table class="table">
+                <table class="table">
 
-                <thead>
+                    <thead>
 
-                <tr>
+                    <tr>
 
-                    <th>Código</th>
-                    <th>Cidade</th>
-                    <th>Estado</th>
-                    <th>País</th>
+                        <th>Código</th>
+                        <th>Cidade</th>
+                        <th>Estado</th>
+                        <th>País</th>
 
-                    <th class="text-right">
-                        Ações
-                    </th>
+                        <th class="text-right">
+                            Ações
+                        </th>
 
-                </tr>
+                    </tr>
 
-                </thead>
+                    </thead>
 
-                <tbody>
+                    <tbody>
 
-                <tr th:each="cidade : ${cidades}">
+                    <tr th:each="cidade : ${cidades}">
 
-                    <td>
-                        <code th:text="${cidade.codigoIata}">
-                            GRU
-                        </code>
-                    </td>
+                        <td>
+                            <code th:text="${cidade.codigoIata}">
+                                GRU
+                            </code>
+                        </td>
 
-                    <td th:text="${cidade.uf}">
-                        São Paulo
-                    </td>
+                        <td th:text="${cidade.cidade}">
+                            São Paulo
+                        </td>
 
-                    <td th:text="${cidade.nome}">
-                        SP
-                    </td>
+                        <td th:text="${cidade.estado}">
+                            SP
+                        </td>
 
-                    <td th:text="${cidade.pais}">
-                        Brasil
-                    </td>
+                        <td th:text="${cidade.pais}">
+                            Brasil
+                        </td>
 
-                    <td class="actions">
+                        <td class="actions">
 
-                        <button class="btn btn-ghost btn-sm">
-                            Editar
-                        </button>
+                            <button class="btn btn-ghost btn-sm">
+                                Editar
+                            </button>
 
-                    </td>
+                        </td>
 
-                </tr>
+                    </tr>
 
-                <!-- Caso lista vazia -->
-                <tr th:if="${#lists.isEmpty(cidades)}">
+                    <!-- Caso lista vazia -->
+                    <tr th:if="${#lists.isEmpty(cidades)}">
 
-                    <td colspan="5"
-                        class="text-center">
+                        <td colspan="5"
+                            class="text-center">
 
-                        Nenhuma cidade cadastrada.
+                            Nenhuma cidade cadastrada.
 
-                    </td>
+                        </td>
 
-                </tr>
+                    </tr>
 
-                </tbody>
+                    </tbody>
 
-            </table>
+                </table>
 
-        </div>
-        </div>
-
+            </div>
         </div>
 
-    </main>
+</div>
+
+</main>
 
 </div>
 

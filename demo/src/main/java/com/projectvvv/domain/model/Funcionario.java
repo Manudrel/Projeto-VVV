@@ -1,9 +1,10 @@
 package com.projectvvv.domain.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "funcionario")
@@ -25,34 +26,50 @@ public class Funcionario {
     @Column(length = 21)
     private String telefone;
 
+    @Column(nullable = false)
+    private String senha;
+
     @Enumerated(EnumType.STRING)
-    @Column
+    @Column(nullable = false)
     private Cargo cargo;
 
-    @OneToMany(
-        mappedBy = "funcionario",
-        cascade = CascadeType.ALL,
-        orphanRemoval = true
-    )
-    private List<PontosDeVendaDoFuncionario> pontosDeVenda;
-
-    @Column
+    @Column(nullable = false)
     private LocalDate dataNascimento;
 
-    // Construtores
-    public Funcionario() {}
 
-    public Funcionario(Long id, String nome, String cpf, String endereco, Cargo cargo, String telefone, LocalDate dataNascimento) {
+    @OneToMany(
+            mappedBy = "funcionario",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<PontosDeVendaDoFuncionario> pontosDeVenda = new ArrayList<>();
+
+
+    // Construtor vazio obrigatório do JPA
+    public Funcionario() {
+    }
+
+
+    public Funcionario(
+            Long id,
+            String nome,
+            String cpf,
+            String endereco,
+            String telefone,
+            String senha,
+            Cargo cargo,
+            LocalDate dataNascimento
+    ) {
         this.id = id;
         this.nome = nome;
         this.cpf = cpf;
         this.endereco = endereco;
-        this.cargo = cargo;
         this.telefone = telefone;
+        this.senha = senha;
+        this.cargo = cargo;
         this.dataNascimento = dataNascimento;
     }
 
-    // Getters e Setters
 
     public Long getId() {
         return id;
@@ -62,6 +79,7 @@ public class Funcionario {
         this.id = id;
     }
 
+
     public String getNome() {
         return nome;
     }
@@ -69,6 +87,7 @@ public class Funcionario {
     public void setNome(String nome) {
         this.nome = nome;
     }
+
 
     public String getCpf() {
         return cpf;
@@ -78,6 +97,7 @@ public class Funcionario {
         this.cpf = cpf;
     }
 
+
     public String getEndereco() {
         return endereco;
     }
@@ -85,6 +105,7 @@ public class Funcionario {
     public void setEndereco(String endereco) {
         this.endereco = endereco;
     }
+
 
     public String getTelefone() {
         return telefone;
@@ -94,6 +115,16 @@ public class Funcionario {
         this.telefone = telefone;
     }
 
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+
     public Cargo getCargo() {
         return cargo;
     }
@@ -102,13 +133,6 @@ public class Funcionario {
         this.cargo = cargo;
     }
 
-    public List<PontosDeVendaDoFuncionario> getPontosDeVenda() {
-        return pontosDeVenda;
-    }
-
-    public void setPontosDeVenda(List<PontosDeVendaDoFuncionario> pontosDeVenda) {
-        this.pontosDeVenda = pontosDeVenda;
-    }
 
     public LocalDate getDataNascimento() {
         return dataNascimento;
@@ -118,11 +142,12 @@ public class Funcionario {
         this.dataNascimento = dataNascimento;
     }
 
-    public Cargo getCargoEnum() {
-        return cargo;
+
+    public List<PontosDeVendaDoFuncionario> getPontosDeVenda() {
+        return pontosDeVenda;
     }
 
-    public void setCargoEnum(Cargo cargo) {
-        this.cargo = cargo;
+    public void setPontosDeVenda(List<PontosDeVendaDoFuncionario> pontosDeVenda) {
+        this.pontosDeVenda = pontosDeVenda;
     }
-}    
+}

@@ -1,19 +1,20 @@
 package com.projectvvv.domain.dto;
 
+import com.projectvvv.domain.model.Cargo;
+
+import java.time.LocalDate;
+
 public class FuncionarioForm {
 
     private String nome;
     private String cpf;
     private String telefone;
-    private Integer idade;
+    private LocalDate dataNascimento;
     private String endereco;
-    private String cargo; // "Funcionario" ou "Gerente"
+    private Cargo cargo;
     private Long pontoDeVendaId;
     private String senha;
     private String confirmarSenha;
-
-    public FuncionarioForm() {
-    }
 
     public String getNome() {
         return nome;
@@ -39,12 +40,12 @@ public class FuncionarioForm {
         this.telefone = telefone;
     }
 
-    public Integer getIdade() {
-        return idade;
+    public LocalDate getDataNascimento() {
+        return dataNascimento;
     }
 
-    public void setIdade(Integer idade) {
-        this.idade = idade;
+    public void setDataNascimento(LocalDate dataNascimento) {
+        this.dataNascimento = dataNascimento;
     }
 
     public String getEndereco() {
@@ -55,11 +56,11 @@ public class FuncionarioForm {
         this.endereco = endereco;
     }
 
-    public String getCargo() {
+    public Cargo getCargo() {
         return cargo;
     }
 
-    public void setCargo(String cargo) {
+    public void setCargo(Cargo cargo) {
         this.cargo = cargo;
     }
 

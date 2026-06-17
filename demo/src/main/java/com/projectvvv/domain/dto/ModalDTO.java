@@ -1,43 +1,78 @@
 package com.projectvvv.domain.dto;
 
-import com.projectvvv.domain.model.EstadoModal;
 import com.projectvvv.domain.model.TipoModal;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
 public class ModalDTO {
 
-    private Long id;
 
-    @NotNull
-    private TipoModal tipo;
+    @NotNull(message = "Selecione o tipo de modal.")
+    private TipoModal tipoModal;
 
-    @NotBlank
-    @Size(max = 60)
-    private String identificacao;
 
-    @NotNull
-    private Long transportadoraId;
+    @NotNull(message = "Informe o ano.")
+    @Min(value = 1950, message = "Ano deve ser maior ou igual a 1950.")
+    private Integer ano;
 
-    @NotNull
-    @Min(1)
+
+    @NotBlank(message = "Informe o modelo.")
+    private String modelo;
+
+
+    @NotNull(message = "Informe a capacidade.")
+    @Min(value = 1, message = "Capacidade deve ser maior que zero.")
     private Integer capacidade;
 
-    @NotNull
-    private EstadoModal estado = EstadoModal.ATIVO;
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public TipoModal getTipo() { return tipo; }
-    public void setTipo(TipoModal tipo) { this.tipo = tipo; }
-    public String getIdentificacao() { return identificacao; }
-    public void setIdentificacao(String identificacao) { this.identificacao = identificacao; }
-    public Long getTransportadoraId() { return transportadoraId; }
-    public void setTransportadoraId(Long transportadoraId) { this.transportadoraId = transportadoraId; }
-    public Integer getCapacidade() { return capacidade; }
-    public void setCapacidade(Integer capacidade) { this.capacidade = capacidade; }
-    public EstadoModal getEstado() { return estado; }
-    public void setEstado(EstadoModal estado) { this.estado = estado; }
+    @NotNull(message = "Selecione a transportadora.")
+    private Long transportadoraId;
+
+
+
+    public TipoModal getTipoModal() {
+        return tipoModal;
+    }
+
+    public void setTipoModal(TipoModal tipoModal) {
+        this.tipoModal = tipoModal;
+    }
+
+
+    public Integer getAno() {
+        return ano;
+    }
+
+    public void setAno(Integer ano) {
+        this.ano = ano;
+    }
+
+
+    public String getModelo() {
+        return modelo;
+    }
+
+    public void setModelo(String modelo) {
+        this.modelo = modelo;
+    }
+
+
+    public Integer getCapacidade() {
+        return capacidade;
+    }
+
+    public void setCapacidade(Integer capacidade) {
+        this.capacidade = capacidade;
+    }
+
+
+    public Long getTransportadoraId() {
+        return transportadoraId;
+    }
+
+    public void setTransportadoraId(Long transportadoraId) {
+        this.transportadoraId = transportadoraId;
+    }
+
 }

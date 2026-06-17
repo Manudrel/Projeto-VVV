@@ -4,123 +4,141 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pontos de Venda — SCVP | VVV</title>
-  <link rel="stylesheet" th:href="@{/css/variables.css}" href="/css/variables.css" />
-  <link rel="stylesheet" th:href="@{/css/components.css}" href="/css/components.css" />
-  <link rel="stylesheet" th:href="@{/css/app.css}" href="/css/app.css" />
+  <link rel="stylesheet" th:href="@{/css/variables.css}" />
+  <link rel="stylesheet" th:href="@{/css/components.css}" />
+  <link rel="stylesheet" th:href="@{/css/app.css}" />
 </head>
 <body>
-  <div class="sidebar-backdrop"></div>
-  <div class="app-shell">
-    <!-- SIDEBAR -->
-    <aside class="app-sidebar">
-      <div class="sidebar-brand">
-        <span class="brand-logo">VVV</span>
-        <span class="brand-text">
-          <span class="brand-name">Vai &amp; Volta</span>
-          <span class="brand-tagline">SCVP</span>
-        </span>
-      </div>
-      <nav class="sidebar-nav" aria-label="Navegação principal">
-        <div class="nav-section-title">Operação</div>
-        <ul class="nav-list">
-          <li class="nav-item"><a th:href="@{/dashboard}" href="/dashboard" class=""><span class="nav-icon">🏠</span>Dashboard</a></li>
-          <li class="nav-item"><a th:href="@{/reservas/nova}" href="/reservas/nova" class=""><span class="nav-icon">➕</span>Nova Reserva</a></li>
-          <li class="nav-item"><a th:href="@{/reservas/consultar}" href="/reservas/consultar" class=""><span class="nav-icon">📋</span>Consultar Reservas</a></li>
-          <li class="nav-item"><a th:href="@{/clientes/cadastro}" href="/clientes/cadastro" class=""><span class="nav-icon">👤</span>Cadastrar Cliente</a></li>
-          <li class="nav-item"><a th:href="@{/modais}" href="/modais" class=""><span class="nav-icon">🚍</span>Central de Modais</a></li>
-          <li class="nav-item"><a th:href="@{/cidades}" href="/cidades" class=""><span class="nav-icon">🏙️</span>Cidades</a></li>
-        </ul>
+<div class="sidebar-backdrop"></div>
+<div class="app-shell">
 
-        <!-- Bloco visível apenas para Gerente (th:if no template Thymeleaf) -->
-        <div class="nav-section-title" th:if="${usuarioLogado != null && usuarioLogado.cargo == 'Gerente'}">Administração</div>
-        <ul class="nav-list">
-        <li class="nav-item" th:if="${usuarioLogado != null && usuarioLogado.cargo == 'Gerente'}">
-            <a th:href="@{gerente/funcionarios}" href="gerente/funcionarios" class=""><span class="nav-icon">👥</span>Funcionários</a>
-        </li>
-        <li class="nav-item" th:if="${usuarioLogado != null && usuarioLogado.cargo == 'Gerente'}">
-            <a th:href="@{/pontos-venda}" href="/pontos-venda" class="active"><span class="nav-icon">🏬</span>Pontos de Venda</a>
-        </li>
-        <li class="nav-item" th:if="${usuarioLogado != null && usuarioLogado.cargo == 'Gerente'}">
-            <a th:href="@{/transportadoras}" href="/transportadoras" class=""><span class="nav-icon">🚚</span>Transportadoras</a>
-        </li>
-        <li class="nav-item" th:if="${usuarioLogado != null && usuarioLogado.cargo == 'Gerente'}">
-            <a th:href="@{/vendas-online/aprovacao}" href="/vendas-online/aprovacao" class=""><span class="nav-icon">✅</span>Aprovação Vendas Online</a>
-        </li>
-        </ul>
+  <!-- SIDEBAR omitida, igual ao padrão do projeto -->
+
+  <main class="app-main">
+    <div class="page-header">
+      <nav class="breadcrumb" aria-label="Trilha">
+        <a th:href="@{/dashboard}">Início</a>
+        <span aria-hidden="true">›</span>
+        <span>Administração</span>
+        <span aria-hidden="true">›</span>
+        <span>Pontos de Venda</span>
       </nav>
-      <div class="sidebar-footer">
-        SCVP v1.0 • <span th:text="${#dates.format(#dates.createNow(), 'dd/MM/yyyy')}">14/06/2026</span>
-      </div>
-    </aside>
+      <h1>Pontos de Venda</h1>
+    </div>
 
-    <!-- HEADER -->
-    <header class="app-header">
-      <div class="header-left">
-        <button class="menu-toggle" data-menu-toggle aria-label="Abrir menu">☰</button>
-        <h1 class="page-title">Pontos de Venda</h1>
+    <!-- Flash messages -->
+    <div th:if="${mensagem}"
+         th:class="'alert alert-' + ${tipoMensagem}"
+         th:text="${mensagem}">
+    </div>
+
+    <!-- Formulário de cadastro -->
+    <section class="card form-card mb-6">
+      <div class="card-header">
+        <h2 class="card-title">Cadastrar ponto de venda</h2>
       </div>
-      <div class="user-menu">
-        <div class="user-info">
-          <span class="user-name" th:text="${usuarioLogado.nome}">Marcella</span>
-          <span class="user-role" th:text="${usuarioLogado.cargo}">Gerente</span>
-        </div>
-        <span class="user-avatar" th:text="${#strings.substring(usuarioLogado.nome,0,1)}">M</span>
-        <form method="post" action="/logout" style="margin:0;">
-          <button type="submit" class="btn btn-ghost btn-sm" title="Sair">Sair</button>
+      <div class="card-body">
+        <form method="post" th:action="@{/pontos-venda}"
+              th:object="${pontoVendaDTO}" novalidate>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="p-nome">
+                Nome <span class="required">*</span>
+              </label>
+              <input id="p-nome" th:field="*{nome}"
+                     class="form-control" required />
+              <span class="form-error"
+                    th:if="${#fields.hasErrors('nome')}"
+                    th:errors="*{nome}">
+              </span>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="p-cnpj">
+                CNPJ <span class="required">*</span>
+              </label>
+              <input id="p-cnpj" th:field="*{cnpj}"
+                     class="form-control"
+                     placeholder="00.000.000/0000-00" required />
+              <span class="form-error"
+                    th:if="${#fields.hasErrors('cnpj')}"
+                    th:errors="*{cnpj}">
+              </span>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="p-tel">
+                Telefone <span class="required">*</span>
+              </label>
+              <input id="p-tel" th:field="*{telefone}"
+                     class="form-control" required />
+              <span class="form-error"
+                    th:if="${#fields.hasErrors('telefone')}"
+                    th:errors="*{telefone}">
+              </span>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="p-end">
+                Endereço <span class="required">*</span>
+              </label>
+              <input id="p-end" th:field="*{endereco}"
+                     class="form-control" required />
+              <span class="form-error"
+                    th:if="${#fields.hasErrors('endereco')}"
+                    th:errors="*{endereco}">
+              </span>
+            </div>
+          </div>
+
+          <div class="btn-group mt-4" style="justify-content:flex-end;">
+            <button type="submit" class="btn btn-primary">Cadastrar</button>
+          </div>
         </form>
       </div>
-    </header>
+    </section>
 
-    <!-- MAIN -->
-    <main class="app-main">
-      <div class="page-header">
-        <nav class="breadcrumb" aria-label="Trilha"><a th:href="@{/dashboard}" href="/dashboard">Início</a> <span aria-hidden='true'>›</span> <span>Administração</span> <span aria-hidden='true'>›</span> <span>Pontos de Venda</span></nav>
-        <h1>Pontos de Venda</h1>
-      </div>
-      
-<div class="alert alert-info"><span class="alert-icon">🔒</span>
-  <div><div class="alert-title">Restrito a Gerentes</div>
-  <span>Apenas usuários com cargo <code>Gerente</code> acessam o cadastro de pontos de venda.</span></div>
+    <!-- Tabela de pontos cadastrados -->
+    <div class="table-wrapper">
+      <table class="table">
+        <thead>
+        <tr>
+          <th>Nome</th>
+          <th>CNPJ</th>
+          <th>Telefone</th>
+          <th>Endereço</th>
+          <th class="text-right">Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${#lists.isEmpty(pontosVenda)}">
+          <td colspan="5" class="text-center text-muted">
+            Nenhum ponto de venda cadastrado ainda.
+          </td>
+        </tr>
+        <tr th:each="p : ${pontosVenda}">
+          <td th:text="${p.nome}">—</td>
+          <td th:text="${p.cnpj}">—</td>
+          <td th:text="${p.telefone}">—</td>
+          <td th:text="${p.endereco}">—</td>
+          <td class="actions">
+            <!-- Remover via POST (sem JS, compatível com Spring Security) -->
+            <form method="post"
+                  th:action="@{/pontos-venda/{id}/remover(id=${p.codigoPonto})}"
+                  style="display:inline"
+                  onsubmit="return confirm('Remover este ponto de venda?')">
+              <button type="submit" class="btn btn-danger btn-sm">Remover</button>
+            </form>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </main>
 </div>
 
-<section class="card form-card mb-6">
-  <div class="card-header"><h2 class="card-title">Cadastrar ponto de venda</h2></div>
-  <div class="card-body">
-    <form method="post" action="/pontos-venda" novalidate>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label" for="p-nome">Nome <span class="required">*</span></label>
-          <input id="p-nome" name="nome" class="form-control" required /></div>
-        <div class="form-group"><label class="form-label" for="p-cnpj">CNPJ <span class="required">*</span></label>
-          <input id="p-cnpj" name="cnpj" class="form-control" placeholder="00.000.000/0000-00" required /></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label" for="p-tel">Telefone <span class="required">*</span></label>
-          <input id="p-tel" name="telefone" class="form-control" required /></div>
-        <div class="form-group"><label class="form-label" for="p-end">Endereço <span class="required">*</span></label>
-          <input id="p-end" name="endereco" class="form-control" required /></div>
-      </div>
-      <div class="btn-group mt-4" style="justify-content:flex-end;">
-        <button type="submit" class="btn btn-primary">Cadastrar</button>
-      </div>
-    </form>
-  </div>
-</section>
-
-<div class="table-wrapper">
-  <table class="table">
-    <thead><tr><th>Nome</th><th>CNPJ</th><th>Telefone</th><th>Gerente responsável</th><th class="text-right">Ações</th></tr></thead>
-    <tbody>
-      <tr><td>PDV Centro — São Paulo/SP</td><td>12.345.678/0001-00</td><td>(11) 3000-0001</td><td>Maria Souza</td>
-        <td class="actions"><button class="btn btn-ghost btn-sm">Editar</button><button class="btn btn-danger btn-sm">Remover</button></td></tr>
-      <tr><td>PDV Aeroporto — Guarulhos/SP</td><td>22.111.000/0001-44</td><td>(11) 3000-0002</td><td>Carlos Mendes</td>
-        <td class="actions"><button class="btn btn-ghost btn-sm">Editar</button><button class="btn btn-danger btn-sm">Remover</button></td></tr>
-    </tbody>
-  </table>
-</div>
-
-    </main>
-  </div>
-
-  <script th:src="@{/js/app.js}" src="/js/app.js"></script>
+<script th:src="@{/js/app.js}"></script>
 </body>
 </html>

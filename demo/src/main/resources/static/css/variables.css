@@ -80,4 +80,10 @@
   --sidebar-w: 260px;
   --header-h: 64px;
   --container-max: 1280px;
+
+  /* Sidebar */
+  --sidebar-bg: #15315c;
+  --sidebar-bg-active: #28508a;
+  --sidebar-text-muted: #93a8c9;
+  --accent-orange: #ff7a29;
 }

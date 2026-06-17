@@ -2,73 +2,72 @@
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/auth-layout :: head('Cadastro de Funcionário')}"></head>
 <body>
-
 <div class="auth-container">
     <div class="auth-card card">
         <div class="auth-header">
-            <h1>Cadastrar Funcionário</h1>
-            <p>Apenas gerentes podem cadastrar novos funcionários</p>
+            <h1>Criar conta</h1>
+            <p>Preencha seus dados para acessar o sistema</p>
         </div>
 
-        <form class="auth-form" th:action="@{/gerente/funcionarios/cadastro}" method="post"
-              th:object="${funcionarioForm}">
+        <div th:if="${erro}" class="alert alert-error" th:text="${erro}"></div>
+
+        <form class="auth-form" th:action="@{/auth/cadastro-funcionario}"
+              method="post" th:object="${funcionarioForm}">
 
             <div class="form-group">
                 <label for="nome">Nome Completo</label>
-                <input class="form-control" type="text" id="nome" th:field="*{nome}" required>
+                <input class="form-control" type="text" id="nome"
+                       th:field="*{nome}" required />
             </div>
-
             <div class="form-group">
                 <label for="cpf">CPF</label>
-                <input class="form-control" type="text" id="cpf" th:field="*{cpf}" required>
+                <input class="form-control" type="text" id="cpf"
+                       th:field="*{cpf}" required />
             </div>
-
             <div class="form-group">
                 <label for="telefone">Telefone</label>
-                <input class="form-control" type="tel" id="telefone" th:field="*{telefone}">
+                <input class="form-control" type="tel" id="telefone"
+                       th:field="*{telefone}" />
             </div>
-
             <div class="form-group">
-                <label for="idade">Idade</label>
-                <input class="form-control" type="number" id="idade" th:field="*{idade}" min="0" max="120">
+                <label for="dataNascimento">Data de Nascimento</label>
+                <input class="form-control" type="date" id="dataNascimento"
+                       th:field="*{dataNascimento}" required />
             </div>
-
             <div class="form-group">
                 <label for="endereco">Endereço</label>
-                <input class="form-control" type="text" id="endereco" th:field="*{endereco}">
-            </div>
-
-            <div class="form-group">
-                <label for="cargo">Cargo</label>
-                <select class="form-control" id="cargo" th:field="*{cargo}">
-                    <option value="Funcionario">Funcionário</option>
-                    <option value="Gerente">Gerente</option>
-                </select>
+                <input class="form-control" type="text" id="endereco"
+                       th:field="*{endereco}" />
             </div>
 
             <div class="form-group">
                 <label for="pontoDeVendaId">Ponto de Venda</label>
                 <select class="form-control" id="pontoDeVendaId" th:field="*{pontoDeVendaId}">
+                    <option value="">Nenhum por enquanto</option>
                     <option th:each="pv : ${pontosDeVenda}"
-                            th:value="${pv.id}"
-                            th:text="${pv.nome}"></option>
+                            th:value="${pv.codigoPonto}"
+                            th:text="${pv.nome}">
+                    </option>
                 </select>
             </div>
 
             <div class="form-group">
                 <label for="senha">Senha</label>
-                <input class="form-control" type="password" id="senha" th:field="*{senha}" required>
+                <input class="form-control" type="password" id="senha"
+                       th:field="*{senha}" required />
             </div>
-
             <div class="form-group">
                 <label for="confirmarSenha">Confirmar Senha</label>
-                <input class="form-control" type="password" id="confirmarSenha" th:field="*{confirmarSenha}" required>
+                <input class="form-control" type="password" id="confirmarSenha"
+                       th:field="*{confirmarSenha}" required />
             </div>
 
-            <button type="submit" class="btn-primary">Cadastrar Funcionário</button>
+            <button type="submit" class="btn-primary">Criar conta</button>
+            <p style="text-align:center; margin-top:12px">
+                Já tem conta? <a th:href="@{/auth/login}">Entrar</a>
+            </p>
         </form>
     </div>
 </div>
-
 </body>
 </html>

@@ -59,17 +59,100 @@
     const stopsList = document.querySelector('[data-stops-list]');
     if (addStopBtn && stopsList) {
         addStopBtn.addEventListener('click', () => {
+            const index = stopsList.children.length;
             const row = document.createElement('div');
             row.className = 'flex gap-2';
             row.style.marginBottom = 'var(--space-3)';
-            row.innerHTML = `
-        <input type="text" class="form-control" placeholder="Cidade de escala" name="escala" />
-        <button type="button" class="btn btn-ghost btn-sm" aria-label="Remover">✕</button>
-      `;
-            row.querySelector('button').addEventListener('click', () => row.remove());
+
+            const select = document.createElement('select');
+            select.name = `escalas[${index}]`;
+            select.className = 'form-control';
+            select.required = true;
+
+            const defaultOpt = document.createElement('option');
+            defaultOpt.value = '';
+            defaultOpt.textContent = 'Selecione...';
+            select.appendChild(defaultOpt);
+
+            (window.CIDADES || []).forEach(cidade => {
+                const opt = document.createElement('option');
+                opt.value = cidade.id;
+                opt.textContent = `${cidade.cidade} — ${cidade.estado} (${cidade.codigoIata})`;
+                select.appendChild(opt);
+            });
+
+            const removeBtn = document.createElement('button');
+            removeBtn.type = 'button';
+            removeBtn.className = 'btn btn-ghost btn-sm';
+            removeBtn.setAttribute('aria-label', 'Remover');
+            removeBtn.textContent = '✕';
+            removeBtn.addEventListener('click', () => row.remove());
+
+            row.appendChild(select);
+            row.appendChild(removeBtn);
             stopsList.appendChild(row);
         });
     }
+
+    // Busca de clientes na etapa 2
+    const btnBuscar = document.getElementById('btn-buscar');
+    const inputBusca = document.getElementById('busca');
+    const tabelaClientes = document.querySelector('[aria-label="Cliente"] tbody');
+
+    function calcularIdade(dataNascimento) {
+        const hoje = new Date();
+        const nasc = new Date(dataNascimento);
+        let idade = hoje.getFullYear() - nasc.getFullYear();
+        const m = hoje.getMonth() - nasc.getMonth();
+        if (m < 0 || (m === 0 && hoje.getDate() < nasc.getDate())) idade--;
+        return idade;
+    }
+
+    function renderClientes(clientes) {
+        tabelaClientes.innerHTML = '';
+        if (!clientes.length) {
+            tabelaClientes.innerHTML = '<tr><td colspan="5" class="text-center">Nenhum cliente encontrado.</td></tr>';
+            return;
+        }
+        clientes.forEach(c => {
+            const idade = c.dataNascimento ? calcularIdade(c.dataNascimento) : '—';
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><input type="radio" name="clienteId" value="${c.id}" /></td>
+                <td>${c.nome}</td>
+                <td>${c.cpf}</td>
+                <td>${idade}</td>
+                <td>${c.telefone ?? '—'}</td>
+            `;
+            tabelaClientes.appendChild(tr);
+        });
+    }
+
+    if (btnBuscar && inputBusca && tabelaClientes) {
+        btnBuscar.addEventListener('click', async () => {
+            const q = inputBusca.value.trim();
+            const res = await fetch(`/reservas/nova/clientes?q=${encodeURIComponent(q)}`);
+            const clientes = await res.json();
+            renderClientes(clientes);
+        });
+
+        inputBusca.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') { e.preventDefault(); btnBuscar.click(); }
+        });
+    }
+
+    // Seleção visual das opções de modal (etapa 3)
+    document.querySelectorAll('.modal-option input[type="radio"]').forEach(radio => {
+        radio.addEventListener('change', () => {
+            document.querySelectorAll('.modal-option').forEach(opt => opt.classList.remove('selected'));
+            radio.closest('.modal-option').classList.add('selected');
+        });
+    });
+
+    // Marca o primeiro como selecionado ao carregar
+    const primeiroModal = document.querySelector('.modal-option input[type="radio"]:checked');
+    if (primeiroModal) primeiroModal.closest('.modal-option').classList.add('selected');
+
 })();
 
 // Dialog modal (abrir/fechar via data-attrs)

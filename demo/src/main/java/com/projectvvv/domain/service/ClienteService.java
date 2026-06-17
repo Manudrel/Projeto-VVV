@@ -6,6 +6,7 @@ import com.projectvvv.domain.repository.ClienteRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ClienteService {
@@ -18,6 +19,17 @@ public class ClienteService {
 
     public List<Cliente> listarTodos() {
         return repository.findAll();
+    }
+
+    public List<Cliente> buscarPorNomeOuCpf(String q) {
+        String termo = q.toLowerCase();
+        String termoSemMascara = termo.replace(".", "").replace("-", "");
+        return repository.findAll().stream()
+                .filter(c ->
+                        c.getNome().toLowerCase().contains(termo) ||
+                        c.getCpf().replace(".", "").replace("-", "").contains(termoSemMascara)
+                )
+                .collect(Collectors.toList());
     }
 
     public Cliente buscarPorId(Long id) {
