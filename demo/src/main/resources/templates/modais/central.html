@@ -9,6 +9,7 @@
     <link rel="stylesheet" th:href="@{/css/components.css}" />
     <link rel="stylesheet" th:href="@{/css/app.css}" />
     <link rel="stylesheet" th:href="@{/css/pages/modais.css}" />
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}" />
 </head>
 
 <body>
@@ -16,6 +17,8 @@
 <div class="app-shell">
 
     <!-- sidebar igual ao seu original, omitida por brevidade -->
+
+    <div th:replace="~{fragments/sidebar :: sidebar('nova-reserva')}"></div>
 
     <main class="app-main">
         <div class="page-header">
