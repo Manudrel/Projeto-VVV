@@ -148,45 +148,6 @@
                 </div>
             </div>
 
-            <!-- Cards de estatísticas -->
-            <div class="stats-grid">
-
-                <div class="stat-card">
-                    <div class="stat-icon icon-blue">📋</div>
-                    <div>
-                        <p class="stat-value" th:text="${reservasPendentesHoje}">X</p>
-                        <p class="stat-label">Reservas pendentes hoje</p>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-icon icon-pink">🎫</div>
-                    <div>
-                        <p class="stat-value" th:text="${ticketsEmitidosHoje}">X</p>
-                        <p class="stat-label">Tickets emitidos no dia</p>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-icon icon-green">✅</div>
-                    <div>
-                        <p class="stat-value">
-                            R$ <span th:text="${#numbers.formatDecimal(faturamentoDoDia, 1, 'POINT', 2, 'COMMA')}">X</span>
-                        </p>
-                        <p class="stat-label">Faturamento do dia</p>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-icon icon-yellow">🛠️</div>
-                    <div>
-                        <p class="stat-value" th:text="${modaisEmManutencao}">X</p>
-                        <p class="stat-label">Modais em manutenção</p>
-                    </div>
-                </div>
-
-            </div>
-
             <!-- Ações rápidas -->
             <h2 class="section-title">Ações rápidas</h2>
 
