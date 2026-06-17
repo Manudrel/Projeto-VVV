@@ -89,7 +89,7 @@ public class FuncionarioViewController {
         redirectAttributes.addFlashAttribute(
                 "mensagem", "Funcionário cadastrado com sucesso.");
 
-        return "redirect:/funcionarios";
+        return "redirect:/dashboard";
     }
 
     private Funcionario buscarLogado(Authentication authentication) {
