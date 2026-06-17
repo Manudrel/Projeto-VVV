@@ -2,6 +2,16 @@
    SCVP - Layout da área logada (header + sidebar + main)
    ========================================================================== */
 
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden !important;
+}
+
 .app-shell {
   display: grid;
   grid-template-columns: var(--sidebar-w) 1fr;
@@ -9,7 +19,17 @@
   grid-template-areas:
     "sidebar header"
     "sidebar main";
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ===== Sidebar — apenas posicionamento no grid =====
+   Estilo visual (cores, fontes, padding) está em sidebar.css  */
+.sidebar {
+  grid-area: sidebar;
+  position: sticky;
+  top: 0;
+  height: 100vh;
 }
 
 /* ===== Header ===== */
@@ -88,119 +108,11 @@
   color: var(--color-text-muted);
 }
 
-/* ===== Sidebar ===== */
-.app-sidebar {
-  grid-area: sidebar;
-  background: var(--color-primary);
-  color: var(--color-text-inverse);
-  display: flex;
-  flex-direction: column;
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  overflow-y: auto;
-}
-
-.sidebar-brand {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-5) var(--space-6);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.brand-logo {
-  width: 40px;
-  height: 40px;
-  background: var(--color-accent);
-  color: var(--color-text-inverse);
-  border-radius: var(--radius-md);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: var(--fw-bold);
-  font-size: var(--fs-sm);
-  letter-spacing: 0.02em;
-}
-
-.brand-text {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.2;
-}
-
-.brand-name {
-  font-weight: var(--fw-bold);
-  font-size: var(--fs-md);
-}
-
-.brand-tagline {
-  font-size: var(--fs-xs);
-  opacity: 0.75;
-}
-
-.sidebar-nav {
-  padding: var(--space-4) var(--space-3);
-  flex: 1;
-}
-
-.nav-section-title {
-  padding: var(--space-3) var(--space-3) var(--space-2);
-  font-size: var(--fs-xs);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  opacity: 0.6;
-  font-weight: var(--fw-semibold);
-}
-
-.nav-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.nav-item a {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-3) var(--space-4);
-  border-radius: var(--radius-md);
-  color: var(--color-text-inverse);
-  font-size: var(--fs-sm);
-  font-weight: var(--fw-medium);
-  text-decoration: none;
-  opacity: 0.85;
-  transition: background 0.15s, opacity 0.15s;
-}
-
-.nav-item a:hover {
-  background: rgba(255, 255, 255, 0.08);
-  opacity: 1;
-  text-decoration: none;
-}
-
-.nav-item a.active {
-  background: rgba(255, 255, 255, 0.15);
-  opacity: 1;
-}
-
-.nav-icon {
-  width: 20px;
-  text-align: center;
-  font-size: 1rem;
-}
-
-.sidebar-footer {
-  padding: var(--space-4) var(--space-6);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  font-size: var(--fs-xs);
-  opacity: 0.7;
-}
-
 /* ===== Main content ===== */
 .app-main {
   grid-area: main;
   padding: var(--space-6);
+  overflow-y: auto;
   overflow-x: hidden;
 }
 
@@ -484,7 +396,7 @@
   min-width: 160px;
 }
 
-/* Responsivo */
+/* ===== Responsivo ===== */
 @media (max-width: 900px) {
   .app-shell {
     grid-template-columns: 1fr;
@@ -493,17 +405,17 @@
       "main";
   }
 
-  .app-sidebar {
+  .sidebar {
     position: fixed;
     top: 0;
     left: 0;
-    width: 280px;
+    width: 260px;
     z-index: 30;
     transform: translateX(-100%);
     transition: transform 0.2s ease;
   }
 
-  .app-sidebar.open {
+  .sidebar.open {
     transform: translateX(0);
     box-shadow: var(--shadow-lg);
   }
@@ -525,6 +437,7 @@
   }
 }
 
+/* ===== Dialogs ===== */
 .dialog-backdrop {
   position: fixed;
   top: 0;
