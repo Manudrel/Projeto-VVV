@@ -12,289 +12,299 @@
 </head>
 
 <body>
-  <div class="sidebar-backdrop"></div>
-  <div class="app-shell">
+<div class="sidebar-backdrop"></div>
+<div class="app-shell">
 
-    <!-- SIDEBAR -->
-    <div th:replace="~{fragments/sidebar :: sidebar('nova-reserva')}"></div>
+  <!-- SIDEBAR -->
+  <div th:replace="~{fragments/sidebar :: sidebar('nova-reserva')}"></div>
 
-    <!-- HEADER -->
-    <header class="app-header">
-      <div class="header-left">
-        <button class="menu-toggle" data-menu-toggle aria-label="Abrir menu">☰</button>
-        <h1 class="page-title">Nova Reserva</h1>
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="header-left">
+      <button class="menu-toggle" data-menu-toggle aria-label="Abrir menu">☰</button>
+      <h1 class="page-title">Nova Reserva</h1>
+    </div>
+    <div class="user-menu">
+      <div class="user-info">
+        <span class="user-name">Maria Souza</span>
+        <span class="user-role">Gerente</span>
       </div>
-      <div class="user-menu">
-        <div class="user-info">
-          <span class="user-name">Maria Souza</span>
-          <span class="user-role">Gerente</span>
-        </div>
-        <span class="user-avatar">M</span>
-        <form method="post" action="/logout" style="margin:0;">
-          <button type="submit" class="btn btn-ghost btn-sm" title="Sair">Sair</button>
-        </form>
-      </div>
-    </header>
+      <span class="user-avatar">M</span>
+      <form method="post" action="/logout" style="margin:0;">
+        <button type="submit" class="btn btn-ghost btn-sm" title="Sair">Sair</button>
+      </form>
+    </div>
+  </header>
 
-    <!-- MAIN -->
-    <!-- Serializa a lista de cidades para o JS usar -->
-    <script th:inline="javascript">
-      window.CIDADES = /*[[${cidades}]]*/[];
-    </script>
-    <main class="app-main">
-      <div class="page-header">
-        <nav class="breadcrumb" aria-label="Trilha">
-          <a th:href="@{/dashboard}" href="/dashboard">Início</a>
-          <span aria-hidden='true'>›</span>
-          <a th:href="@{/reservas}" href="/reservas">Reservas</a>
-          <span aria-hidden='true'>›</span>
-          <span>Nova</span>
-        </nav>
-        <h1>Nova Reserva</h1>
-      </div>
+  <!-- MAIN -->
+  <!-- Serializa a lista de cidades para o JS usar -->
+  <script th:inline="javascript">
+    window.CIDADES = /*[[${cidades}]]*/[];
+  </script>
+  <main class="app-main">
+    <div class="page-header">
+      <nav class="breadcrumb" aria-label="Trilha">
+        <a th:href="@{/dashboard}" href="/dashboard">Início</a>
+        <span aria-hidden='true'>›</span>
+        <a th:href="@{/reservas}" href="/reservas">Reservas</a>
+        <span aria-hidden='true'>›</span>
+        <span>Nova</span>
+      </nav>
+      <h1>Nova Reserva</h1>
+    </div>
 
-      <div class="card" data-wizard>
-        <div class="card-body">
-          <ol class="wizard-steps" role="tablist">
-            <li class="wizard-step active"><span class="num">1</span> Rota</li>
-            <!-- <li class="wizard-step"><span class="num">2</span> Cliente</li> -->
-            <li class="wizard-step"><span class="num">2</span> Modal &amp; Passagem</li>
-            <li class="wizard-step"><span class="num">3</span> Resumo</li>
-            <!-- <li class="wizard-step"><span class="num">5</span> Pagamento</li> -->
-          </ol>
+    <div class="card" data-wizard>
+      <div class="card-body">
+        <ol class="wizard-steps" role="tablist">
+          <li class="wizard-step active"><span class="num">1</span> Rota</li>
+          <!-- <li class="wizard-step"><span class="num">2</span> Cliente</li> -->
+          <li class="wizard-step"><span class="num">2</span> Modal &amp; Passagem</li>
+          <li class="wizard-step"><span class="num">3</span> Resumo</li>
+          <!-- <li class="wizard-step"><span class="num">5</span> Pagamento</li> -->
+        </ol>
 
-          <form method="post" action="/reservas" novalidate>
-            <!-- ETAPA 1 -->
-            <section class="wizard-pane active" aria-label="Rotas">
-              <h3>Origem e destino</h3>
-              <div class="form-row">
-                <div class="form-group">
-                  <label class="form-label" for="origem">Cidade de origem <span class="required">*</span></label>
-                  <select id="origem" name="origemId" class="form-control" required>
-                    <option th:each="cidade : ${cidades}" th:value="${cidade.id}"
-                      th:text="${cidade.cidade + ' — ' + cidade.estado + ' (' + cidade.codigoIata + ')'}">
-                    </option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="destino">Cidade de destino <span class="required">*</span></label>
-                  <select id="destino" name="destinoId" class="form-control" required>
-                    <option th:each="cidade : ${cidades}" th:value="${cidade.id}"
-                      th:text="${cidade.cidade + ' — ' + cidade.estado + ' (' + cidade.codigoIata + ')'}">
-                    </option>
-                    </option>
-                  </select>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="form-label">Tipo de viagem</label>
-                <div class="flex gap-3" style="flex-wrap:wrap;">
-                  <label><input type="radio" name="tipoViagem" value="direta" checked
-                      data-toggle-target="#escalas-bloco" data-toggle-value="comEscalas" /> Direta</label>
-                  <label><input type="radio" name="tipoViagem" value="comEscalas" data-toggle-target="#escalas-bloco"
-                      data-toggle-value="comEscalas" /> Com escalas</label>
-                </div>
-              </div>
-              <div id="escalas-bloco" class="hidden">
-                <label class="form-label">Cidades intermediárias</label>
-                <div data-stops-list>
-                  <!-- as escalas adicionadas dinamicamente vão aparecer aqui -->
-                </div>
-                <button type="button" class="btn btn-secondary btn-sm" data-add-stop>+ Adicionar escala</button>
-              </div>
-              <div class="form-row mt-4">
-                <div class="form-group">
-                  <label class="form-label" for="data">Data da viagem <span class="required">*</span></label>
-                  <input id="data" name="data" type="date" class="form-control" required />
-                </div>
-              </div>
-              <div class="wizard-nav">
-                <button type="button" class="btn btn-secondary" data-wizard-prev>← Voltar</button>
-                <button type="button" class="btn btn-primary" data-wizard-next>Próximo →</button>
-              </div>
-            </section>
-
-
-            <!-- ETAPA 2 -->
-
-            <!-- <section class="wizard-pane" aria-label="Cliente">
-            <h3>Selecione o cliente</h3>
+        <form method="post" action="/reservas" novalidate>
+          <!-- ETAPA 1 -->
+          <section class="wizard-pane active" aria-label="Rotas">
+            <h3>Origem e destino</h3>
             <div class="form-row">
               <div class="form-group">
-                <label class="form-label" for="busca">Buscar por CPF ou nome</label>
-                <input id="busca" class="form-control" placeholder="Ex.: 000.000.000-00" />
+                <label class="form-label" for="origem">Cidade de origem <span class="required">*</span></label>
+                <select id="origem" name="origemId" class="form-control" required>
+                  <option th:each="cidade : ${cidades}" th:value="${cidade.id}"
+                          th:text="${cidade.cidade + ' — ' + cidade.estado + ' (' + cidade.codigoIata + ')'}">
+                  </option>
+                </select>
               </div>
-              <div class="form-group" style="align-self:end;">
-                <button type="button" id="btn-buscar" class="btn btn-secondary">🔍 Buscar</button>
-              </div>
-            </div>
-            <div class="table-wrapper mt-4">
-              <table class="table">
-                <thead>
-                <tr>
-                  <th></th>
-                  <th>Nome</th>
-                  <th>CPF</th>
-                  <th>Idade</th>
-                  <th>Telefone</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="cliente : ${clientes}">
-                  <td><input type="radio" name="clienteId" th:value="${cliente.id}" /></td>
-                  <td th:text="${cliente.nome}"></td>
-                  <td th:text="${cliente.cpf}"></td>
-                  <td
-                          th:text="${cliente.dataNascimento != null ? T(java.time.Period).between(cliente.dataNascimento, T(java.time.LocalDate).now()).years : '—'}">
-                  </td>
-                  <td th:text="${cliente.telefone}"></td>
-                </tr>
-                <tr th:if="${#lists.isEmpty(clientes)}">
-                  <td colspan="5" class="text-center">Nenhum cliente cadastrado.</td>
-                </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="wizard-nav">
-              <span></span>
-              <button type="button" class="btn btn-primary" data-wizard-next>Próximo →</button>
-            </div>
-          </section> -->
-
-            <!-- ETAPA 2 -->
-            <section class="wizard-pane" aria-label="Modal e Passagem">
-              <h3>Escolha o modal disponível</h3>
-              <div class="stack">
-                <label class="modal-option">
-                  <input type="radio" name="modalId" value="1" checked />
-                  <span class="icon">✈️</span>
-                  <span class="info">
-                    <span class="name">Avião — LATAM 3024</span>
-                    <span class="meta">Capacidade 180 • Saída 08:30 • Chegada 11:10</span>
-                  </span>
-                  <span class="price">R$ 489,00</span>
-                </label>
-                <label class="modal-option">
-                  <input type="radio" name="modalId" value="2" />
-                  <span class="icon">🚌</span>
-                  <span class="info">
-                    <span class="name">Ônibus — Viação Cometa</span>
-                    <span class="meta">Capacidade 42 • Saída 22:00 • Chegada 09:45 (dia seguinte)</span>
-                  </span>
-                  <span class="price">R$ 189,00</span>
-                </label>
-                <label class="modal-option">
-                  <input type="radio" name="modalId" value="3" />
-                  <span class="icon">🚆</span>
-                  <span class="info">
-                    <span class="name">Trem — Vale Expresso</span>
-                    <span class="meta">Capacidade 220 • Saída 06:15 • Chegada 13:00</span>
-                  </span>
-                  <span class="price">R$ 259,00</span>
-                </label>
-                <label class="modal-option">
-                  <input type="radio" name="modalId" value="4" />
-                  <span class="icon">🚢</span>
-                  <span class="info">
-                    <span class="name">Navio — Vale Expresso</span>
-                    <span class="meta">Capacidade 220 • Saída 06:15 • Chegada 13:00</span>
-                  </span>
-                  <span class="price">R$ 200,00</span>
-                </label>
-              </div>
-              <div class="form-row mt-4">
-                <div class="form-group">
-                  <label class="form-label" for="tipoPassagem">Tipo de passagem <span class="required">*</span></label>
-                  <select id="tipoPassagem" name="tipoPassagem" class="form-control" required>
-                    <option value="Economica">Econômica</option>
-                    <option value="Semi-Leito">Semi-Leito</option>
-                    <option value="Leito">Leito</option>
-                  </select>
-                </div>
-              </div>
-              <div class="wizard-nav">
-                <button type="button" class="btn btn-secondary" data-wizard-prev>← Voltar</button>
-                <button type="button" class="btn btn-primary" data-wizard-next>Próximo →</button>
-              </div>
-            </section>
-
-            <!-- ETAPA 3 — RESUMO -->
-            <section class="wizard-pane" aria-label="Resumo">
-              <h3>Resumo da reserva</h3>
-              <div class="grid-2">
-                <div class="card">
-                  <div class="card-header">
-                    <h4 class="card-title">Rota</h4>
-                  </div>
-                  <div class="card-body">
-                    <ul class="summary-list">
-                      <li><span>Trajeto</span><span id="summary-trajeto">—</span></li>
-                      <li><span>Tipo de viagem</span><span id="summary-tipo-viagem">—</span></li>
-                      <li><span>Escalas</span><span id="summary-escalas">—</span></li>
-                      <li><span>Data</span><span id="summary-data">—</span></li>
-                    </ul>
-                  </div>
-                </div>
-                <div class="card">
-                  <div class="card-header">
-                    <h4 class="card-title">Modal &amp; Passagem</h4>
-                  </div>
-                  <div class="card-body">
-                    <ul class="summary-list">
-                      <li><span>Modal</span><span id="summary-modal">—</span></li>
-                      <li><span>Detalhes</span><span id="summary-modal-meta"
-                          style="font-size:0.85em;color:var(--color-text-muted)">—</span></li>
-                      <li><span>Tipo de passagem</span><span id="summary-tipo-passagem">—</span></li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-              <div class="wizard-nav">
-                <button type="button" class="btn btn-secondary" data-wizard-prev>← Voltar</button>
-                <button type="submit" class="btn btn-accent btn-lg">Confirmar Reserva</button>
-              </div>
-            </section>
-
-            <!-- <section class="wizard-pane" aria-label="Pagamento">
-            <h3>Forma de pagamento</h3>
-            <div class="form-row">
               <div class="form-group">
-                <label class="form-label" for="formaPagamento">Forma <span class="required">*</span></label>
-                <select id="formaPagamento" name="formaPagamento" class="form-control" required
-                        data-toggle-target="#parcelas-bloco" data-toggle-value="credito">
-                  <option value="dinheiro">Dinheiro</option>
-                  <option value="pix">PIX</option>
-                  <option value="debito">Cartão de Débito</option>
-                  <option value="credito">Cartão de Crédito</option>
+                <label class="form-label" for="destino">Cidade de destino <span class="required">*</span></label>
+                <select id="destino" name="destinoId" class="form-control" required>
+                  <option th:each="cidade : ${cidades}" th:value="${cidade.id}"
+                          th:text="${cidade.cidade + ' — ' + cidade.estado + ' (' + cidade.codigoIata + ')'}">
+                  </option>
+                  </option>
                 </select>
               </div>
-              <div class="form-group hidden" id="parcelas-bloco">
-                <label class="form-label" for="parcelas">Parcelas</label>
-                <select id="parcelas" name="parcelas" class="form-control">
-                  <option>1x sem juros</option>
-                  <option>2x sem juros</option>
-                  <option>3x sem juros</option>
-                  <option>4x sem juros</option>
-                  <option>6x com juros (5% a.m.)</option>
-                  <option>12x com juros (5% a.m.)</option>
-                  <option>24x com juros (5% a.m.)</option>
-                </select>
-                <span class="form-hint">Acima de 4x são aplicados juros de 5%.</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tipo de viagem</label>
+              <div class="flex gap-3" style="flex-wrap:wrap;">
+                <label><input type="radio" name="tipoViagem" value="direta" checked
+                              data-toggle-target="#escalas-bloco" data-toggle-value="comEscalas" /> Direta</label>
+                <label><input type="radio" name="tipoViagem" value="comEscalas" data-toggle-target="#escalas-bloco"
+                              data-toggle-value="comEscalas" /> Com escalas</label>
+              </div>
+            </div>
+            <div id="escalas-bloco" class="hidden">
+              <label class="form-label">Cidades intermediárias</label>
+              <div data-stops-list>
+                <!-- as escalas adicionadas dinamicamente vão aparecer aqui -->
+              </div>
+              <button type="button" class="btn btn-secondary btn-sm" data-add-stop>+ Adicionar escala</button>
+            </div>
+            <div class="form-row mt-4">
+              <div class="form-group">
+                <label class="form-label" for="data">Data da viagem <span class="required">*</span></label>
+                <input id="data" name="data" type="date" class="form-control" required />
               </div>
             </div>
             <div class="wizard-nav">
               <button type="button" class="btn btn-secondary" data-wizard-prev>← Voltar</button>
-              <button type="submit" class="btn btn-accent btn-lg">Confirmar Reserva e Emitir Ticket</button>
+              <button type="button" class="btn btn-primary" data-wizard-next>Próximo →</button>
             </div>
-          </section> -->
-          </form>
-        </div>
+          </section>
+
+
+          <!-- ETAPA 2 -->
+
+          <!-- <section class="wizard-pane" aria-label="Cliente">
+          <h3>Selecione o cliente</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="busca">Buscar por CPF ou nome</label>
+              <input id="busca" class="form-control" placeholder="Ex.: 000.000.000-00" />
+            </div>
+            <div class="form-group" style="align-self:end;">
+              <button type="button" id="btn-buscar" class="btn btn-secondary">🔍 Buscar</button>
+            </div>
+          </div>
+          <div class="table-wrapper mt-4">
+            <table class="table">
+              <thead>
+              <tr>
+                <th></th>
+                <th>Nome</th>
+                <th>CPF</th>
+                <th>Idade</th>
+                <th>Telefone</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr th:each="cliente : ${clientes}">
+                <td><input type="radio" name="clienteId" th:value="${cliente.id}" /></td>
+                <td th:text="${cliente.nome}"></td>
+                <td th:text="${cliente.cpf}"></td>
+                <td
+                        th:text="${cliente.dataNascimento != null ? T(java.time.Period).between(cliente.dataNascimento, T(java.time.LocalDate).now()).years : '—'}">
+                </td>
+                <td th:text="${cliente.telefone}"></td>
+              </tr>
+              <tr th:if="${#lists.isEmpty(clientes)}">
+                <td colspan="5" class="text-center">Nenhum cliente cadastrado.</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="wizard-nav">
+            <span></span>
+            <button type="button" class="btn btn-primary" data-wizard-next>Próximo →</button>
+          </div>
+        </section> -->
+
+
+          <!-- ETAPA 2 -->
+          <section class="wizard-pane" aria-label="Modal e Passagem">
+            <h3>Escolha o modal disponível</h3>
+
+            <div class="stack">
+
+              <!-- Caso não haja modais -->
+              <p th:if="${#lists.isEmpty(modais)}" class="text-muted">
+                Nenhum modal disponível no momento.
+              </p>
+
+              <!-- Lista dinâmica de modais -->
+              <label class="modal-option"
+                     th:each="m, iter : ${modais}">
+
+                <input type="radio"
+                       name="modalId"
+                       th:value="${m.id}"
+                       th:checked="${iter.index == 0}" />
+
+                <!-- Ícone dinâmico -->
+                <span class="icon"
+                      th:text="${m.tipoModal.name() == 'AVIAO' ? '✈️' :
+                     m.tipoModal.name() == 'ONIBUS' ? '🚌' :
+                     m.tipoModal.name() == 'TREM' ? '🚆' : '🚢'}">
+                </span>
+
+                <span class="info">
+                  <span class="name"
+                        th:text="${m.tipoModal + ' — ' + m.modelo}">
+                  </span>
+
+                  <span class="meta"
+                        th:text="'Capacidade ' + ${m.capacidade} + ' • Ano ' + ${m.ano}">
+                  </span>
+                </span>
+
+                <span class="price">—</span>
+              </label>
+
+            </div>
+
+            <div class="form-row mt-4">
+              <div class="form-group">
+                <label class="form-label" for="tipoPassagem">
+                  Tipo de passagem <span class="required">*</span>
+                </label>
+                <select id="tipoPassagem" name="tipoPassagem"
+                        class="form-control" required>
+                  <option value="Economica">Econômica</option>
+                  <option value="Semi-Leito">Semi-Leito</option>
+                  <option value="Leito">Leito</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="wizard-nav">
+              <button type="button" class="btn btn-secondary"
+                      data-wizard-prev>← Voltar</button>
+
+              <button type="button" class="btn btn-primary"
+                      data-wizard-next>Próximo →</button>
+            </div>
+          </section>
+
+
+          <!-- ETAPA 3 — RESUMO -->
+          <section class="wizard-pane" aria-label="Resumo">
+            <h3>Resumo da reserva</h3>
+            <div class="grid-2">
+              <div class="card">
+                <div class="card-header">
+                  <h4 class="card-title">Rota</h4>
+                </div>
+                <div class="card-body">
+                  <ul class="summary-list">
+                    <li><span>Trajeto</span><span id="summary-trajeto">—</span></li>
+                    <li><span>Tipo de viagem</span><span id="summary-tipo-viagem">—</span></li>
+                    <li><span>Escalas</span><span id="summary-escalas">—</span></li>
+                    <li><span>Data</span><span id="summary-data">—</span></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-header">
+                  <h4 class="card-title">Modal &amp; Passagem</h4>
+                </div>
+                <div class="card-body">
+                  <ul class="summary-list">
+                    <li><span>Modal</span><span id="summary-modal">—</span></li>
+                    <li><span>Detalhes</span><span id="summary-modal-meta"
+                                                   style="font-size:0.85em;color:var(--color-text-muted)">—</span></li>
+                    <li><span>Tipo de passagem</span><span id="summary-tipo-passagem">—</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="wizard-nav">
+              <button type="button" class="btn btn-secondary" data-wizard-prev>← Voltar</button>
+              <button type="submit" class="btn btn-accent btn-lg">Confirmar Reserva</button>
+            </div>
+          </section>
+
+          <!-- <section class="wizard-pane" aria-label="Pagamento">
+          <h3>Forma de pagamento</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="formaPagamento">Forma <span class="required">*</span></label>
+              <select id="formaPagamento" name="formaPagamento" class="form-control" required
+                      data-toggle-target="#parcelas-bloco" data-toggle-value="credito">
+                <option value="dinheiro">Dinheiro</option>
+                <option value="pix">PIX</option>
+                <option value="debito">Cartão de Débito</option>
+                <option value="credito">Cartão de Crédito</option>
+              </select>
+            </div>
+            <div class="form-group hidden" id="parcelas-bloco">
+              <label class="form-label" for="parcelas">Parcelas</label>
+              <select id="parcelas" name="parcelas" class="form-control">
+                <option>1x sem juros</option>
+                <option>2x sem juros</option>
+                <option>3x sem juros</option>
+                <option>4x sem juros</option>
+                <option>6x com juros (5% a.m.)</option>
+                <option>12x com juros (5% a.m.)</option>
+                <option>24x com juros (5% a.m.)</option>
+              </select>
+              <span class="form-hint">Acima de 4x são aplicados juros de 5%.</span>
+            </div>
+          </div>
+          <div class="wizard-nav">
+            <button type="button" class="btn btn-secondary" data-wizard-prev>← Voltar</button>
+            <button type="submit" class="btn btn-accent btn-lg">Confirmar Reserva e Emitir Ticket</button>
+          </div>
+        </section> -->
+        </form>
       </div>
+    </div>
 
-    </main>
-  </div>
+  </main>
+</div>
 
-  <script th:src="@{/js/app.js}" src="/js/app.js"></script>
+<script th:src="@{/js/app.js}" src="/js/app.js"></script>
 </body>
 
 </html>
