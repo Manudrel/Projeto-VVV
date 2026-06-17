@@ -57,7 +57,7 @@ public class ReservaViewController {
     public String novaReservaEtapa1(Model model, HttpSession session) {
         ReservaDTO dados = (ReservaDTO) session.getAttribute(SESSION_DADOS);
         model.addAttribute("dados", dados != null ? dados : new ReservaDTO());
-        return "reservas/nova-dados";
+        return "reservas/nova";
     }
 
     @PostMapping("/nova")
